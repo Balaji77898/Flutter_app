@@ -1,0 +1,13 @@
+# Ignore non-web platforms to speed up Vercel builds
+android/
+ios/
+linux/
+macos/
+windows/
+test/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+pubspec.lock
+build/
