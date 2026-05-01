@@ -15,7 +15,7 @@ class UnifiedLoginScreen extends StatefulWidget {
 class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  UserRole _selectedRole = UserRole.servingStaff;
+  UserRole _selectedRole = UserRole.admin;
   bool _obscurePassword = true;
   String? _error;
 
@@ -44,7 +44,7 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
       );
       // Navigation will be handled by the router/main redirect logic
     } catch (e) {
-      setState(() => _error = 'Login failed. Please check your credentials.');
+      setState(() => _error = e.toString().replaceAll('Exception: ', ''));
     }
   }
 
@@ -94,15 +94,15 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
                 Row(
                   children: [
                     _RoleButton(
-                      label: 'Staff',
-                      isSelected: _selectedRole != UserRole.admin,
-                      onTap: () => setState(() => _selectedRole = UserRole.servingStaff),
-                    ),
-                    const SizedBox(width: 12),
-                    _RoleButton(
                       label: 'Admin',
                       isSelected: _selectedRole == UserRole.admin,
                       onTap: () => setState(() => _selectedRole = UserRole.admin),
+                    ),
+                    const SizedBox(width: 12),
+                    _RoleButton(
+                      label: 'Staff',
+                      isSelected: _selectedRole != UserRole.admin,
+                      onTap: () => setState(() => _selectedRole = UserRole.servingStaff),
                     ),
                   ],
                 ),
