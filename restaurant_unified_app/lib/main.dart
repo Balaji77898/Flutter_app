@@ -20,15 +20,18 @@ void main() async {
   final authProvider = AuthProvider();
   await authProvider.loadAuth();
 
+  final staffAuthProvider = StaffAuthProvider();
+  await staffAuthProvider.loadAuth();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: authProvider),
+        ChangeNotifierProvider.value(value: staffAuthProvider),
         ChangeNotifierProvider(create: (_) => RestaurantProvider()),
         ChangeNotifierProvider(create: (_) => OrdersProvider()),
         ChangeNotifierProvider(create: (_) => TablesProvider()),
         ChangeNotifierProvider(create: (_) => MenuProvider()),
-        ChangeNotifierProvider(create: (_) => StaffAuthProvider()),
       ],
       child: const RestaurantUnifiedApp(),
     ),

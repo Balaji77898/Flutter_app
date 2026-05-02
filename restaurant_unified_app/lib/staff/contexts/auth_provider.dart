@@ -18,6 +18,18 @@ class StaffAuthProvider extends ChangeNotifier {
   bool get isLoggedIn => _user != null;
   String? get token => _token;
 
+  StaffAuthProvider() {
+    loadAuth();
+  }
+
+  Future<void> loadAuth() async {
+    final prefs = await SharedPreferences.getInstance();
+    _token = prefs.getString('auth_token');
+    if (_token != null) {
+      await fetchUserProfile();
+    }
+  }
+
   // 🔥 FETCH USER PROFILE
   Future<void> fetchUserProfile() async {
     if (_token == null) return;
