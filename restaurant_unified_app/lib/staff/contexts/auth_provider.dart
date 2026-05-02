@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/models.dart';
+import '../../core/constants.dart';
 
 class StaffAuthProvider extends ChangeNotifier {
   StaffUser? _user;
@@ -36,27 +37,24 @@ class StaffAuthProvider extends ChangeNotifier {
 
     try {
       final response = await http.get(
-        Uri.parse("https://pos-backend-s380.onrender.com/api/staff/me"),
+        Uri.parse("$kBackendBase${ApiEndpoints.me}"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $_token",
         },
       );
 
-      debugPrint("FETCH ME STATUS: ${response.statusCode}");
-      debugPrint("FETCH ME BODY: ${response.body}");
-
+      debugPrint("StaffAuthProvider: FETCH ME STATUS: ${response.statusCode}");
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final userData = data['data'] ?? data['staff'];
-        if (data['success'] == true && userData != null) {
-          _user = StaffUser.fromJson(userData);
-          _role = _role ?? _user!.role;
-          notifyListeners();
-        }
+        final decoded = json.decode(response.body);
+        final data = (decoded is Map && decoded.containsKey('data')) ? decoded['data'] : decoded;
+        
+        _user = StaffUser.fromJson(data);
+        _role = _user!.role;
+        notifyListeners();
       }
     } catch (e) {
-      debugPrint("Fetch profile error: $e");
+      debugPrint("StaffAuthProvider: Fetch profile error: $e");
     }
   }
 
@@ -67,7 +65,7 @@ class StaffAuthProvider extends ChangeNotifier {
 
     try {
       final response = await http.post(
-        Uri.parse("https://pos-backend-s380.onrender.com/api/staff/login"),
+        Uri.parse("$kBackendBase${ApiEndpoints.staffLogin}"),
         headers: {"Content-Type": "application/json"},
         body: json.encode({
           "email": email,
@@ -75,30 +73,29 @@ class StaffAuthProvider extends ChangeNotifier {
         }),
       );
 
-      debugPrint("LOGIN STATUS: ${response.statusCode}");
-      debugPrint("LOGIN BODY: ${response.body}");
+      debugPrint("StaffAuthProvider: LOGIN STATUS: ${response.statusCode}");
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        debugPrint("LOGIN DATA KEYS: ${data.keys.toList()}");
-
-        // 🔥 SAVE TOKEN AND SELECTED ROLE
-        _token = data['token'];
+        final decoded = json.decode(response.body);
+        final data = (decoded is Map && decoded.containsKey('data')) ? decoded['data'] : decoded;
+        
+        // Save token and role
+        _token = data['token'] ?? decoded['token'];
         _role = role;
 
-        // 🔥 PERSIST TOKEN
+        // Persist token
         final prefs = await SharedPreferences.getInstance();
         if (_token != null) {
           await prefs.setString('auth_token', _token!);
         }
 
-        // 🔥 FETCH FULL PROFILE
+        // Fetch full profile
         await fetchUserProfile();
       } else {
-        throw Exception("Login failed: ${response.body}");
+        throw Exception("Login failed (${response.statusCode})");
       }
     } catch (e) {
-      debugPrint("Login error: $e");
+      debugPrint("StaffAuthProvider: Login error: $e");
       rethrow;
     } finally {
       _isLoading = false;

@@ -7,10 +7,32 @@ import '../models/models.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
 
-class OrderDetailsScreen extends StatelessWidget {
+class OrderDetailsScreen extends StatefulWidget {
   final String orderId;
 
   const OrderDetailsScreen({super.key, required this.orderId});
+
+  @override
+  State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
+}
+
+class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadData();
+    });
+  }
+
+  Future<void> _loadData() async {
+    if (!mounted) return;
+    final auth = context.read<StaffAuthProvider>();
+    final ordersProvider = context.read<OrdersProvider>();
+    if (auth.token != null && ordersProvider.orders.isEmpty) {
+      await ordersProvider.fetchOrders(auth.token!);
+    }
+  }
 
   Map<String, dynamic> _getConfig(OrderStatus s) {
     switch (s) {
@@ -62,7 +84,7 @@ class OrderDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<OrdersProvider>();
-    final order = provider.findById(orderId);
+    final order = provider.findById(widget.orderId);
 
     if (order == null) {
       return Scaffold(

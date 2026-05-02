@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../contexts/auth_provider.dart';
+import 'package:restaurant_unified_app/core/auth_provider.dart';
 import '../models/models.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
@@ -230,9 +231,12 @@ class ProfileScreen extends StatelessWidget {
                         const SizedBox(height: 20),
                         // Full-width logout button
                         GestureDetector(
-                          onTap: () {
-                            auth.logout();
-                            context.go('/login');
+                          onTap: () async {
+                            await auth.logout();
+                            if (context.mounted) {
+                              await context.read<AuthProvider>().logout();
+                              context.go('/login');
+                            }
                           },
                           child: Container(
                             width: double.infinity,

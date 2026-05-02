@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../models/models.dart';
+import '../../core/constants.dart';
 
 class TablesProvider extends ChangeNotifier {
   List<TableModel> _tables = [];
@@ -16,7 +17,7 @@ class TablesProvider extends ChangeNotifier {
 
     try {
       final response = await http.get(
-        Uri.parse("https://pos-backend-s380.onrender.com/api/admin/tables"),
+        Uri.parse("$kBackendBase${ApiEndpoints.staffTables}"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",

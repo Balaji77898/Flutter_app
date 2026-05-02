@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/core/auth_provider.dart';
+import 'package:restaurant_unified_app/staff/contexts/auth_provider.dart';
 import 'package:restaurant_unified_app/admin/core/providers/restaurant_provider.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
@@ -214,7 +215,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     child: ElevatedButton.icon(
                       onPressed: () async {
                         await auth.logout();
-                        if (context.mounted) context.go('/login');
+                        if (context.mounted) {
+                          await context.read<StaffAuthProvider>().logout();
+                          context.go('/login');
+                        }
                       },
                       icon: const Icon(Icons.logout_rounded, size: 16, color: Colors.white),
                       label: Text('Logout', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),

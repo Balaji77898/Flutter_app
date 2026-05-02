@@ -22,12 +22,12 @@ class ApiEndpoints {
   static String toggleTable(String id) => '/api/admin/tables/$id/toggle';
   static String deleteTable(String id) => '/api/admin/tables/$id';
   
-  static const String menuCategoriesList = '/api/admin/menu-categories';
-  static String menuCategoryById(String id) => '/api/admin/menu-categories/$id';
+  static const String menuCategoriesList = '/api/admin/menu/categories';
+  static String menuCategoryById(String id) => '/api/admin/menu/categories/$id';
   
-  static const String menuItemsList = '/api/admin/menu-items';
-  static String menuItemById(String id) => '/api/admin/menu-items/$id';
-  static String toggleMenuItem(String id) => '/api/admin/menu-items/$id/toggle';
+  static const String menuItemsList = '/api/admin/menu/items';
+  static String menuItemById(String id) => '/api/admin/menu/items/$id';
+  static String toggleMenuItem(String id) => '/api/admin/menu/items/$id/toggle';
   
   static const String ordersList = '/api/admin/orders';
   static String orderById(String id) => '/api/admin/orders/$id';

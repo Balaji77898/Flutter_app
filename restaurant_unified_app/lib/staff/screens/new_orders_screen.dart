@@ -8,8 +8,30 @@ import '../widgets/common_widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../contexts/auth_provider.dart';
 
-class NewOrdersScreen extends StatelessWidget {
+class NewOrdersScreen extends StatefulWidget {
   const NewOrdersScreen({super.key});
+
+  @override
+  State<NewOrdersScreen> createState() => _NewOrdersScreenState();
+}
+
+class _NewOrdersScreenState extends State<NewOrdersScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadData();
+    });
+  }
+
+  Future<void> _loadData() async {
+    if (!mounted) return;
+    final auth = context.read<StaffAuthProvider>();
+    final ordersProvider = context.read<OrdersProvider>();
+    if (auth.token != null && ordersProvider.orders.isEmpty) {
+      await ordersProvider.fetchOrders(auth.token!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

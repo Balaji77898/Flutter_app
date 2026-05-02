@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../contexts/orders_provider.dart';
+import '../contexts/auth_provider.dart';
 import '../models/models.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
@@ -16,6 +17,25 @@ class OrdersScreen extends StatefulWidget {
 
 class _OrdersScreenState extends State<OrdersScreen> {
   String _activeFilter = 'all';
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadData();
+    });
+  }
+
+  Future<void> _loadData() async {
+    if (!mounted) return;
+    // Use read instead of watch in methods
+    final ordersProvider = context.read<OrdersProvider>();
+    final auth = context.read<StaffAuthProvider>();
+    
+    if (auth.token != null && ordersProvider.orders.isEmpty) {
+      await ordersProvider.fetchOrders(auth.token!);
+    }
+  }
 
   Map<String, dynamic> _getStatusConfig(OrderStatus status) {
     switch (status) {

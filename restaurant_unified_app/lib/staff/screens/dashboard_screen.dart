@@ -9,8 +9,35 @@ import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadData();
+    });
+  }
+
+  Future<void> _loadData() async {
+    if (!mounted) return;
+    final auth = context.read<StaffAuthProvider>();
+    final ordersProvider = context.read<OrdersProvider>();
+    final tablesProvider = context.read<TablesProvider>();
+
+    if (auth.token != null) {
+      await Future.wait([
+        ordersProvider.fetchOrders(auth.token!),
+        tablesProvider.fetchTables(auth.token!),
+      ]);
+    }
+  }
 
   String _getGreeting() {
     final hour = DateTime.now().hour;

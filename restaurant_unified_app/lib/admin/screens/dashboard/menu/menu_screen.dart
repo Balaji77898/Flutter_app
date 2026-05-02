@@ -230,15 +230,25 @@ class _MenuScreenState extends State<MenuScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
+                  InkWell(
                     onTap: () => context.go('/admin/dashboard'),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.arrow_back, color: AppColors.gold, size: 16),
-                        const SizedBox(width: 8),
-                        Text('Back to Dashboard', style: GoogleFonts.inter(color: AppColors.gold, fontSize: 14)),
-                      ],
+                    borderRadius: BorderRadius.circular(8),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.gold, size: 14),
+                          const SizedBox(width: 8),
+                          Text('Back to Dashboard', 
+                            style: GoogleFonts.inter(
+                              color: AppColors.gold, 
+                              fontSize: 14, 
+                              fontWeight: FontWeight.w600
+                            )
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),

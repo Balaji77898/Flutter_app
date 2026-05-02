@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../models/models.dart';
+import '../../core/constants.dart';
 
 class OrdersProvider extends ChangeNotifier {
   List<Order> _orders = [];
@@ -35,8 +36,7 @@ class OrdersProvider extends ChangeNotifier {
 
     try {
       final response = await http.get(
-        Uri.parse(
-            "https://pos-backend-s380.onrender.com/api/admin/orders"),
+        Uri.parse("$kBackendBase${ApiEndpoints.staffOrders}"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
@@ -70,8 +70,7 @@ _orders = ordersList
       String id, OrderStatus status, String token) async {
     try {
       await http.patch(
-        Uri.parse(
-            "https://pos-backend-s380.onrender.com/api/admin/orders/$id/status"),
+        Uri.parse("$kBackendBase${ApiEndpoints.ordersList}/$id/status"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token", // 🔥 IMPORTANT
@@ -95,8 +94,7 @@ _orders = ordersList
   try {
     // 🔥 STEP 1 → SERVED → BILLED
     final billedResponse = await http.patch(
-      Uri.parse(
-          "https://pos-backend-s380.onrender.com/api/admin/orders/$orderId/status"),
+      Uri.parse("$kBackendBase${ApiEndpoints.ordersList}/$orderId/status"),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
@@ -111,8 +109,7 @@ _orders = ordersList
 
     // 🔥 STEP 2 → BILLED → PAID
     final paidResponse = await http.patch(
-      Uri.parse(
-          "https://pos-backend-s380.onrender.com/api/admin/orders/$orderId/status"),
+      Uri.parse("$kBackendBase${ApiEndpoints.ordersList}/$orderId/status"),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
@@ -141,7 +138,7 @@ _orders = ordersList
 
     try {
       final response = await http.post(
-        Uri.parse("https://pos-backend-s380.onrender.com/api/admin/orders"),
+        Uri.parse("$kBackendBase${ApiEndpoints.ordersList}"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
