@@ -1,4 +1,7 @@
-enum StaffRole { servingStaff, billingStaff }
+import '../../core/constants.dart';
+export '../../core/constants.dart' show StaffRole;
+
+// StaffRole is now defined in core/constants.dart
 
 enum OrderStatus {
   placed,
