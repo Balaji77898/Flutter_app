@@ -23,23 +23,18 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> loadAuth() async {
+    // Always start fresh — clear any stored session so users see the login screen
     try {
       final prefs = await SharedPreferences.getInstance();
-      _token = prefs.getString(kTokenKey);
-      final roleStr = prefs.getString(kRoleKey);
-      
-      if (roleStr != null && _token != null) {
-        try {
-          _role = UserRole.values.firstWhere((e) => e.name == roleStr);
-        } catch (_) {
-          _role = null;
-          _token = null; // Clear token if role is invalid
-        }
-      }
-      notifyListeners();
+      await prefs.remove(kTokenKey);
+      await prefs.remove(kRoleKey);
     } catch (e) {
       debugPrint("AuthProvider loadAuth error: $e");
     }
+    _token = null;
+    _role = null;
+    _user = null;
+    notifyListeners();
   }
 
   Future<void> login(String email, String password, UserRole role) async {

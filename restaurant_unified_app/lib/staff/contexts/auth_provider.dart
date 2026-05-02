@@ -24,15 +24,17 @@ class StaffAuthProvider extends ChangeNotifier {
   }
 
   Future<void> loadAuth() async {
+    // Always start fresh — clear any stored session so users see the login screen
     try {
       final prefs = await SharedPreferences.getInstance();
-      _token = prefs.getString('auth_token');
-      if (_token != null) {
-        await fetchUserProfile();
-      }
+      await prefs.remove('auth_token');
     } catch (e) {
       debugPrint("StaffAuthProvider loadAuth error: $e");
     }
+    _token = null;
+    _user = null;
+    _role = null;
+    notifyListeners();
   }
 
   // 🔥 FETCH USER PROFILE
