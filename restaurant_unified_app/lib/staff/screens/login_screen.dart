@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:restaurant_unified_app/core/constants.dart';
-import 'package:restaurant_unified_app/core/auth_provider.dart';
-import 'package:restaurant_unified_app/core/theme.dart';
+import '../contexts/auth_provider.dart';
 import '../models/models.dart';
 import '../contexts/orders_provider.dart';
+import '../theme/app_theme.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -43,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    final auth = context.read<AuthProvider>();
+    final auth = context.read<StaffAuthProvider>();
     final orders = context.read<OrdersProvider>();
 
     try {
@@ -51,9 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await auth.login(
         _staffIdController.text,
         _staffPasswordController.text,
-        _selectedRole == StaffRole.billingStaff 
-            ? UserRole.billingStaff 
-            : UserRole.servingStaff,
+        _selectedRole!,
       );
 
       // 🔥 FETCH ORDERS AFTER LOGIN
@@ -78,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.watch<AuthProvider>();
+    final auth = context.watch<StaffAuthProvider>();
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),

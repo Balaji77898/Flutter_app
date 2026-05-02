@@ -1,10 +1,9 @@
-import 'package:go_router/go_router.dart';
-import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import '../contexts/orders_provider.dart';
-import 'package:restaurant_unified_app/core/auth_provider.dart';
-import 'package:restaurant_unified_app/core/theme.dart';
+import '../contexts/auth_provider.dart';
+import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -54,7 +53,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => context.pop(),
+                      onPressed: () => Navigator.pop(context),
                     ),
                     const SizedBox(width: 8),
                     Column(
@@ -307,7 +306,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   const SizedBox(height: 10),
 
                   TextButton(
-                    onPressed: () => context.pop(),
+                    onPressed: () => Navigator.pop(context),
                     child: const Text('Cancel'),
                   ),
                 ],
@@ -326,7 +325,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       int finalTotal) async {
     setState(() => _isProcessing = true);
 
-    final token = context.read<AuthProvider>().token;
+    final token = context.read<StaffAuthProvider>().token;
 
     if (token == null) {
       setState(() => _isProcessing = false);
@@ -338,7 +337,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
       if (!context.mounted) return;
 
-      context.go(
+      context.pushReplacement(
         '/staff/bill',
         extra: {
           'orderId': widget.orderId,

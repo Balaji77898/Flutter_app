@@ -1,10 +1,9 @@
-import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_unified_app/core/auth_provider.dart';
+import '../contexts/auth_provider.dart';
 import '../contexts/tables_provider.dart';
 import '../models/models.dart';
-import 'package:restaurant_unified_app/core/theme.dart';
+import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -22,7 +21,7 @@ class _TablesScreenState extends State<TablesScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final token = context.read<AuthProvider>().token;
+      final token = context.read<StaffAuthProvider>().token;
       if (token != null) {
         context.read<TablesProvider>().fetchTables(token);
       }

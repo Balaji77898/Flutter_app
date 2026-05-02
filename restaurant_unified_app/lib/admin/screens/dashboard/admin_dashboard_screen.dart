@@ -46,25 +46,25 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       title: 'Menu Management',
       description: 'Add, update, or remove menu items.',
       icon: Icons.restaurant_menu_rounded,
-      route: '/admin/dashboard/menu',
+      route: '/admin/menu',
     ),
     const _DashOption(
       title: 'Staff Management',
       description: 'Manage billing and serving staff credentials.',
       icon: Icons.people_outline_rounded,
-      route: '/admin/dashboard/staff',
+      route: '/admin/staff',
     ),
     const _DashOption(
       title: 'Table Details',
       description: 'Configure layout, view status, and QR codes.',
       icon: Icons.grid_view_rounded,
-      route: '/admin/dashboard/tables',
+      route: '/admin/tables',
     ),
     const _DashOption(
       title: 'Order Bill',
       description: 'View daily orders and billing history.',
       icon: Icons.receipt_long_rounded,
-      route: '/admin/dashboard/orders',
+      route: '/admin/orders',
     ),
   ];
 
@@ -214,7 +214,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     child: ElevatedButton.icon(
                       onPressed: () async {
                         await auth.logout();
-                        if (context.mounted) context.go('/admin/login');
+                        if (context.mounted) context.go('/login');
                       },
                       icon: const Icon(Icons.logout_rounded, size: 16, color: Colors.white),
                       label: Text('Logout', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
@@ -391,7 +391,7 @@ class _ProfileChipState extends State<_ProfileChip> {
       onExit: (_) => setState(() => _isHovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () => context.go('/admin/dashboard/profile'),
+        onTap: () => context.go('/admin/profile'),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

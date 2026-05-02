@@ -239,7 +239,7 @@ class _StaffScreenState extends State<StaffScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ElevatedButton.icon(
-                      onPressed: () => context.go('/admin/dashboard/staff'),
+                      onPressed: () => context.go('/admin/staff'),
                       icon: const Icon(Icons.arrow_back, size: 16),
                       label: const Text('Back to Staff Management'),
                       style: ElevatedButton.styleFrom(

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
-import 'package:restaurant_unified_app/core/constants.dart';
-import 'package:restaurant_unified_app/core/auth_provider.dart';
-import 'package:restaurant_unified_app/core/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../contexts/auth_provider.dart';
 import '../contexts/menu_provider.dart';
 import '../contexts/orders_provider.dart';
 import '../contexts/tables_provider.dart';
 import '../models/models.dart';
+import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
 
 class CreateOrderScreen extends StatefulWidget {
@@ -25,14 +23,13 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
   String? _selectedTableId;
   String _selectedTableName = 'Takeaway / Walk-in';
   bool _isSubmitting = false;
-  
   final Map<String, int> _qty = {}; // menuItemId -> quantity
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final auth = context.read<AuthProvider>();
+      final auth = context.read<StaffAuthProvider>();
       context.read<MenuProvider>().fetchMenuItems(authToken: auth.token);
       if (auth.token != null) {
         context.read<TablesProvider>().fetchTables(auth.token!);
@@ -99,7 +96,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
-      context.pop();
+      Navigator.pop(context);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -140,7 +137,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
             actions: [
               HeaderIconButton(
                 icon: Icons.arrow_back,
-                onTap: () => context.pop(),
+                onTap: () => Navigator.pop(context),
               ),
             ],
           ),
@@ -389,7 +386,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
             PrimaryButton(
               label: 'Retry',
               onTap: () async {
-                final auth = context.read<AuthProvider>();
+                final auth = context.read<StaffAuthProvider>();
                 menu.fetchMenuItems(authToken: auth.token);
               },
             ),

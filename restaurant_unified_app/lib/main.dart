@@ -12,6 +12,7 @@ import 'admin/core/providers/restaurant_provider.dart';
 import 'staff/contexts/orders_provider.dart';
 import 'staff/contexts/tables_provider.dart';
 import 'staff/contexts/menu_provider.dart';
+import 'staff/contexts/auth_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => OrdersProvider()),
         ChangeNotifierProvider(create: (_) => TablesProvider()),
         ChangeNotifierProvider(create: (_) => MenuProvider()),
+        ChangeNotifierProvider(create: (_) => StaffAuthProvider()),
       ],
       child: const RestaurantUnifiedApp(),
     ),

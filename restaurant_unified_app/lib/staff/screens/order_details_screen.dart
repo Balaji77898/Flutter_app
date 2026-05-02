@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:restaurant_unified_app/core/constants.dart';
-import 'package:restaurant_unified_app/core/auth_provider.dart';
-import 'package:restaurant_unified_app/core/theme.dart';
+import '../contexts/auth_provider.dart';
 import '../contexts/orders_provider.dart';
 import '../models/models.dart';
+import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
@@ -88,7 +87,7 @@ class OrderDetailsScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     GestureDetector(
-                      onTap: () => context.pop(),
+                      onTap: () => Navigator.pop(context),
                       child: Container(
                         width: 40,
                         height: 40,
@@ -377,7 +376,7 @@ class _ActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final token = context.read<AuthProvider>().token;
+    final token = context.read<StaffAuthProvider>().token;
 
     if (token == null) {
       return const Center(child: Text("Not authenticated"));
@@ -409,7 +408,7 @@ class _ActionButtons extends StatelessWidget {
         );
 
       case OrderStatus.served:
-        final role = context.read<AuthProvider>().role;
+        final role = context.read<StaffAuthProvider>().role;
         if (role == StaffRole.billingStaff) {
           return PrimaryButton(
             label: 'Generate Bill',
@@ -425,7 +424,7 @@ class _ActionButtons extends StatelessWidget {
         return const SizedBox.shrink();
 
       case OrderStatus.billed:
-        final billingRole = context.read<AuthProvider>().role;
+        final billingRole = context.read<StaffAuthProvider>().role;
         if (billingRole == StaffRole.billingStaff) {
           return Column(
             children: [

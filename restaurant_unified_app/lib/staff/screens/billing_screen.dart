@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:restaurant_unified_app/core/constants.dart';
-import 'package:restaurant_unified_app/core/theme.dart';
 import '../contexts/orders_provider.dart';
 import '../models/models.dart';
+import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
 
 class BillingScreen extends StatefulWidget {

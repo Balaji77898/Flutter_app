@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/core/auth_provider.dart';
+import 'package:restaurant_unified_app/staff/contexts/auth_provider.dart';
+import 'package:restaurant_unified_app/staff/models/models.dart' as staff_models;
 import '../core/theme.dart';
 
 class UnifiedLoginScreen extends StatefulWidget {
@@ -42,6 +44,17 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
         _passwordController.text,
         _selectedRole,
       );
+      
+      if (_selectedRole != UserRole.admin) {
+        final staffAuth = context.read<StaffAuthProvider>();
+        await staffAuth.login(
+          _emailController.text,
+          _passwordController.text,
+          _selectedRole == UserRole.servingStaff 
+              ? staff_models.StaffRole.servingStaff 
+              : staff_models.StaffRole.billingStaff,
+        );
+      }
       // Navigation will be handled by the router/main redirect logic
     } catch (e) {
       setState(() => _error = e.toString().replaceAll('Exception: ', ''));

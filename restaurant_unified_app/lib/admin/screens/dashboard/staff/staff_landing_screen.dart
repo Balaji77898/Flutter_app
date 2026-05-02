@@ -161,7 +161,7 @@ class _StaffTypeCardState extends State<_StaffTypeCard> {
       onExit: (_) => setState(() => _isHovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () => context.go('/admin/dashboard/staff/${widget.role}'),
+        onTap: () => context.go('/admin/staff/${widget.role}'),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           width: 320,

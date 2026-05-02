@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_unified_app/core/constants.dart';
-import 'package:restaurant_unified_app/core/auth_provider.dart';
-import 'package:restaurant_unified_app/core/theme.dart';
+import '../contexts/auth_provider.dart';
 import '../models/models.dart';
+import '../theme/app_theme.dart';
 import 'dashboard_screen.dart';
 import 'orders_screen.dart';
 import 'tables_screen.dart';
@@ -29,7 +28,7 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.watch<AuthProvider>();
+    final auth = context.watch<StaffAuthProvider>();
     final role = auth.role;
     final user = auth.user;
     final isBilling = role == StaffRole.billingStaff;

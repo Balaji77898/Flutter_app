@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:restaurant_unified_app/core/constants.dart';
-import 'package:restaurant_unified_app/core/auth_provider.dart';
-import 'package:restaurant_unified_app/core/theme.dart';
+import '../contexts/auth_provider.dart';
 import '../models/models.dart';
+import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.watch<AuthProvider>();
+    final auth = context.watch<StaffAuthProvider>();
     final user = auth.user;
     final role = auth.role;
     final isBilling = role == StaffRole.billingStaff;
@@ -157,24 +156,21 @@ class ProfileScreen extends StatelessWidget {
                             icon: Icons.receipt_long_rounded,
                             label: 'View Active Orders',
                             accentColor: AppColors.primary,
-                            onTap: () =>
-                                context.push('/staff/orders'),
+                            onTap: () => context.push('/staff/orders'),
                           ),
                           Divider(height: 20, color: AppColors.slate100),
                           _QuickLink(
                             icon: Icons.table_restaurant_rounded,
                             label: 'Floor Plan',
                             accentColor: AppColors.billingAccent,
-                            onTap: () =>
-                                context.push('/staff/tables'),
+                            onTap: () => context.push('/staff/tables'),
                           ),
                         ] else ...[
                           _QuickLink(
                             icon: Icons.account_balance_wallet_rounded,
                             label: 'Billing & Payments',
                             accentColor: AppColors.billingAccent,
-                            onTap: () =>
-                                context.push('/staff/billing'),
+                            onTap: () => context.push('/staff/billing'),
                           ),
                         ],
                       ],

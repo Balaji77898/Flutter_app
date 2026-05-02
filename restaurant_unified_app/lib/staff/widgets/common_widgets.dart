@@ -1,7 +1,6 @@
-import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:restaurant_unified_app/core/theme.dart';
+import '../theme/app_theme.dart';
 
 // ─── Header Component ────────────────────────────────────────────────────────
 class PageHeader extends StatelessWidget {

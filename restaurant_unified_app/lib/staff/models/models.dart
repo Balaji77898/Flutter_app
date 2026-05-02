@@ -1,4 +1,4 @@
-import 'package:restaurant_unified_app/core/constants.dart';
+enum StaffRole { servingStaff, billingStaff }
 
 enum OrderStatus {
   placed,

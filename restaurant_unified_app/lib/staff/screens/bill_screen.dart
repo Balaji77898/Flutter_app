@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
-import 'package:restaurant_unified_app/core/constants.dart';
-import 'package:restaurant_unified_app/core/auth_provider.dart';
-import 'package:restaurant_unified_app/core/theme.dart';
+import '../contexts/auth_provider.dart';
 import '../contexts/orders_provider.dart';
 import '../models/models.dart';
+import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
 
 class BillScreen extends StatelessWidget {
@@ -28,7 +26,7 @@ class BillScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<OrdersProvider>();
-    final auth = context.read<AuthProvider>();
+    final auth = context.read<StaffAuthProvider>();
     final order = provider.findById(orderId);
     final billNumber =
         'BILL-${orderId.substring(0, orderId.length < 8 ? orderId.length : 8).toUpperCase()}';
@@ -294,11 +292,7 @@ class BillScreen extends StatelessWidget {
                               const SizedBox(height: 12),
                               GestureDetector(
                                 onTap: () {
-                                  if (auth.role == StaffRole.billingStaff) {
-                                    context.go('/staff/billing');
-                                  } else {
-                                    context.go('/staff/dashboard');
-                                  }
+                                  Navigator.pop(context); // go back cleanly
                                 },
                                 child: Container(
                                   width: double.infinity,
