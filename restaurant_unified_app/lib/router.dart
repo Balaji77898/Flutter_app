@@ -28,18 +28,22 @@ GoRouter createRouter(AuthProvider authProvider) {
     redirect: (context, state) {
       final isLoggedIn = authProvider.isAuthenticated;
       final isLoggingIn = state.matchedLocation == '/login';
+      final isRoot = state.matchedLocation == '/';
 
       if (!isLoggedIn) {
-        return isLoggingIn ? null : '/login';
+        if (isLoggingIn) return null;
+        return '/login';
       }
 
-      if (isLoggingIn) {
-        if (authProvider.role == UserRole.admin) {
+      if (isLoggingIn || isRoot) {
+        final role = authProvider.role;
+        if (role == UserRole.admin) {
           return '/admin/dashboard';
-        } else if (authProvider.role == UserRole.billingStaff) {
-          return '/staff/billing';
+        } else if (role == UserRole.billingStaff || role == UserRole.servingStaff) {
+          return role == UserRole.billingStaff ? '/staff/billing' : '/staff/dashboard';
         } else {
-          return '/staff/dashboard';
+          // If logged in but no role (shouldn't happen with fixed loadAuth), go to login
+          return '/login';
         }
       }
 

@@ -19,17 +19,27 @@ class AuthProvider extends ChangeNotifier {
   bool get isAuthenticated => _token != null;
 
   AuthProvider() {
-    loadAuth();
+    // Initialization handled in main.dart
   }
 
   Future<void> loadAuth() async {
-    final prefs = await SharedPreferences.getInstance();
-    _token = prefs.getString(kTokenKey);
-    final roleStr = prefs.getString(kRoleKey);
-    if (roleStr != null) {
-      _role = UserRole.values.firstWhere((e) => e.name == roleStr);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      _token = prefs.getString(kTokenKey);
+      final roleStr = prefs.getString(kRoleKey);
+      
+      if (roleStr != null && _token != null) {
+        try {
+          _role = UserRole.values.firstWhere((e) => e.name == roleStr);
+        } catch (_) {
+          _role = null;
+          _token = null; // Clear token if role is invalid
+        }
+      }
+      notifyListeners();
+    } catch (e) {
+      debugPrint("AuthProvider loadAuth error: $e");
     }
-    notifyListeners();
   }
 
   Future<void> login(String email, String password, UserRole role) async {

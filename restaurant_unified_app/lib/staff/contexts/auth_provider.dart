@@ -20,14 +20,18 @@ class StaffAuthProvider extends ChangeNotifier {
   String? get token => _token;
 
   StaffAuthProvider() {
-    loadAuth();
+    // Initialization handled in main.dart
   }
 
   Future<void> loadAuth() async {
-    final prefs = await SharedPreferences.getInstance();
-    _token = prefs.getString('auth_token');
-    if (_token != null) {
-      await fetchUserProfile();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      _token = prefs.getString('auth_token');
+      if (_token != null) {
+        await fetchUserProfile();
+      }
+    } catch (e) {
+      debugPrint("StaffAuthProvider loadAuth error: $e");
     }
   }
 

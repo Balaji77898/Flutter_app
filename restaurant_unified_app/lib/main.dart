@@ -15,27 +15,36 @@ import 'staff/contexts/menu_provider.dart';
 import 'staff/contexts/auth_provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  final authProvider = AuthProvider();
-  await authProvider.loadAuth();
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    
+    final authProvider = AuthProvider();
+    final staffAuthProvider = StaffAuthProvider();
 
-  final staffAuthProvider = StaffAuthProvider();
-  await staffAuthProvider.loadAuth();
+    // Start loading but don't block forever if one fails
+    await Future.wait([
+      authProvider.loadAuth().timeout(const Duration(seconds: 5), onTimeout: () {}),
+      staffAuthProvider.loadAuth().timeout(const Duration(seconds: 5), onTimeout: () {}),
+    ]).catchError((e) => debugPrint("Initialization error: $e"));
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: authProvider),
-        ChangeNotifierProvider.value(value: staffAuthProvider),
-        ChangeNotifierProvider(create: (_) => RestaurantProvider()),
-        ChangeNotifierProvider(create: (_) => OrdersProvider()),
-        ChangeNotifierProvider(create: (_) => TablesProvider()),
-        ChangeNotifierProvider(create: (_) => MenuProvider()),
-      ],
-      child: const RestaurantUnifiedApp(),
-    ),
-  );
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: authProvider),
+          ChangeNotifierProvider.value(value: staffAuthProvider),
+          ChangeNotifierProvider(create: (_) => RestaurantProvider()),
+          ChangeNotifierProvider(create: (_) => OrdersProvider()),
+          ChangeNotifierProvider(create: (_) => TablesProvider()),
+          ChangeNotifierProvider(create: (_) => MenuProvider()),
+        ],
+        child: const RestaurantUnifiedApp(),
+      ),
+    );
+  } catch (e) {
+    debugPrint("CRITICAL MAIN ERROR: $e");
+    // Still try to run the app
+    runApp(const MaterialApp(home: Scaffold(body: Center(child: Text("App initialization failed. Please refresh.")))));
+  }
 }
 
 class RestaurantUnifiedApp extends StatefulWidget {
@@ -57,7 +66,7 @@ class _RestaurantUnifiedAppState extends State<RestaurantUnifiedApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Restaurant Unified',
+      title: 'Flutter App',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       routerConfig: _router,
