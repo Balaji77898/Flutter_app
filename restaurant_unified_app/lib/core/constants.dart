@@ -10,6 +10,8 @@ class ApiEndpoints {
   static const String adminLogin = '/api/admin/login';
   static const String staffLogin = '/api/staff/login';
   static const String me = '/api/auth/me';
+  static const String forgotPassword = '/api/auth/forgot-password';
+  static const String resetPassword = '/api/auth/reset-password';
   
   // Admin Endpoints
   static const String restaurant = '/api/admin/restaurant';

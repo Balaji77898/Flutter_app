@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:restaurant_unified_app/core/auth_provider.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
 import 'shared/login_screen.dart';
+import 'shared/forgot_password_screen.dart';
+import 'shared/reset_password_screen.dart';
 
 // Admin Imports
 import 'admin/screens/dashboard/admin_dashboard_screen.dart';
@@ -28,14 +30,17 @@ GoRouter createRouter(AuthProvider authProvider) {
     redirect: (context, state) {
       final isLoggedIn = authProvider.isAuthenticated;
       final isLoggingIn = state.matchedLocation == '/login';
+      final isForgotPassword = state.matchedLocation == '/forgot-password';
+      final isResetPassword = state.matchedLocation.startsWith('/reset-password');
+      final isAuthRoute = isLoggingIn || isForgotPassword || isResetPassword;
       final isRoot = state.matchedLocation == '/';
 
       if (!isLoggedIn) {
-        if (isLoggingIn) return null;
+        if (isAuthRoute) return null;
         return '/login';
       }
 
-      if (isLoggingIn || isRoot) {
+      if (isAuthRoute || isRoot) {
         final role = authProvider.role;
         if (role == UserRole.admin) {
           return '/admin/dashboard';
@@ -53,6 +58,17 @@ GoRouter createRouter(AuthProvider authProvider) {
       GoRoute(
         path: '/login',
         builder: (context, state) => const UnifiedLoginScreen(),
+      ),
+      GoRoute(
+        path: '/forgot-password',
+        builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+      GoRoute(
+        path: '/reset-password/:token',
+        builder: (context, state) {
+          final token = state.pathParameters['token'] ?? '';
+          return ResetPasswordScreen(token: token);
+        },
       ),
 
       // Admin Routes

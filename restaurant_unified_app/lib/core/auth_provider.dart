@@ -96,4 +96,44 @@ class AuthProvider extends ChangeNotifier {
     await prefs.remove(kRoleKey);
     notifyListeners();
   }
+
+  Future<void> forgotPassword(String email) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await http.post(
+        Uri.parse('$kBackendBase${ApiEndpoints.forgotPassword}'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'email': email}),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to send reset email: ${response.body}');
+      }
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> resetPassword(String token, String password) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await http.post(
+        Uri.parse('$kBackendBase${ApiEndpoints.resetPassword}'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'token': token, 'password': password}),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to reset password: ${response.body}');
+      }
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }
