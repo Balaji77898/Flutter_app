@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
+import 'package:restaurant_unified_app/admin/core/providers/restaurant_provider.dart';
 import 'package:restaurant_unified_app/admin/services/orders_service.dart';
 
 class OrdersScreen extends StatefulWidget {
@@ -24,6 +29,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   String _paymentFilter = 'All Payments';
   String _typeFilter = 'All Types';
   String _searchQuery = '';
+  String _sortOrder = 'Newest First';
 
   @override
   void initState() {
@@ -37,17 +43,23 @@ class _OrdersScreenState extends State<OrdersScreen> {
         _isLoading = true;
         _error = null;
       });
-      final list = await OrdersService.getOrders();
-      setState(() => _orders = list);
+      
+      // Fetch orders and restaurant profile in parallel
+      await Future.wait<dynamic>([
+        OrdersService.getOrders().then((list) {
+          if (mounted) setState(() => _orders = list);
+        }),
+        context.read<RestaurantProvider>().fetchRestaurant(),
+      ]);
     } catch (e) {
-      setState(() => _error = e.toString().replaceAll('Exception: ', ''));
+      if (mounted) setState(() => _error = e.toString().replaceAll('Exception: ', ''));
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   List<OrderModel> get _filtered {
-    return _orders.where((o) {
+    final filtered = _orders.where((o) {
       final matchSearch = _searchQuery.isEmpty || o.id.toLowerCase().contains(_searchQuery.toLowerCase());
       final matchStatus = _statusFilter == 'All Status' || o.status.toUpperCase() == _statusFilter.toUpperCase();
       final matchPayment = _paymentFilter == 'All Payments' || o.paymentStatus.toUpperCase() == _paymentFilter.toUpperCase();
@@ -55,6 +67,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
       
       return matchSearch && matchStatus && matchPayment && matchType;
     }).toList();
+
+    // Apply sorting
+    filtered.sort((a, b) {
+      final dateA = DateTime.tryParse(a.createdAt) ?? DateTime.now();
+      final dateB = DateTime.tryParse(b.createdAt) ?? DateTime.now();
+      if (_sortOrder == 'Newest First') {
+        return dateB.compareTo(dateA);
+      } else {
+        return dateA.compareTo(dateB);
+      }
+    });
+
+    return filtered;
   }
 
   double get _totalRevenue => _orders
@@ -238,7 +263,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 flex: 1,
                 child: _buildDropdown(_typeFilter, ['All Types', 'DINE_IN', 'TAKEAWAY'], (v) => setState(() => _typeFilter = v!))
               ),
-              const Spacer(flex: 3), // Add space to push the "All Types" dropdown to the left like the screenshot
+              const SizedBox(width: 16),
+              Expanded(
+                flex: 1,
+                child: _buildDropdown(_sortOrder, ['Newest First', 'Oldest First'], (v) => setState(() => _sortOrder = v!))
+              ),
+              const Spacer(flex: 2),
             ],
           ),
         ],
@@ -439,29 +469,33 @@ class _OrderDetailsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('MMMM dd, yyyy at hh:mm a');
+    final dateFormat = DateFormat("MMMM dd, yyyy 'at' hh:mm a");
     
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      backgroundColor: Colors.white,
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxWidth: 750,
+          maxWidth: 850,
           maxHeight: MediaQuery.of(context).size.height * 0.9,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Header
             Padding(
-              padding: const EdgeInsets.fromLTRB(32, 24, 24, 8),
+              padding: const EdgeInsets.fromLTRB(32, 24, 24, 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Order Details', style: GoogleFonts.playfairDisplay(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.rubyDark)),
+                  Text('Order Details', 
+                    style: GoogleFonts.playfairDisplay(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.rubyDark)),
                   IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
                 ],
               ),
             ),
-            const Divider(height: 1),
+            const Divider(height: 1, thickness: 1, color: Color(0xFFF1F5F9)),
+            
             Flexible(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(32),
@@ -470,92 +504,211 @@ class _OrderDetailsDialog extends StatelessWidget {
                   children: [
                     // Top Summary Card
                     Container(
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey.shade200),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFFE2E8F0), width: 1.5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 20,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
                       child: Row(
                         children: [
                           _summaryItem('Order ID', '#${order.id.length > 8 ? order.id.substring(0, 8) : order.id}', isBold: true),
                           _summaryItem('Order Type', order.orderType.replaceAll('_', ' ').toUpperCase(), isBold: true),
-                          _summaryItem('Status', order.status.toUpperCase(), isBadge: true, badgeCol: const Color(0xFFFEF9C3), textCol: const Color(0xFFCA8A04)),
-                          _summaryItem('Payment', order.paymentStatus.toUpperCase(), isBadge: true, badgeCol: const Color(0xFFFEF9C3), textCol: const Color(0xFFCA8A04)),
+                          _summaryItem('Status', order.status.toUpperCase(), 
+                            isBadge: true, 
+                            badgeCol: const Color(0xFFD1FAE5), 
+                            textCol: const Color(0xFF059669)),
+                          _summaryItem('Payment', order.paymentStatus.toUpperCase(), 
+                            isBadge: true, 
+                            badgeCol: const Color(0xFFD1FAE5), 
+                            textCol: const Color(0xFF059669)),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        const Icon(Icons.inventory_2_outlined, size: 20, color: AppColors.rubyDark),
-                        const SizedBox(width: 8),
-                        Text('Order Items', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.rubyDark)),
-                      ],
+                    
+                    const SizedBox(height: 32),
+                    
+                    // Finalized Order Actions
+                    Text('FINALIZED ORDER', 
+                      style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.slate600, letterSpacing: 1.0)),
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFFE2E8F0), width: 1.5),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 15,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          _actionButton(context, 'Print Receipt', Icons.print, const Color(0xFF1E293B), () {
+                            final restaurantName = context.read<RestaurantProvider>().restaurant?.name ?? 'RESTAURANT';
+                            _handlePrint(context, restaurantName);
+                          }),
+                          const SizedBox(width: 16),
+                          _actionButton(context, 'Download Receipt', Icons.file_download, const Color(0xFF0284C7), () {
+                            final restaurantName = context.read<RestaurantProvider>().restaurant?.name ?? 'RESTAURANT';
+                            _handleDownload(context, restaurantName);
+                          }),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 12),
+                    
+                    const SizedBox(height: 48),
+                    
+                    // Receipt Header
+                    Center(
+                      child: Column(
+                        children: [
+                          Consumer<RestaurantProvider>(
+                            builder: (context, provider, child) {
+                              return Text((provider.restaurant?.name ?? 'RESTAURANT').toUpperCase(), 
+                                style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w900, color: const Color(0xFF0F172A), letterSpacing: 2.0));
+                            }
+                          ),
+                          const SizedBox(height: 8),
+                          Text('PAYMENT RECEIPT', 
+                            style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.slate600, letterSpacing: 1.5)),
+                        ],
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 32),
+                    const Divider(thickness: 1, color: Color(0xFFF1F5F9)),
+                    const SizedBox(height: 24),
+                    
+                    // Bill Details
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFFE2E8F0), width: 1.5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 20,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          _billDetailRow('Bill Number', 'BILL-${order.id.toUpperCase()}'),
+                          _billDetailRow('Date', dateFormat.format(DateTime.tryParse(order.createdAt) ?? DateTime.now())),
+                          _billDetailRow('Payment Method', order.paymentMethod ?? 'Cash'),
+                          _billDetailRow('Table', 'Table ${order.tableNumber ?? 't1'}'),
+                        ],
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 40),
+                    
+                    Text('ORDER ITEMS', 
+                      style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.slate900, letterSpacing: 1.0)),
+                    const SizedBox(height: 16),
+                    
                     // Items Table
                     Container(
-                      width: double.infinity,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade200),
-                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: const Color(0xFFE2E8F0), width: 1.5),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.02),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                        color: Colors.white,
                       ),
                       child: Column(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            color: Colors.grey.shade50,
-                            child: const Row(
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFF8FAFC),
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                            ),
+                            child: Row(
                               children: [
-                                Expanded(flex: 3, child: Text('Item', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
-                                Expanded(child: Center(child: Text('Quantity', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)))),
-                                Expanded(child: Center(child: Text('Price', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)))),
-                                Expanded(child: Center(child: Text('Subtotal', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)))),
+                                Expanded(flex: 3, child: _tableHeader('Item')),
+                                Expanded(child: Center(child: _tableHeader('Qty'))),
+                                Expanded(child: Center(child: _tableHeader('Price'))),
+                                Expanded(child: Center(child: _tableHeader('Total'))),
                               ],
                             ),
                           ),
                           ...order.items.map((item) => Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey.shade100))),
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                            decoration: const BoxDecoration(border: Border(top: BorderSide(color: Color(0xFFF1F5F9)))),
                             child: Row(
                               children: [
-                                Expanded(flex: 3, child: Text(item.name, style: const TextStyle(fontSize: 14))),
-                                Expanded(child: Center(child: Text(item.quantity.toString(), style: const TextStyle(fontSize: 14)))),
-                                Expanded(child: Center(child: Text(item.price.toStringAsFixed(2), style: const TextStyle(fontSize: 14)))),
-                                Expanded(child: Center(child: Text((item.price * item.quantity).toStringAsFixed(2), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.rubyDark)))),
+                                Expanded(flex: 3, child: Text(item.name, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.slate900))),
+                                Expanded(child: Center(child: Text(item.quantity.toString(), style: GoogleFonts.inter(fontSize: 14, color: AppColors.slate700)))),
+                                Expanded(child: Center(child: Text('₹${item.price.toStringAsFixed(0)}', style: GoogleFonts.inter(fontSize: 14, color: AppColors.slate700)))),
+                                Expanded(child: Center(child: Text('₹${(item.price * item.quantity).toStringAsFixed(0)}', 
+                                  style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.slate900)))),
                               ],
                             ),
                           )),
                         ],
                       ),
                     ),
+                    
                     const SizedBox(height: 24),
-                    // Price Breakdown
+                    
+                    // Totals
                     Container(
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey.shade200),
+                        color: const Color(0xFFF8FAFC),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFFE2E8F0), width: 1.5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.02),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
                       child: Column(
                         children: [
-                          _priceRow('Subtotal', order.calculatedSubtotal.toStringAsFixed(2)),
-                          const SizedBox(height: 8),
-                          _priceRow('Tax', '0.00'),
-                          const Divider(height: 24),
-                          _priceRow('Total', (order.totalAmount > 0 ? order.totalAmount : order.calculatedSubtotal).toStringAsFixed(2), isTotal: true),
+                          _priceRow('Subtotal', order.calculatedSubtotal.toStringAsFixed(0)),
+                          const SizedBox(height: 12),
+                          _priceRow('Tax (5%)', (order.calculatedSubtotal * 0.05).toStringAsFixed(0)),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            child: Divider(height: 1, color: Color(0xFFCBD5E1)),
+                          ),
+                          _priceRow('TOTAL', (order.calculatedSubtotal * 1.05).toStringAsFixed(0), isTotal: true),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    // Info Cards
+                    
+                    const SizedBox(height: 48),
+                    
+                    // Bottom Info
                     Row(
                       children: [
                         Expanded(
                           child: _infoBox(
-                            Icons.payment,
+                            Icons.credit_card,
                             'Payment Information',
                             [
                               'Method: ${order.paymentMethod ?? "N/A"}',
@@ -565,14 +718,14 @@ class _OrderDetailsDialog extends StatelessWidget {
                             const Color(0xFF1E40AF),
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 24),
                         Expanded(
                           child: _infoBox(
-                            Icons.access_time,
+                            Icons.schedule,
                             'Timestamps',
                             [
                               'Created: ${dateFormat.format(DateTime.tryParse(order.createdAt) ?? DateTime.now())}',
-                              'Updated: ${order.updatedAt != null ? dateFormat.format(DateTime.tryParse(order.updatedAt!) ?? DateTime.now()) : dateFormat.format(DateTime.tryParse(order.createdAt) ?? DateTime.now())}',
+                              'Updated: ${order.updatedAt != null ? dateFormat.format(DateTime.tryParse(order.updatedAt!) ?? DateTime.now()) : "N/A"}',
                             ],
                             const Color(0xFFFAF5FF),
                             const Color(0xFF6B21A8),
@@ -590,21 +743,196 @@ class _OrderDetailsDialog extends StatelessWidget {
     );
   }
 
+  Widget _tableHeader(String text) {
+    return Text(text, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.slate700, letterSpacing: 0.5));
+  }
+
+  Widget _actionButton(BuildContext context, String label, IconData icon, Color color, VoidCallback onPressed) {
+    return Expanded(
+      child: ElevatedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon, size: 20),
+        label: Text(label, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          elevation: 0,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handlePrint(BuildContext context, String restaurantName) async {
+    final pdf = await _generateReceiptPdf(restaurantName);
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.save(),
+      name: 'Receipt_${order.id}',
+    );
+  }
+
+  Future<void> _handleDownload(BuildContext context, String restaurantName) async {
+    final pdf = await _generateReceiptPdf(restaurantName);
+    await Printing.sharePdf(
+      bytes: await pdf.save(),
+      filename: 'Receipt_${order.id}.pdf',
+    );
+  }
+
+  Future<pw.Document> _generateReceiptPdf(String restaurantName) async {
+    final pdf = pw.Document();
+    final dateFormat = DateFormat("MMMM dd, yyyy 'at' hh:mm a");
+    final dateStr = dateFormat.format(DateTime.tryParse(order.createdAt) ?? DateTime.now());
+
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        margin: const pw.EdgeInsets.all(40),
+        build: (pw.Context pdfContext) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              // Header
+              pw.Center(
+                child: pw.Column(
+                  children: [
+                    pw.Text(
+                      restaurantName.toUpperCase(),
+                      style: pw.TextStyle(
+                        fontSize: 28,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                    pw.SizedBox(height: 4),
+                    pw.Text(
+                      'Payment Receipt',
+                      style: const pw.TextStyle(fontSize: 14),
+                    ),
+                    pw.SizedBox(height: 16),
+                    pw.Container(height: 2, color: PdfColors.black),
+                  ],
+                ),
+              ),
+              pw.SizedBox(height: 24),
+
+              // Bill info
+              _pdfRow('Bill Number', 'BILL-${order.id.toUpperCase()}'),
+              _pdfRow('Date', dateStr),
+              _pdfRow('Payment Method', order.paymentMethod ?? 'Cash'),
+              _pdfRow('Table', 'Table ${order.tableNumber ?? 't1'}'),
+
+              pw.SizedBox(height: 24),
+              pw.Text('Order Items', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 12),
+
+              // Items Table
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey300),
+                children: [
+                  pw.TableRow(
+                    decoration: const pw.BoxDecoration(color: PdfColors.grey200),
+                    children: [
+                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('Item', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('Qty', style: pw.TextStyle(fontWeight: pw.FontWeight.bold), textAlign: pw.TextAlign.center)),
+                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('Price', style: pw.TextStyle(fontWeight: pw.FontWeight.bold), textAlign: pw.TextAlign.right)),
+                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('Total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold), textAlign: pw.TextAlign.right)),
+                    ],
+                  ),
+                  ...order.items.map((item) => pw.TableRow(
+                    children: [
+                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text(item.name)),
+                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text(item.quantity.toString(), textAlign: pw.TextAlign.center)),
+                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('₹${item.price.toStringAsFixed(0)}', textAlign: pw.TextAlign.right)),
+                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('₹${(item.price * item.quantity).toStringAsFixed(0)}', textAlign: pw.TextAlign.right, style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                    ],
+                  )),
+                ],
+              ),
+
+              pw.SizedBox(height: 24),
+
+              // Totals
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.end,
+                children: [
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.end,
+                    children: [
+                      _pdfPriceRow('Subtotal', order.calculatedSubtotal.toStringAsFixed(0)),
+                      _pdfPriceRow('Tax (5%)', (order.calculatedSubtotal * 0.05).toStringAsFixed(0)),
+                      pw.Divider(color: PdfColors.grey400),
+                      _pdfPriceRow('TOTAL', (order.calculatedSubtotal * 1.05).toStringAsFixed(0), isTotal: true),
+                    ],
+                  ),
+                ],
+              ),
+
+              pw.Spacer(),
+              pw.Center(
+                child: pw.Text('Thank you for dining with us!', style: const pw.TextStyle(fontSize: 12, color: PdfColors.grey600)),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+    return pdf;
+  }
+
+  pw.Widget _pdfRow(String label, String value) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.symmetric(vertical: 4),
+      child: pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+        children: [
+          pw.Text(label, style: const pw.TextStyle(fontSize: 12, color: PdfColors.grey700)),
+          pw.Text(value, style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+        ],
+      ),
+    );
+  }
+
+  pw.Widget _pdfPriceRow(String label, String value, {bool isTotal = false}) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.symmetric(vertical: 2),
+      child: pw.Row(
+        children: [
+          pw.Text('$label: ', style: pw.TextStyle(fontSize: isTotal ? 14 : 12, fontWeight: isTotal ? pw.FontWeight.bold : pw.FontWeight.normal)),
+          pw.Text('₹$value', style: pw.TextStyle(fontSize: isTotal ? 14 : 12, fontWeight: pw.FontWeight.bold)),
+        ],
+      ),
+    );
+  }
+
+  Widget _billDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: GoogleFonts.inter(fontSize: 14, color: AppColors.slate500, fontWeight: FontWeight.w500)),
+          Text(value, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.slate900)),
+        ],
+      ),
+    );
+  }
+
   Widget _summaryItem(String label, String value, {bool isBold = false, bool isBadge = false, Color? badgeCol, Color? textCol}) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: AppColors.textMuted, fontSize: 11)),
-          const SizedBox(height: 4),
+          Text(label, style: GoogleFonts.inter(color: AppColors.slate500, fontSize: 12, fontWeight: FontWeight.w500)),
+          const SizedBox(height: 8),
           if (isBadge)
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(color: badgeCol, borderRadius: BorderRadius.circular(100)),
-              child: Text(value, style: TextStyle(color: textCol, fontSize: 10, fontWeight: FontWeight.bold)),
+              child: Text(value, style: GoogleFonts.inter(color: textCol, fontSize: 11, fontWeight: FontWeight.bold)),
             )
           else
-            Text(value, style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal, fontSize: 14, color: AppColors.rubyDark)),
+            Text(value, style: GoogleFonts.inter(fontWeight: isBold ? FontWeight.w900 : FontWeight.w500, fontSize: 16, color: AppColors.slate900)),
         ],
       ),
     );
@@ -614,18 +942,26 @@ class _OrderDetailsDialog extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(fontSize: isTotal ? 16 : 14, fontWeight: isTotal ? FontWeight.bold : FontWeight.normal)),
-        Text('₹$value', style: TextStyle(fontSize: isTotal ? 16 : 14, fontWeight: isTotal ? FontWeight.bold : FontWeight.bold, color: isTotal ? AppColors.rubyDark : AppColors.textDark)),
+        Text(label, style: GoogleFonts.inter(
+          fontSize: isTotal ? 18 : 14, 
+          fontWeight: isTotal ? FontWeight.w900 : FontWeight.w500,
+          color: isTotal ? AppColors.slate900 : AppColors.slate600,
+        )),
+        Text('₹$value', style: GoogleFonts.inter(
+          fontSize: isTotal ? 20 : 16, 
+          fontWeight: FontWeight.w900, 
+          color: AppColors.slate900,
+        )),
       ],
     );
   }
 
   Widget _infoBox(IconData icon, String title, List<String> lines, Color bg, Color accent) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: accent.withOpacity(0.1)),
       ),
       child: Column(
@@ -633,15 +969,15 @@ class _OrderDetailsDialog extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, size: 16, color: accent),
-              const SizedBox(width: 8),
-              Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: accent)),
+              Icon(icon, size: 20, color: accent),
+              const SizedBox(width: 12),
+              Text(title, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: accent)),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           ...lines.map((l) => Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Text(l, style: TextStyle(fontSize: 12, color: accent.withOpacity(0.8), fontWeight: FontWeight.w600)),
+            padding: const EdgeInsets.only(bottom: 6),
+            child: Text(l, style: GoogleFonts.inter(fontSize: 13, color: accent.withOpacity(0.8), fontWeight: FontWeight.w600)),
           )),
         ],
       ),
