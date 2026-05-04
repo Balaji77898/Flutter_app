@@ -57,7 +57,7 @@ class ApiService {
     return _handleResponse(response, path);
   }
 
-  /// PATCH request
+  /// PATCH request (Refreshed)
   static Future<dynamic> patch(String path,
       {Map<String, dynamic>? body, bool requiresAuth = true}) async {
     final headers = await _buildHeaders(requiresAuth: requiresAuth);

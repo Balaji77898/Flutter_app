@@ -33,6 +33,7 @@ class ApiEndpoints {
   
   static const String ordersList = '/api/admin/orders';
   static String orderById(String id) => '/api/admin/orders/$id';
+  static String updateOrderStatus(String id) => '/api/admin/orders/$id/status';
   
   // Staff Endpoints
   static const String staffOrders = '/api/staff/orders';

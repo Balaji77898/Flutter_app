@@ -224,6 +224,34 @@ class OrderModel {
     );
   }
 
+  OrderModel copyWith({
+    String? id,
+    String? status,
+    String? orderType,
+    double? totalAmount,
+    String? paymentStatus,
+    String? paymentMethod,
+    String? createdAt,
+    String? updatedAt,
+    String? tableNumber,
+    String? customerName,
+    List<OrderItem>? items,
+  }) {
+    return OrderModel(
+      id: id ?? this.id,
+      status: status ?? this.status,
+      orderType: orderType ?? this.orderType,
+      totalAmount: totalAmount ?? this.totalAmount,
+      paymentStatus: paymentStatus ?? this.paymentStatus,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      tableNumber: tableNumber ?? this.tableNumber,
+      customerName: customerName ?? this.customerName,
+      items: items ?? this.items,
+    );
+  }
+
   double get calculatedSubtotal => items.fold(0, (sum, item) => sum + (item.price * item.quantity));
 }
 

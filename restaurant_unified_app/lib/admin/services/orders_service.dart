@@ -20,4 +20,12 @@ class OrdersService {
     final data = await ApiService.post(ApiEndpoints.ordersList, payload, requiresAuth: true);
     return data as Map<String, dynamic>;
   }
+
+  static Future<void> updateOrderStatus(String orderId, String status) async {
+    await ApiService.patch(
+      ApiEndpoints.updateOrderStatus(orderId),
+      body: {'status': status.toUpperCase()},
+      requiresAuth: true,
+    );
+  }
 }

@@ -30,6 +30,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   String _typeFilter = 'All Types';
   String _searchQuery = '';
   String _sortOrder = 'Newest First';
+  final Set<String> _updatingOrderIds = {};
 
   @override
   void initState() {
@@ -37,24 +38,32 @@ class _OrdersScreenState extends State<OrdersScreen> {
     _loadOrders();
   }
 
-  Future<void> _loadOrders() async {
+  Future<void> _loadOrders({bool silent = false}) async {
     try {
-      setState(() {
-        _isLoading = true;
-        _error = null;
-      });
+      if (!silent) {
+        setState(() {
+          _isLoading = true;
+          _error = null;
+        });
+      }
       
-      // Fetch orders and restaurant profile in parallel
-      await Future.wait<dynamic>([
+      // Fetch orders and conditionally fetch restaurant profile if missing
+      final provider = context.read<RestaurantProvider>();
+      final futures = <Future<dynamic>>[
         OrdersService.getOrders().then((list) {
           if (mounted) setState(() => _orders = list);
         }),
-        context.read<RestaurantProvider>().fetchRestaurant(),
-      ]);
+      ];
+      
+      if (provider.restaurant == null) {
+        futures.add(provider.fetchRestaurant());
+      }
+      
+      await Future.wait(futures);
     } catch (e) {
       if (mounted) setState(() => _error = e.toString().replaceAll('Exception: ', ''));
     } finally {
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted && !silent) setState(() => _isLoading = false);
     }
   }
 
@@ -107,10 +116,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           const SizedBox(height: 32),
                           _buildFilterSection(),
                           const SizedBox(height: 24),
-                          Text('Showing ${filtered.length} orders', 
+                          Text('Showing ${filtered.length > 50 ? 50 : filtered.length} of ${filtered.length} orders', 
                             style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 12),
-                          _buildOrdersTable(filtered),
+                          _buildOrdersTable(filtered.take(50).toList()),
                         ]),
                       ),
                     ),
@@ -296,6 +305,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 
   Widget _buildOrdersTable(List<OrderModel> orders) {
+    final dateFormat = DateFormat('dd MMM yyyy, hh:mm a');
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -369,10 +379,18 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 ],
               )
             ),
-            DataCell(_statusBadge(o.status)),
+            DataCell(_statusBadge(o.status, 
+              isLoading: _updatingOrderIds.contains(o.id),
+              onTap: () {
+                final next = _getNextStatusFor(o.status);
+                if (next != null) {
+                  _updateOrderStatus(o.id, next);
+                }
+              }
+            )),
             DataCell(Text('₹${o.totalAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(fontWeight: FontWeight.w800, color: AppColors.rubyDark, fontSize: 14))),
             DataCell(_paymentBadge(o.paymentStatus)),
-            DataCell(Text(DateFormat('dd MMM yyyy, hh:mm a').format(DateTime.tryParse(o.createdAt) ?? DateTime.now()), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted))),
+            DataCell(Text(dateFormat.format(DateTime.tryParse(o.createdAt) ?? DateTime.now()), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted))),
             DataCell(ElevatedButton.icon(
               onPressed: () => _showOrderDetails(o),
               icon: const Icon(Icons.visibility, size: 14),
@@ -393,6 +411,26 @@ class _OrdersScreenState extends State<OrdersScreen> {
 );
 }
 
+  String? _getNextStatusFor(String currentStatus) {
+    const statusFlow = [
+      'PLACED',
+      'CONFIRMED',
+      'PREPARING',
+      'READY',
+      'SERVED',
+      'BILLED',
+      'PAID'
+    ];
+    
+    final current = currentStatus.toUpperCase();
+    final currentIndex = statusFlow.indexOf(current);
+    
+    if (currentIndex != -1 && currentIndex < statusFlow.length - 1) {
+      return statusFlow[currentIndex + 1];
+    }
+    return null;
+  }
+
   Widget _badge(String text, Color bg, Color textCol) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -401,25 +439,55 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
-  Widget _statusBadge(String status) {
+  Widget _statusBadge(String status, {VoidCallback? onTap, bool isLoading = false}) {
     Color bg = const Color(0xFFE0F2FE);
     Color text = const Color(0xFF0284C7);
-    
-    if (status.toUpperCase() == 'SERVED') {
+
+    if (status.toUpperCase() == 'PLACED' || status.toUpperCase() == 'CONFIRMED') {
+      bg = const Color(0xFFE0F2FE);
+      text = const Color(0xFF0284C7);
+    } else if (status.toUpperCase() == 'PREPARING') {
+      bg = const Color(0xFFFFEDD5);
+      text = const Color(0xFFF97316);
+    } else if (status.toUpperCase() == 'READY') {
+      bg = const Color(0xFFF3E8FF);
+      text = const Color(0xFFA855F7);
+    } else if (status.toUpperCase() == 'SERVED') {
+      bg = const Color(0xFFF0FDFA);
+      text = const Color(0xFF0D9488);
+    } else if (status.toUpperCase() == 'BILLED' || status.toUpperCase() == 'PAID') {
       bg = const Color(0xFFDCFCE7);
       text = const Color(0xFF16A34A);
     } else if (status.toUpperCase() == 'CANCELLED') {
       bg = const Color(0xFFFEE2E2);
       text = const Color(0xFFDC2626);
-    } else if (status.toUpperCase() == 'PREPARING') {
-      bg = const Color(0xFFFEF3C7);
-      text = const Color(0xFFD97706);
     }
     
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(100), border: Border.all(color: text.withOpacity(0.3))),
-      child: Text(status.toUpperCase() == 'PLACED' ? 'Placed' : status, style: GoogleFonts.inter(color: text, fontSize: 11, fontWeight: FontWeight.bold)),
+    return MouseRegion(
+      cursor: (onTap != null && !isLoading) ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      child: GestureDetector(
+        onTap: isLoading ? null : onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: bg, 
+            borderRadius: BorderRadius.circular(100), 
+            border: Border.all(color: text.withOpacity(0.3)),
+            boxShadow: (onTap != null && !isLoading) ? [BoxShadow(color: text.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2))] : null,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (isLoading) ...[
+                SizedBox(width: 12, height: 12, child: CircularProgressIndicator(strokeWidth: 2, color: text)),
+                const SizedBox(width: 6),
+              ],
+              Text(status.toUpperCase() == 'PLACED' ? 'Placed' : status, 
+                style: GoogleFonts.inter(color: text, fontSize: 11, fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -430,6 +498,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
     if (status.toUpperCase() == 'PAID') {
       bg = const Color(0xFFDCFCE7);
       text = const Color(0xFF16A34A);
+    } else if (status.toUpperCase() == 'BILLED') {
+      bg = const Color(0xFFFFF7ED);
+      text = const Color(0xFFF97316);
     }
     
     return Container(
@@ -439,10 +510,49 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
+  Future<void> _updateOrderStatus(String orderId, String newStatus) async {
+    if (_updatingOrderIds.contains(orderId)) return;
+    
+    setState(() => _updatingOrderIds.add(orderId));
+    try {
+      await OrdersService.updateOrderStatus(orderId, newStatus);
+      
+      // Update local state instead of fetching all orders for immediate feedback
+      setState(() {
+        final index = _orders.indexWhere((o) => o.id == orderId);
+        if (index != -1) {
+          _orders[index] = _orders[index].copyWith(
+            status: newStatus,
+            paymentStatus: newStatus == 'PAID' ? 'PAID' : _orders[index].paymentStatus,
+          );
+        }
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Order status updated to $newStatus')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update status: $e'), backgroundColor: AppColors.danger),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _updatingOrderIds.remove(orderId));
+    }
+  }
+
   void _showOrderDetails(OrderModel order) {
     showDialog(
       context: context,
-      builder: (ctx) => _OrderDetailsDialog(order: order),
+      builder: (ctx) => _OrderDetailsDialog(
+        order: order,
+        onStatusUpdate: (newStatus) async {
+          await _updateOrderStatus(order.id, newStatus);
+        },
+      ),
     );
   }
 
@@ -462,10 +572,231 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 }
 
-class _OrderDetailsDialog extends StatelessWidget {
+class _PaymentDialog extends StatefulWidget {
   final OrderModel order;
+  final VoidCallback onPaid;
 
-  const _OrderDetailsDialog({required this.order});
+  const _PaymentDialog({required this.order, required this.onPaid});
+
+  @override
+  State<_PaymentDialog> createState() => _PaymentDialogState();
+}
+
+class _PaymentDialogState extends State<_PaymentDialog> {
+  String _paymentMethod = 'Cash';
+  double _tipPercentage = 0;
+  final TextEditingController _customTipController = TextEditingController();
+
+  double get _tipAmount {
+    if (_customTipController.text.isNotEmpty) {
+      return double.tryParse(_customTipController.text) ?? 0;
+    }
+    return widget.order.totalAmount * (_tipPercentage / 100);
+  }
+
+  double get _grandTotal => widget.order.totalAmount + _tipAmount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 450),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: const BoxDecoration(
+                color: AppColors.rubyDark,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Process Payment', 
+                        style: GoogleFonts.inter(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                      Text('Table ${widget.order.tableNumber ?? 'N/A'}', 
+                        style: GoogleFonts.inter(color: Colors.white70, fontSize: 14)),
+                    ],
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('SELECT METHOD', 
+                      style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        _methodCard('Cash', Icons.attach_money),
+                        const SizedBox(width: 16),
+                        _methodCard('UPI', Icons.qr_code_scanner),
+                      ],
+                    ),
+
+                    const SizedBox(height: 32),
+                    Text('ADD TIP', 
+                      style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [0.0, 10.0, 15.0, 20.0].map((p) => _tipButton(p)).toList(),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _customTipController,
+                      onChanged: (v) => setState(() {}),
+                      decoration: InputDecoration(
+                        hintText: 'Custom amount (₹)',
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+
+                    const Divider(height: 64),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Order Total', style: GoogleFonts.inter(color: Colors.grey, fontSize: 16)),
+                        Text('₹${widget.order.totalAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(color: Colors.grey, fontSize: 16)),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Grand Total', style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w900, color: AppColors.rubyDark)),
+                        Text('₹${_grandTotal.toStringAsFixed(0)}', style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w900, color: AppColors.rubyDark)),
+                      ],
+                    ),
+
+                    const SizedBox(height: 32),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          widget.onPaid();
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.check_circle_outline),
+                        label: Text('Confirm Payment', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.rubyDark,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                          elevation: 4,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _methodCard(String label, IconData icon) {
+    final isSelected = _paymentMethod == label;
+    return Expanded(
+      child: InkWell(
+        onTap: () => setState(() => _paymentMethod = label),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 24),
+          decoration: BoxDecoration(
+            border: Border.all(color: isSelected ? AppColors.rubyDark : Colors.grey.shade200, width: 2),
+            borderRadius: BorderRadius.circular(20),
+            color: isSelected ? AppColors.rubyDark.withOpacity(0.02) : Colors.white,
+          ),
+          child: Column(
+            children: [
+              Icon(icon, size: 32, color: isSelected ? AppColors.rubyDark : Colors.grey),
+              const SizedBox(height: 8),
+              Text(label, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: isSelected ? AppColors.rubyDark : Colors.grey)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _tipButton(double percentage) {
+    final isSelected = _tipPercentage == percentage && _customTipController.text.isEmpty;
+    return InkWell(
+      onTap: () {
+        _customTipController.clear();
+        setState(() => _tipPercentage = percentage);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.rubyDark : Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text('${percentage.toInt()}%', 
+          style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: isSelected ? Colors.white : Colors.grey.shade600)),
+      ),
+    );
+  }
+}
+
+class _OrderDetailsDialog extends StatefulWidget {
+  final OrderModel order;
+  final Function(String) onStatusUpdate;
+
+  const _OrderDetailsDialog({required this.order, required this.onStatusUpdate});
+
+  @override
+  State<_OrderDetailsDialog> createState() => _OrderDetailsDialogState();
+}
+
+class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
+  late OrderModel _currentOrder;
+  bool _isUpdating = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentOrder = widget.order;
+  }
+
+  Future<void> _handleStatusUpdate(String newStatus) async {
+    setState(() => _isUpdating = true);
+    try {
+      await widget.onStatusUpdate(newStatus);
+      // Update the local status immediately. Parent state is also updated.
+      setState(() {
+        _currentOrder = _currentOrder.copyWith(
+          status: newStatus,
+          paymentStatus: newStatus == 'PAID' ? 'PAID' : _currentOrder.paymentStatus,
+        );
+        _isUpdating = false;
+      });
+    } catch (e) {
+      setState(() => _isUpdating = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -519,51 +850,87 @@ class _OrderDetailsDialog extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          _summaryItem('Order ID', '#${order.id.length > 8 ? order.id.substring(0, 8) : order.id}', isBold: true),
-                          _summaryItem('Order Type', order.orderType.replaceAll('_', ' ').toUpperCase(), isBold: true),
-                          _summaryItem('Status', order.status.toUpperCase(), 
-                            isBadge: true, 
-                            badgeCol: const Color(0xFFD1FAE5), 
-                            textCol: const Color(0xFF059669)),
-                          _summaryItem('Payment', order.paymentStatus.toUpperCase(), 
-                            isBadge: true, 
-                            badgeCol: const Color(0xFFD1FAE5), 
-                            textCol: const Color(0xFF059669)),
+                          _summaryItem('Order ID', '#${_currentOrder.id.length > 8 ? _currentOrder.id.substring(0, 8) : _currentOrder.id}', isBold: true),
+                          _summaryItem('Order Type', _currentOrder.orderType.replaceAll('_', ' ').toUpperCase(), isBold: true),
+                          _summaryItem('Status', _currentOrder.status.toUpperCase(), isBadge: true),
+                          _summaryItem('Payment', _currentOrder.paymentStatus.toUpperCase(), isBadge: true),
                         ],
                       ),
                     ),
                     
                     const SizedBox(height: 32),
                     
-                    // Finalized Order Actions
-                    Text('FINALIZED ORDER', 
-                      style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.slate600, letterSpacing: 1.0)),
+                    // Update Order Status Section
+                    Text(_currentOrder.status.toUpperCase() == 'PAID' ? 'ORDER COMPLETED' : 'UPDATE ORDER STATUS', 
+                      style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: _currentOrder.status.toUpperCase() == 'PAID' ? AppColors.success : AppColors.slate600, letterSpacing: 1.0)),
                     const SizedBox(height: 16),
                     Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xFFE2E8F0), width: 1.5),
+                        border: Border.all(color: Colors.grey.withOpacity(0.3), width: 1.5),
                         color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
-                            blurRadius: 15,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
                       ),
-                      child: Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _actionButton(context, 'Print Receipt', Icons.print, const Color(0xFF1E293B), () {
-                            final restaurantName = context.read<RestaurantProvider>().restaurant?.name ?? 'RESTAURANT';
-                            _handlePrint(context, restaurantName);
-                          }),
-                          const SizedBox(width: 16),
-                          _actionButton(context, 'Download Receipt', Icons.file_download, const Color(0xFF0284C7), () {
-                            final restaurantName = context.read<RestaurantProvider>().restaurant?.name ?? 'RESTAURANT';
-                            _handleDownload(context, restaurantName);
-                          }),
+                          if (_currentOrder.status.toUpperCase() == 'PAID') ...[
+                            Row(
+                              children: [
+                                _actionButton(context, 'Print Receipt', Icons.print, const Color(0xFF1E293B), () {
+                                  final restaurantName = context.read<RestaurantProvider>().restaurant?.name ?? 'RESTAURANT';
+                                  _handlePrint(context, restaurantName);
+                                }),
+                                const SizedBox(width: 16),
+                                _actionButton(context, 'Download Receipt', Icons.file_download, const Color(0xFF0284C7), () {
+                                  final restaurantName = context.read<RestaurantProvider>().restaurant?.name ?? 'RESTAURANT';
+                                  _handleDownload(context, restaurantName);
+                                }),
+                              ],
+                            ),
+                          ] else if (_getButtonLabel() != '') ...[
+                            Row(
+                              children: [
+                                if (_currentOrder.status.toUpperCase() == 'BILLED') ...[
+                                  _actionButton(context, 'Proceed to Payment', Icons.payment, AppColors.rubyDark, () {
+                                    _showPaymentDialog(context);
+                                  }),
+                                  const SizedBox(width: 16),
+                                  _actionButton(context, 'Print Receipt', Icons.print, const Color(0xFF1E293B), () {
+                                    final restaurantName = context.read<RestaurantProvider>().restaurant?.name ?? 'RESTAURANT';
+                                    _handlePrint(context, restaurantName);
+                                  }),
+                                  const SizedBox(width: 16),
+                                  _actionButton(context, 'Download Receipt', Icons.file_download, const Color(0xFF0284C7), () {
+                                    final restaurantName = context.read<RestaurantProvider>().restaurant?.name ?? 'RESTAURANT';
+                                    _handleDownload(context, restaurantName);
+                                  }),
+                                ] else ...[
+                                  SizedBox(
+                                    width: 240,
+                                    child: ElevatedButton.icon(
+                                      onPressed: _isUpdating ? null : () {
+                                        final next = _getNextStatus();
+                                        if (next != null) _handleStatusUpdate(next);
+                                      },
+                                      icon: _isUpdating 
+                                        ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                                        : Icon(_getButtonIcon(), size: 20),
+                                      label: Text(_isUpdating ? 'Updating...' : _getButtonLabel(), 
+                                        style: GoogleFonts.inter(fontWeight: FontWeight.bold, letterSpacing: 0.5)),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: _getButtonColor(),
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(vertical: 20),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                        elevation: 0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -608,10 +975,10 @@ class _OrderDetailsDialog extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          _billDetailRow('Bill Number', 'BILL-${order.id.toUpperCase()}'),
-                          _billDetailRow('Date', dateFormat.format(DateTime.tryParse(order.createdAt) ?? DateTime.now())),
-                          _billDetailRow('Payment Method', order.paymentMethod ?? 'Cash'),
-                          _billDetailRow('Table', 'Table ${order.tableNumber ?? 't1'}'),
+                          _billDetailRow('Bill Number', 'BILL-${_currentOrder.id.toUpperCase()}'),
+                          _billDetailRow('Date', dateFormat.format(DateTime.tryParse(_currentOrder.createdAt) ?? DateTime.now())),
+                          _billDetailRow('Payment Method', _currentOrder.paymentMethod ?? 'Cash'),
+                          _billDetailRow('Table', 'Table ${_currentOrder.tableNumber ?? 't1'}'),
                         ],
                       ),
                     ),
@@ -653,7 +1020,7 @@ class _OrderDetailsDialog extends StatelessWidget {
                               ],
                             ),
                           ),
-                          ...order.items.map((item) => Container(
+                          ..._currentOrder.items.map((item) => Container(
                             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                             decoration: const BoxDecoration(border: Border(top: BorderSide(color: Color(0xFFF1F5F9)))),
                             child: Row(
@@ -689,14 +1056,14 @@ class _OrderDetailsDialog extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          _priceRow('Subtotal', order.calculatedSubtotal.toStringAsFixed(0)),
+                          _priceRow('Subtotal', _currentOrder.calculatedSubtotal.toStringAsFixed(0)),
                           const SizedBox(height: 12),
-                          _priceRow('Tax (5%)', (order.calculatedSubtotal * 0.05).toStringAsFixed(0)),
+                          _priceRow('Tax (5%)', (_currentOrder.calculatedSubtotal * 0.05).toStringAsFixed(0)),
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 16),
                             child: Divider(height: 1, color: Color(0xFFCBD5E1)),
                           ),
-                          _priceRow('TOTAL', (order.calculatedSubtotal * 1.05).toStringAsFixed(0), isTotal: true),
+                          _priceRow('TOTAL', (_currentOrder.calculatedSubtotal * 1.05).toStringAsFixed(0), isTotal: true),
                         ],
                       ),
                     ),
@@ -711,8 +1078,8 @@ class _OrderDetailsDialog extends StatelessWidget {
                             Icons.credit_card,
                             'Payment Information',
                             [
-                              'Method: ${order.paymentMethod ?? "N/A"}',
-                              'Status: ${order.paymentStatus.toUpperCase()}',
+                              'Method: ${_currentOrder.paymentMethod ?? "N/A"}',
+                              'Status: ${_currentOrder.paymentStatus.toUpperCase()}',
                             ],
                             const Color(0xFFEFF6FF),
                             const Color(0xFF1E40AF),
@@ -724,8 +1091,8 @@ class _OrderDetailsDialog extends StatelessWidget {
                             Icons.schedule,
                             'Timestamps',
                             [
-                              'Created: ${dateFormat.format(DateTime.tryParse(order.createdAt) ?? DateTime.now())}',
-                              'Updated: ${order.updatedAt != null ? dateFormat.format(DateTime.tryParse(order.updatedAt!) ?? DateTime.now()) : "N/A"}',
+                              'Created: ${dateFormat.format(DateTime.tryParse(_currentOrder.createdAt) ?? DateTime.now())}',
+                              'Updated: ${_currentOrder.updatedAt != null ? dateFormat.format(DateTime.tryParse(_currentOrder.updatedAt!) ?? DateTime.now()) : "N/A"}',
                             ],
                             const Color(0xFFFAF5FF),
                             const Color(0xFF6B21A8),
@@ -739,6 +1106,60 @@ class _OrderDetailsDialog extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  String? _getNextStatus() {
+    final s = _currentOrder.status.toUpperCase();
+    if (s == 'PLACED') return 'CONFIRMED';
+    if (s == 'CONFIRMED') return 'PREPARING';
+    if (s == 'PREPARING') return 'READY';
+    if (s == 'READY') return 'SERVED';
+    if (s == 'SERVED') return 'BILLED';
+    return null;
+  }
+
+  String _getButtonLabel() {
+    final s = _currentOrder.status.toUpperCase();
+    if (s == 'PLACED') return 'Confirm Order';
+    if (s == 'CONFIRMED') return 'Start Preparing';
+    if (s == 'PREPARING') return 'Mark as Ready';
+    if (s == 'READY') return 'Mark as Served';
+    if (s == 'SERVED') return 'Generate Bill';
+    if (s == 'BILLED') return 'Proceed to Payment';
+    return '';
+  }
+
+  IconData _getButtonIcon() {
+    final s = _currentOrder.status.toUpperCase();
+    if (s == 'PLACED') return Icons.check_circle_outline;
+    if (s == 'CONFIRMED') return Icons.restaurant;
+    if (s == 'PREPARING') return Icons.notifications_active;
+    if (s == 'READY') return Icons.local_shipping;
+    if (s == 'SERVED') return Icons.payments;
+    if (s == 'BILLED') return Icons.payment;
+    return Icons.sync;
+  }
+
+  Color _getButtonColor() {
+    final s = _currentOrder.status.toUpperCase();
+    if (s == 'PLACED') return const Color(0xFF2563EB); // Blue
+    if (s == 'CONFIRMED') return const Color(0xFFF97316); // Orange
+    if (s == 'PREPARING') return const Color(0xFFA855F7); // Purple
+    if (s == 'READY') return const Color(0xFF0D9488); // Teal
+    if (s == 'SERVED') return const Color(0xFF6366F1); // Indigo
+    return const Color(0xFF1E293B);
+  }
+
+  void _showPaymentDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => _PaymentDialog(
+        order: _currentOrder,
+        onPaid: () {
+          _handleStatusUpdate('PAID');
+        },
       ),
     );
   }
@@ -768,7 +1189,7 @@ class _OrderDetailsDialog extends StatelessWidget {
     final pdf = await _generateReceiptPdf(restaurantName);
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => pdf.save(),
-      name: 'Receipt_${order.id}',
+      name: 'Receipt_${_currentOrder.id}',
     );
   }
 
@@ -776,14 +1197,14 @@ class _OrderDetailsDialog extends StatelessWidget {
     final pdf = await _generateReceiptPdf(restaurantName);
     await Printing.sharePdf(
       bytes: await pdf.save(),
-      filename: 'Receipt_${order.id}.pdf',
+      filename: 'Receipt_${_currentOrder.id}.pdf',
     );
   }
 
   Future<pw.Document> _generateReceiptPdf(String restaurantName) async {
     final pdf = pw.Document();
     final dateFormat = DateFormat("MMMM dd, yyyy 'at' hh:mm a");
-    final dateStr = dateFormat.format(DateTime.tryParse(order.createdAt) ?? DateTime.now());
+    final dateStr = dateFormat.format(DateTime.tryParse(_currentOrder.createdAt) ?? DateTime.now());
 
     pdf.addPage(
       pw.Page(
@@ -817,10 +1238,10 @@ class _OrderDetailsDialog extends StatelessWidget {
               pw.SizedBox(height: 24),
 
               // Bill info
-              _pdfRow('Bill Number', 'BILL-${order.id.toUpperCase()}'),
+              _pdfRow('Bill Number', 'BILL-${_currentOrder.id.toUpperCase()}'),
               _pdfRow('Date', dateStr),
-              _pdfRow('Payment Method', order.paymentMethod ?? 'Cash'),
-              _pdfRow('Table', 'Table ${order.tableNumber ?? 't1'}'),
+              _pdfRow('Payment Method', _currentOrder.paymentMethod ?? 'Cash'),
+              _pdfRow('Table', 'Table ${_currentOrder.tableNumber ?? 't1'}'),
 
               pw.SizedBox(height: 24),
               pw.Text('Order Items', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
@@ -839,12 +1260,12 @@ class _OrderDetailsDialog extends StatelessWidget {
                       pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('Total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold), textAlign: pw.TextAlign.right)),
                     ],
                   ),
-                  ...order.items.map((item) => pw.TableRow(
+                  ..._currentOrder.items.map((item) => pw.TableRow(
                     children: [
                       pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text(item.name)),
                       pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text(item.quantity.toString(), textAlign: pw.TextAlign.center)),
-                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('₹${item.price.toStringAsFixed(0)}', textAlign: pw.TextAlign.right)),
-                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('₹${(item.price * item.quantity).toStringAsFixed(0)}', textAlign: pw.TextAlign.right, style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('Rs. ${item.price.toStringAsFixed(0)}', textAlign: pw.TextAlign.right)),
+                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('Rs. ${(item.price * item.quantity).toStringAsFixed(0)}', textAlign: pw.TextAlign.right, style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
                     ],
                   )),
                 ],
@@ -859,10 +1280,10 @@ class _OrderDetailsDialog extends StatelessWidget {
                   pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.end,
                     children: [
-                      _pdfPriceRow('Subtotal', order.calculatedSubtotal.toStringAsFixed(0)),
-                      _pdfPriceRow('Tax (5%)', (order.calculatedSubtotal * 0.05).toStringAsFixed(0)),
+                      _pdfPriceRow('Subtotal', _currentOrder.calculatedSubtotal.toStringAsFixed(0)),
+                      _pdfPriceRow('Tax (5%)', (_currentOrder.calculatedSubtotal * 0.05).toStringAsFixed(0)),
                       pw.Divider(color: PdfColors.grey400),
-                      _pdfPriceRow('TOTAL', (order.calculatedSubtotal * 1.05).toStringAsFixed(0), isTotal: true),
+                      _pdfPriceRow('TOTAL', (_currentOrder.calculatedSubtotal * 1.05).toStringAsFixed(0), isTotal: true),
                     ],
                   ),
                 ],
@@ -899,7 +1320,7 @@ class _OrderDetailsDialog extends StatelessWidget {
       child: pw.Row(
         children: [
           pw.Text('$label: ', style: pw.TextStyle(fontSize: isTotal ? 14 : 12, fontWeight: isTotal ? pw.FontWeight.bold : pw.FontWeight.normal)),
-          pw.Text('₹$value', style: pw.TextStyle(fontSize: isTotal ? 14 : 12, fontWeight: pw.FontWeight.bold)),
+          pw.Text('Rs. $value', style: pw.TextStyle(fontSize: isTotal ? 14 : 12, fontWeight: pw.FontWeight.bold)),
         ],
       ),
     );
@@ -918,7 +1339,33 @@ class _OrderDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _summaryItem(String label, String value, {bool isBold = false, bool isBadge = false, Color? badgeCol, Color? textCol}) {
+  Widget _summaryItem(String label, String value, {bool isBold = false, bool isBadge = false}) {
+    Color badgeCol = const Color(0xFFF1F5F9);
+    Color textCol = const Color(0xFF475569);
+
+    if (isBadge) {
+      final v = value.toUpperCase();
+      if (v == 'PLACED' || v == 'CONFIRMED') {
+        badgeCol = const Color(0xFFE0F2FE);
+        textCol = const Color(0xFF0284C7);
+      } else if (v == 'PREPARING') {
+        badgeCol = const Color(0xFFFFEDD5);
+        textCol = const Color(0xFFF97316);
+      } else if (v == 'READY') {
+        badgeCol = const Color(0xFFF3E8FF);
+        textCol = const Color(0xFFA855F7);
+      } else if (v == 'SERVED') {
+        badgeCol = const Color(0xFFF0FDFA);
+        textCol = const Color(0xFF0D9488);
+      } else if (v == 'BILLED' || v == 'PAID') {
+        badgeCol = const Color(0xFFDCFCE7);
+        textCol = const Color(0xFF16A34A);
+      } else if (v == 'CANCELLED' || v == 'PENDING') {
+        badgeCol = const Color(0xFFFEE2E2);
+        textCol = const Color(0xFFDC2626);
+      }
+    }
+
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
