@@ -6,7 +6,11 @@ class RestaurantProfile {
   final String status;
   final String? address;
   final String? city;
+  final String? state;
+  final String? country;
+  final String? pincode;
   final String? phone;
+  final String? email;
   final String? description;
 
   RestaurantProfile({
@@ -16,7 +20,11 @@ class RestaurantProfile {
     required this.status,
     this.address,
     this.city,
+    this.state,
+    this.country,
+    this.pincode,
     this.phone,
+    this.email,
     this.description,
   });
 
@@ -28,12 +36,39 @@ class RestaurantProfile {
       status: json['status']?.toString() ?? 'INACTIVE',
       address: json['address']?.toString(),
       city: json['city']?.toString(),
+      state: json['state']?.toString(),
+      country: json['country']?.toString(),
+      pincode: json['pincode']?.toString(),
       phone: json['phone']?.toString(),
+      email: json['email']?.toString(),
       description: json['description']?.toString(),
     );
   }
 
   bool get isActive => status.toUpperCase() == 'ACTIVE';
+}
+
+class RestaurantContact {
+  final String id;
+  final String restaurantId;
+  final String type; // PHONE or EMAIL
+  final String value;
+
+  RestaurantContact({
+    required this.id,
+    required this.restaurantId,
+    required this.type,
+    required this.value,
+  });
+
+  factory RestaurantContact.fromJson(Map<String, dynamic> json) {
+    return RestaurantContact(
+      id: json['id']?.toString() ?? '',
+      restaurantId: json['restaurant_id']?.toString() ?? '',
+      type: json['type']?.toString() ?? 'PHONE',
+      value: json['value']?.toString() ?? '',
+    );
+  }
 }
 
 // ─── Menu Category Model ──────────────────────────────────────────────────────

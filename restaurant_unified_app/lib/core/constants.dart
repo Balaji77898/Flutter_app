@@ -15,6 +15,9 @@ class ApiEndpoints {
   
   // Admin Endpoints
   static const String restaurant = '/api/admin/restaurant';
+  static const String restaurantDetails = '/api/admin/restaurant/details';
+  static const String restaurantContacts = '/api/admin/restaurant/contacts';
+  static String restaurantContactById(String id) => '/api/admin/restaurant/contacts/$id';
   static const String staffList = '/api/admin/staff';
   static String staffById(String id) => '/api/admin/staff/$id';
   static String toggleStaff(String id) => '/api/admin/staff/$id/toggle';
