@@ -32,6 +32,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   String _sortOrder = 'Newest First';
   final Set<String> _updatingOrderIds = {};
   String? _highlightedOrderId;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -47,8 +48,29 @@ class _OrdersScreenState extends State<OrdersScreen> {
       if (highlightId != null) {
         setState(() {
           _highlightedOrderId = highlightId;
-          _searchQuery = highlightId; // This will filter the list
         });
+        
+        // Wait for list to load then scroll
+        _scrollToHighlighted(highlightId);
+      }
+    });
+  }
+
+  void _scrollToHighlighted(String id) {
+    Future.delayed(const Duration(milliseconds: 800), () {
+      if (!mounted) return;
+      final filtered = _filtered;
+      final index = filtered.indexWhere((o) => o.id == id);
+      if (index != -1) {
+        // Approximate heights:
+        // Header ~180, Stats ~120, Filters ~180, Spacings ~100
+        // Rows 80 each
+        final offset = 180.0 + 120.0 + 180.0 + 100.0 + (index * 80.0);
+        _scrollController.animateTo(
+          offset,
+          duration: const Duration(milliseconds: 1000),
+          curve: Curves.easeInOutCubic,
+        );
       }
     });
   }
@@ -120,6 +142,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           : _error != null
               ? _buildErrorState()
               : CustomScrollView(
+                  controller: _scrollController,
                   physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
                     SliverToBoxAdapter(child: _buildHeader()),
@@ -349,16 +372,25 @@ class _OrdersScreenState extends State<OrdersScreen> {
             DataColumn(label: Text('PAYMENT', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 11, color: Colors.grey.shade600, letterSpacing: 0.5))),
             DataColumn(label: Text('DATE', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 11, color: Colors.grey.shade600, letterSpacing: 0.5))),
             DataColumn(label: Text('ACTIONS', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 11, color: Colors.grey.shade600, letterSpacing: 0.5))),
-          ],
-          rows: orders.map((o) {
+          ],          rows: orders.map((o) {
             final isHighlighted = o.id == _highlightedOrderId;
+            
+            // Helper to wrap cell content in animation if highlighted
+            Widget anim(Widget child) {
+              if (!isHighlighted) return child;
+              return child
+                .animate(onPlay: (controller) => controller.repeat(reverse: true))
+                .shimmer(duration: 1500.ms, color: AppColors.rubyRed.withOpacity(0.2))
+                .scale(begin: const Offset(1, 1), end: const Offset(1.02, 1.02), duration: 1000.ms);
+            }
+
             return DataRow(
               color: isHighlighted 
-                  ? WidgetStateProperty.all(AppColors.rubyRed.withOpacity(0.05)) 
+                  ? WidgetStateProperty.resolveWith((states) => AppColors.rubyRed.withOpacity(0.08))
                   : null,
               cells: [
             DataCell(
-              Column(
+              anim(Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -366,10 +398,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   const SizedBox(height: 6),
                   _badge(o.orderType.replaceAll('_', '-'), const Color(0xFFE0F2FE), const Color(0xFF0284C7)),
                 ],
-              )
+              ))
             ),
             DataCell(
-              Row(
+              anim(Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(6),
@@ -384,10 +416,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     ),
                   ),
                 ],
-              )
+              ))
             ),
             DataCell(
-              Row(
+              anim(Row(
                 children: [
                   Icon(Icons.location_on_outlined, size: 14, color: Colors.grey.shade600),
                   const SizedBox(width: 4),
@@ -398,9 +430,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     ),
                   ),
                 ],
-              )
+              ))
             ),
-            DataCell(_statusBadge(o.status, 
+            DataCell(anim(_statusBadge(o.status, 
               isLoading: _updatingOrderIds.contains(o.id),
               onTap: () {
                 final next = _getNextStatusFor(o.status);
@@ -408,11 +440,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   _updateOrderStatus(o.id, next);
                 }
               }
-            )),
-            DataCell(Text('₹${o.totalAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(fontWeight: FontWeight.w800, color: AppColors.rubyDark, fontSize: 14))),
-            DataCell(_paymentBadge(o.paymentStatus)),
-            DataCell(Text(dateFormat.format(DateTime.tryParse(o.createdAt) ?? DateTime.now()), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted))),
-            DataCell(ElevatedButton.icon(
+            ))),
+            DataCell(anim(Text('₹${o.totalAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(fontWeight: FontWeight.w800, color: AppColors.rubyDark, fontSize: 14)))),
+            DataCell(anim(_paymentBadge(o.paymentStatus))),
+            DataCell(anim(Text(dateFormat.format(DateTime.tryParse(o.createdAt) ?? DateTime.now()), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted)))),
+            DataCell(anim(ElevatedButton.icon(
               onPressed: () => _showOrderDetails(o),
               icon: const Icon(Icons.visibility, size: 14),
               label: Text('View Details', style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 12)),
@@ -423,8 +455,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 elevation: 0,
               ),
-            )),
-            ]);
+            ))),
+              ],
+            );
           }).toList(),
         ),
       ),
@@ -570,7 +603,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     if (order.id == _highlightedOrderId) {
       setState(() {
         _highlightedOrderId = null;
-        _searchQuery = ''; // Clear the filter
+        // Removed: _searchQuery = ''; // No longer filtering
       });
     }
     showDialog(
