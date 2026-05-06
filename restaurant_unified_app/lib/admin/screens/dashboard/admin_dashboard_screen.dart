@@ -7,6 +7,8 @@ import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/core/auth_provider.dart';
 import 'package:restaurant_unified_app/staff/contexts/auth_provider.dart';
 import 'package:restaurant_unified_app/admin/core/providers/restaurant_provider.dart';
+import 'package:restaurant_unified_app/admin/core/providers/notification_provider.dart';
+import 'package:restaurant_unified_app/admin/core/models/notification_model.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -24,7 +26,43 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<RestaurantProvider>().fetchRestaurant();
+      final notifProv = context.read<NotificationProvider>();
+      notifProv.startPolling();
+      
+      // Listen for new notifications to show custom top toast
+      notifProv.addListener(() {
+        if (notifProv.notifications.isNotEmpty && !notifProv.notifications.first.isRead) {
+          final latest = notifProv.notifications.first;
+          if (mounted) {
+            _showTopToast(latest);
+          }
+        }
+      });
     });
+  }
+
+  void _showTopToast(NotificationModel notification) {
+    late OverlayEntry overlayEntry;
+    overlayEntry = OverlayEntry(
+      builder: (context) => _TopToastWidget(
+        notification: notification,
+        onDismiss: () => overlayEntry.remove(),
+        onView: () {
+          overlayEntry.remove();
+          context.go('/admin/orders?highlightOrderId=${notification.orderId}');
+        },
+      ),
+    );
+
+    Overlay.of(context).insert(overlayEntry);
+  }
+
+  @override
+  void dispose() {
+    // Note: We might want to keep polling if the admin stays in the app
+    // but for now we stop when dashboard is disposed
+    // context.read<NotificationProvider>().stopPolling(); 
+    super.dispose();
   }
 
   void _triggerNavAnimation(Offset startPos, String route) async {
@@ -208,7 +246,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  _ProfileChip(email: auth.userEmail ?? 'admin@restaurant.com'),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _NotificationButton(),
+                      const SizedBox(width: 16),
+                      _ProfileChip(email: auth.userEmail ?? 'admin@restaurant.com'),
+                    ],
+                  ),
                   const SizedBox(height: 12),
                   SizedBox(
                     height: 40,
@@ -217,6 +262,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         await auth.logout();
                         if (context.mounted) {
                           await context.read<StaffAuthProvider>().logout();
+                          context.read<NotificationProvider>().stopPolling();
                           context.go('/login');
                         }
                       },
@@ -504,6 +550,307 @@ class _NavigationPulse extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+class _NotificationButton extends StatefulWidget {
+  @override
+  State<_NotificationButton> createState() => _NotificationButtonState();
+}
+
+class _NotificationButtonState extends State<_NotificationButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final prov = context.watch<NotificationProvider>();
+    final unread = prov.unreadCount;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: () => _showNotificationOverlay(context),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: _isHovered ? Colors.white.withOpacity(0.15) : Colors.white.withOpacity(0.08),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: _isHovered ? AppColors.gold.withOpacity(0.5) : Colors.white.withOpacity(0.1)),
+          ),
+          child: Center(
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(Icons.notifications_outlined, color: Colors.white, size: 24),
+                if (unread > 0)
+                  Positioned(
+                    right: -2,
+                    top: -2,
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: const BoxDecoration(color: AppColors.success, shape: BoxShape.circle),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showNotificationOverlay(BuildContext context) {
+    final prov = context.read<NotificationProvider>();
+    
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        alignment: Alignment.topRight,
+        insetPadding: const EdgeInsets.only(top: 80, right: 100),
+        backgroundColor: Colors.transparent,
+        child: Container(
+          width: 400,
+          constraints: const BoxConstraints(maxHeight: 500),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 40, offset: const Offset(0, 10))
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+                child: Row(
+                  children: [
+                    Icon(Icons.notifications_outlined, color: AppColors.rubyRed, size: 20),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Notifications',
+                      style: GoogleFonts.playfairDisplay(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.rubyDark,
+                      ),
+                    ),
+                    const Spacer(),
+                    if (prov.notifications.isNotEmpty)
+                      TextButton(
+                        onPressed: () {
+                          prov.markAllAsRead();
+                          Navigator.pop(context);
+                        },
+                        child: Text('Mark all as read', style: GoogleFonts.inter(fontSize: 12)),
+                      ),
+                  ],
+                ),
+              ),
+              const Divider(height: 1, color: AppColors.ivoryDark),
+              if (prov.notifications.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 60),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: AppColors.ivory,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.notifications_none_rounded, color: Colors.grey.shade300, size: 48),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No new notifications',
+                        style: GoogleFonts.inter(
+                          color: Colors.grey.shade500,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                Flexible(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    itemCount: prov.notifications.length,
+                    itemBuilder: (context, i) {
+                      final n = prov.notifications[i];
+                      return ListTile(
+                        onTap: () {
+                          prov.markAsRead(n.id);
+                          Navigator.pop(context);
+                          context.go('/admin/orders?highlightOrderId=${n.orderId}');
+                        },
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: n.isRead ? AppColors.ivory : AppColors.rubyRed.withOpacity(0.05),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.receipt_long_rounded,
+                            color: n.isRead ? Colors.grey : AppColors.rubyRed,
+                            size: 20,
+                          ),
+                        ),
+                        title: Text(
+                          n.message,
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            fontWeight: n.isRead ? FontWeight.w500 : FontWeight.bold,
+                            color: AppColors.slate900,
+                          ),
+                        ),
+                        subtitle: Text(
+                          _formatTime(n.createdAt),
+                          style: GoogleFonts.inter(fontSize: 11, color: AppColors.slate400),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                      );
+                    },
+                  ),
+                ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatTime(DateTime dt) {
+    final diff = DateTime.now().difference(dt);
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
+    if (diff.inHours < 24) return '${diff.inHours}h ago';
+    return '${diff.inDays}d ago';
+  }
+}
+
+class _TopToastWidget extends StatefulWidget {
+  final NotificationModel notification;
+  final VoidCallback onDismiss;
+  final VoidCallback onView;
+
+  const _TopToastWidget({
+    required this.notification,
+    required this.onDismiss,
+    required this.onView,
+  });
+
+  @override
+  State<_TopToastWidget> createState() => _TopToastWidgetState();
+}
+
+class _TopToastWidgetState extends State<_TopToastWidget> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+
+    _offsetAnimation = Tween<Offset>(
+      begin: const Offset(0, -1.5),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
+
+    _controller.forward();
+
+    // Auto dismiss after 5 seconds
+    Future.delayed(const Duration(seconds: 5), () {
+      if (mounted) {
+        _controller.reverse().then((_) => widget.onDismiss());
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 40,
+      left: 20,
+      right: 20,
+      child: SlideTransition(
+        position: _offsetAnimation,
+        child: Material(
+          color: Colors.transparent,
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 600),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.95), // Transparent white
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white.withOpacity(0.5)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  )
+                ],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.rubyRed.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.receipt_long_rounded, color: AppColors.rubyRed, size: 20),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      widget.notification.message,
+                      style: GoogleFonts.inter(
+                        color: AppColors.rubyDark,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  TextButton(
+                    onPressed: widget.onView,
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.rubyRed,
+                      textStyle: GoogleFonts.inter(fontWeight: FontWeight.w900, letterSpacing: 1),
+                    ),
+                    child: const Text('VIEW'),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 18, color: Colors.grey),
+                    onPressed: () => _controller.reverse().then((_) => widget.onDismiss()),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

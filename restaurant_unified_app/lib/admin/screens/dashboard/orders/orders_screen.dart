@@ -31,11 +31,26 @@ class _OrdersScreenState extends State<OrdersScreen> {
   String _searchQuery = '';
   String _sortOrder = 'Newest First';
   final Set<String> _updatingOrderIds = {};
+  String? _highlightedOrderId;
 
   @override
   void initState() {
     super.initState();
     _loadOrders();
+    _checkHighlight();
+  }
+
+  void _checkHighlight() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final state = GoRouterState.of(context);
+      final highlightId = state.uri.queryParameters['highlightOrderId'];
+      if (highlightId != null) {
+        setState(() {
+          _highlightedOrderId = highlightId;
+          _searchQuery = highlightId; // This will filter the list
+        });
+      }
+    });
   }
 
   Future<void> _loadOrders({bool silent = false}) async {
@@ -335,7 +350,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
             DataColumn(label: Text('DATE', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 11, color: Colors.grey.shade600, letterSpacing: 0.5))),
             DataColumn(label: Text('ACTIONS', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 11, color: Colors.grey.shade600, letterSpacing: 0.5))),
           ],
-          rows: orders.map((o) => DataRow(cells: [
+          rows: orders.map((o) {
+            final isHighlighted = o.id == _highlightedOrderId;
+            return DataRow(
+              color: isHighlighted 
+                  ? WidgetStateProperty.all(AppColors.rubyRed.withOpacity(0.05)) 
+                  : null,
+              cells: [
             DataCell(
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -403,7 +424,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 elevation: 0,
               ),
             )),
-          ])).toList(),
+            ]);
+          }).toList(),
         ),
       ),
     ),
@@ -545,6 +567,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 
   void _showOrderDetails(OrderModel order) {
+    if (order.id == _highlightedOrderId) {
+      setState(() {
+        _highlightedOrderId = null;
+        _searchQuery = ''; // Clear the filter
+      });
+    }
     showDialog(
       context: context,
       builder: (ctx) => _OrderDetailsDialog(

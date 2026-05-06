@@ -7,6 +7,7 @@ import 'router.dart';
 
 // Admin Providers
 import 'admin/core/providers/restaurant_provider.dart';
+import 'admin/core/providers/notification_provider.dart';
 
 // Staff Providers
 import 'staff/contexts/orders_provider.dart';
@@ -33,6 +34,7 @@ void main() async {
           ChangeNotifierProvider.value(value: authProvider),
           ChangeNotifierProvider.value(value: staffAuthProvider),
           ChangeNotifierProvider(create: (_) => RestaurantProvider()),
+          ChangeNotifierProvider(create: (_) => NotificationProvider()),
           ChangeNotifierProvider(create: (_) => OrdersProvider()),
           ChangeNotifierProvider(create: (_) => TablesProvider()),
           ChangeNotifierProvider(create: (_) => MenuProvider()),
