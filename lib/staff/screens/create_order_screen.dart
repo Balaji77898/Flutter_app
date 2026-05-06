@@ -360,8 +360,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
     if (menu.isLoading) {
       return Column(
         children: List.generate(5, (index) => 
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
             child: ShimmerLoading(width: double.infinity, height: 60, borderRadius: 12),
           )
         ),
@@ -372,7 +372,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
         padding: const EdgeInsets.symmetric(vertical: 24),
         child: Column(
           children: [
-            Icon(Icons.restaurant_menu_outlined,
+            const Icon(Icons.restaurant_menu_outlined,
                 size: 48, color: AppColors.slate300),
             const SizedBox(height: 12),
             Text(
@@ -539,7 +539,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 24),
                           child: Column(
                             children: [
-                              Icon(Icons.shopping_basket_outlined, size: 32, color: AppColors.slate200),
+                              const Icon(Icons.shopping_basket_outlined, size: 32, color: AppColors.slate200),
                               const SizedBox(height: 12),
                               Text(
                                 'No items selected',

@@ -24,16 +24,15 @@ class StaffAuthProvider extends ChangeNotifier {
   }
 
   Future<void> loadAuth() async {
-    // Always start fresh — clear any stored session so users see the login screen
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('auth_token');
+      _token = prefs.getString(kTokenKey);
+      if (_token != null) {
+        await fetchUserProfile();
+      }
     } catch (e) {
       debugPrint("StaffAuthProvider loadAuth error: $e");
     }
-    _token = null;
-    _user = null;
-    _role = null;
     notifyListeners();
   }
 
@@ -41,26 +40,43 @@ class StaffAuthProvider extends ChangeNotifier {
   Future<void> fetchUserProfile() async {
     if (_token == null) return;
 
-    try {
-      final response = await http.get(
-        Uri.parse("$kBackendBase${ApiEndpoints.me}"),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $_token",
-        },
-      );
+    final endpoints = [
+      ApiEndpoints.me, // /api/admin/me
+      '/api/staff/me',
+      '/api/staff/profile',
+      '/api/auth/me',
+    ];
 
-      debugPrint("StaffAuthProvider: FETCH ME STATUS: ${response.statusCode}");
-      if (response.statusCode == 200) {
-        final decoded = json.decode(response.body);
-        final data = (decoded is Map && decoded.containsKey('data')) ? decoded['data'] : decoded;
-        
-        _user = StaffUser.fromJson(data);
-        _role = _user!.role;
-        notifyListeners();
+    for (final endpoint in endpoints) {
+      try {
+        debugPrint("StaffAuthProvider: Trying profile endpoint: $endpoint");
+        final response = await http.get(
+          Uri.parse("$kBackendBase$endpoint"),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $_token",
+          },
+        );
+
+        debugPrint("StaffAuthProvider: FETCH PROFILE ($endpoint) STATUS: ${response.statusCode}");
+        if (response.statusCode == 200) {
+          final decoded = json.decode(response.body);
+          final data = (decoded is Map && decoded.containsKey('data')) 
+              ? decoded['data'] 
+              : (decoded is Map && decoded.containsKey('user'))
+                  ? decoded['user']
+                  : decoded;
+          
+          if (data is Map<String, dynamic>) {
+            _user = StaffUser.fromJson(data);
+            _role = _user!.role;
+            notifyListeners();
+            return; // Success!
+          }
+        }
+      } catch (e) {
+        debugPrint("StaffAuthProvider: Error with endpoint $endpoint: $e");
       }
-    } catch (e) {
-      debugPrint("StaffAuthProvider: Fetch profile error: $e");
     }
   }
 
@@ -89,13 +105,20 @@ class StaffAuthProvider extends ChangeNotifier {
         _token = data['token'] ?? decoded['token'];
         _role = role;
 
+        // Try to get user from login response first
+        final userData = data['user'] ?? decoded['user'];
+        if (userData != null && userData is Map<String, dynamic>) {
+          _user = StaffUser.fromJson(userData);
+          _role = _user!.role;
+        }
+
         // Persist token
         final prefs = await SharedPreferences.getInstance();
         if (_token != null) {
-          await prefs.setString('auth_token', _token!);
+          await prefs.setString(kTokenKey, _token!);
         }
 
-        // Fetch full profile
+        // Fetch/Refresh full profile
         await fetchUserProfile();
       } else {
         throw Exception("Login failed (${response.statusCode})");
@@ -116,7 +139,7 @@ class StaffAuthProvider extends ChangeNotifier {
     _token = null;
     
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('auth_token');
+    await prefs.remove(kTokenKey);
     
     notifyListeners();
   }

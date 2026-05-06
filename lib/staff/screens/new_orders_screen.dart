@@ -5,6 +5,7 @@ import '../contexts/orders_provider.dart';
 import '../models/models.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
+import '../../core/currency_utils.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../contexts/auth_provider.dart';
 
@@ -16,6 +17,7 @@ class NewOrdersScreen extends StatefulWidget {
 }
 
 class _NewOrdersScreenState extends State<NewOrdersScreen> {
+  bool _showNewestFirst = true;
   @override
   void initState() {
     super.initState();
@@ -36,7 +38,13 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<OrdersProvider>();
-    final newOrders = provider.newOrders;
+    final newOrders = List<Order>.from(provider.newOrders);
+    
+    // Sort by createdAt
+    newOrders.sort((a, b) => _showNewestFirst 
+        ? a.createdAt.compareTo(b.createdAt) 
+        : b.createdAt.compareTo(a.createdAt));
+
     final acceptedCount = provider.activeOrders.length;
 
     return Scaffold(
@@ -45,7 +53,7 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
         children: [
           PageHeader(
   title: 'New Orders',
-  subtitle: 'Incoming Kitchen Requests',
+  subtitle: 'Incoming Kitchen Orders',
   actions: [
     HeaderIconButton(
       icon: Icons.arrow_back,
@@ -55,11 +63,17 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
     HeaderIconButton(
       icon: Icons.refresh,
       onTap: () {
-  final token = context.read<StaffAuthProvider>().token;
-  if (token != null) {
-    context.read<OrdersProvider>().fetchOrders(token);
-  }
-},
+        final token = context.read<StaffAuthProvider>().token;
+        if (token != null) {
+          context.read<OrdersProvider>().fetchOrders(token);
+        }
+      },
+    ),
+    const SizedBox(width: 8),
+    HeaderIconButton(
+      icon: _showNewestFirst ? Icons.arrow_downward : Icons.arrow_upward,
+      label: _showNewestFirst ? 'Newest First' : 'Oldest First',
+      onTap: () => setState(() => _showNewestFirst = !_showNewestFirst),
     ),
   ],
 ),
@@ -96,7 +110,7 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
                     icon: Icons.notifications_outlined,
                     iconColor: AppColors.primary,
                     iconBg: const Color(0xFFFEE2E2),
-                    label: 'New Requests',
+                    label: 'New Orders',
                     value: '${newOrders.length}',
                   ).animate().fade().scale(curve: Curves.easeOutBack, duration: 400.ms),
                 ),
@@ -380,7 +394,7 @@ class _OrderCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '₹${order.total.round()}',
+                      CurrencyUtils.format(order.total),
                       style: AppTheme.sans(
                         size: 26,
                         weight: FontWeight.w900,

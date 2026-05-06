@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+// ignore: unused_import — removed unused flutter/material.dart
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_unified_app/core/auth_provider.dart';
 import 'package:restaurant_unified_app/core/constants.dart';

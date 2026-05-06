@@ -5,35 +5,35 @@ import 'constants.dart';
 class AppShadows {
   static List<BoxShadow> get card => [
         BoxShadow(
-          color: Colors.black.withOpacity(0.05),
+          color: Colors.black.withValues(alpha: 0.05),
           blurRadius: 16,
           offset: const Offset(0, 6),
         ),
       ];
   static List<BoxShadow> get float => [
         BoxShadow(
-          color: Colors.black.withOpacity(0.08),
+          color: Colors.black.withValues(alpha: 0.08),
           blurRadius: 24,
           offset: const Offset(0, -4),
         ),
       ];
   static List<BoxShadow> get primaryGlow => [
         BoxShadow(
-          color: AppColors.primary.withOpacity(0.25),
+          color: AppColors.primary.withValues(alpha: 0.25),
           blurRadius: 18,
           offset: const Offset(0, 6),
         ),
       ];
   static List<BoxShadow> get goldGlow => [
         BoxShadow(
-          color: AppColors.gold.withOpacity(0.35),
+          color: AppColors.gold.withValues(alpha: 0.35),
           blurRadius: 18,
           offset: const Offset(0, 6),
         ),
       ];
   static List<BoxShadow> get billingGlow => [
         BoxShadow(
-          color: AppColors.billingAccent.withOpacity(0.25),
+          color: AppColors.billingAccent.withValues(alpha: 0.25),
           blurRadius: 18,
           offset: const Offset(0, 6),
         ),

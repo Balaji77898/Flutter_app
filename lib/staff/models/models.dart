@@ -176,11 +176,15 @@ class Order {
     try {
       final dt = DateTime.parse(isoTime).toLocal();
 
-      final hour = dt.hour > 12 ? dt.hour - 12 : dt.hour;
+      final hour = dt.hour == 0 ? 12 : (dt.hour > 12 ? dt.hour - 12 : dt.hour);
       final minute = dt.minute.toString().padLeft(2, '0');
       final period = dt.hour >= 12 ? 'PM' : 'AM';
 
-      return '$hour:$minute $period';
+      final day = dt.day.toString().padLeft(2, '0');
+      final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      final month = months[dt.month - 1];
+
+      return '$day $month, $hour:$minute $period';
     } catch (e) {
       return '';
     }
@@ -277,10 +281,10 @@ class StaffUser {
   factory StaffUser.fromJson(Map<String, dynamic> json) {
     final createdAtRaw = json['created_at'] ?? json['createdAt'];
     return StaffUser(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      email: json['email'] ?? '',
-      role: json['role'] == 'SERVING_STAFF'
+      id: (json['id'] ?? json['_id'] ?? '').toString(),
+      name: (json['name'] ?? json['full_name'] ?? 'Staff Member').toString(),
+      email: (json['email'] ?? '').toString(),
+      role: (json['role']?.toString().toUpperCase() == 'SERVING_STAFF')
           ? StaffRole.servingStaff
           : StaffRole.billingStaff,
       phone: json['phone']?.toString(),

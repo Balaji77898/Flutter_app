@@ -39,13 +39,13 @@ class _TablesScreenState extends State<TablesScreen> {
         cardBorder: Color(0xFFBFDBFE),
       );
     } else {
-      return _TableDisplayConfig(
-        bg: const Color(0xFFF0FDF4),
-        textColor: const Color(0xFF16A34A),
+      return const _TableDisplayConfig(
+        bg: Color(0xFFF0FDF4),
+        textColor: Color(0xFF16A34A),
         label: 'Available',
         icon: Icons.check_circle_rounded,
-        gradient: const [Color(0xFF34D399), Color(0xFF10B981)],
-        cardBorder: const Color(0xFFBBF7D0),
+        gradient: [Color(0xFF34D399), Color(0xFF10B981)],
+        cardBorder: Color(0xFFBBF7D0),
       );
     }
   }

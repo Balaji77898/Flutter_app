@@ -53,7 +53,7 @@ class StaffLandingScreen extends StatelessWidget {
                             onPressed: () => context.go('/admin/dashboard'),
                             icon: const Icon(Icons.arrow_back_rounded, color: AppColors.rubyDark),
                             style: IconButton.styleFrom(
-                              backgroundColor: AppColors.rubyDark.withOpacity(0.05),
+                              backgroundColor: AppColors.rubyDark.withValues(alpha: 0.05),
                               padding: const EdgeInsets.all(12),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
@@ -83,7 +83,7 @@ class StaffLandingScreen extends StatelessWidget {
                               'Select a role to manage credentials and access.',
                               textAlign: TextAlign.center,
                               style: GoogleFonts.inter(
-                                color: AppColors.rubyDark.withOpacity(0.7),
+                                color: AppColors.rubyDark.withValues(alpha: 0.7),
                                 fontSize: 16,
                                 fontStyle: FontStyle.italic,
                                 fontWeight: FontWeight.w500,
@@ -96,8 +96,8 @@ class StaffLandingScreen extends StatelessWidget {
                       const SizedBox(height: 60),
 
                       // ── Cards Section ───────────────────────────────────────
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 40),
                         child: Wrap(
                           spacing: 40,
                           runSpacing: 30,
@@ -176,7 +176,7 @@ class _StaffTypeCardState extends State<_StaffTypeCard> {
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.rubyDark.withOpacity(0.12),
+                color: AppColors.rubyDark.withValues(alpha: 0.12),
                 blurRadius: _isHovered ? 30 : 20,
                 offset: Offset(0, _isHovered ? 15 : 10),
               )
@@ -191,7 +191,7 @@ class _StaffTypeCardState extends State<_StaffTypeCard> {
                 width: 72,
                 height: 72,
                 decoration: BoxDecoration(
-                  color: _isHovered ? AppColors.rubyRed : AppColors.rubyDark.withOpacity(0.05),
+                  color: _isHovered ? AppColors.rubyRed : AppColors.rubyDark.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(

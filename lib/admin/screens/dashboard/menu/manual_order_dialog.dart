@@ -300,7 +300,7 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
             _isLoadingTables
                 ? const LinearProgressIndicator()
                 : DropdownButtonFormField<String>(
-                    value: _selectedTableId,
+                    initialValue: _selectedTableId,
                     decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16)),
                     hint: const Text('Choose a table'),
                     items: _tables.map((t) => DropdownMenuItem(value: t.id, child: Text('Table ${t.tableNumber}'))).toList(),
@@ -313,7 +313,7 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
           // Payment Mode
           _fieldLabel('Payment Mode'),
           DropdownButtonFormField<String>(
-            value: _paymentMode,
+            initialValue: _paymentMode,
             decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16)),
             items: ['Cash', 'Card', 'UPI', 'Online'].map((m) => DropdownMenuItem(value: m, child: Text(m))).toList(),
             onChanged: (v) => setState(() => _paymentMode = v!),
@@ -442,8 +442,8 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8, offset: const Offset(0, 2))],
-                  border: Border.all(color: qty > 0 ? AppColors.rubyRed.withOpacity(0.4) : AppColors.rubyDark.withOpacity(0.12), width: 1.5),
+                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 8, offset: const Offset(0, 2))],
+                  border: Border.all(color: qty > 0 ? AppColors.rubyRed.withValues(alpha: 0.4) : AppColors.rubyDark.withValues(alpha: 0.12), width: 1.5),
                 ),
                 child: Row(
                   children: [
@@ -530,19 +530,19 @@ class _CategoryCardState extends State<_CategoryCard> {
         onTap: widget.onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          transform: _isHovered ? (Matrix4.identity()..scale(1.02)) : Matrix4.identity(),
+          transform: _isHovered ? Matrix4.diagonal3Values(1.02, 1.02, 1.0) : Matrix4.identity(),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(_isHovered ? 0.08 : 0.04),
+                color: Colors.black.withValues(alpha: _isHovered ? 0.08 : 0.04),
                 blurRadius: _isHovered ? 15 : 10,
                 offset: Offset(0, _isHovered ? 6 : 4),
               )
             ],
             border: Border.all(
-              color: _isHovered ? AppColors.rubyDark : AppColors.rubyDark.withOpacity(0.2),
+              color: _isHovered ? AppColors.rubyDark : AppColors.rubyDark.withValues(alpha: 0.2),
               width: _isHovered ? 2 : 1.5,
             ),
           ),
@@ -552,7 +552,7 @@ class _CategoryCardState extends State<_CategoryCard> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: (_isHovered ? AppColors.rubyRed : AppColors.rubyRed).withOpacity(_isHovered ? 0.15 : 0.08),
+                  color: (_isHovered ? AppColors.rubyRed : AppColors.rubyRed).withValues(alpha: _isHovered ? 0.15 : 0.08),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(

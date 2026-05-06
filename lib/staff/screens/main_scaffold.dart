@@ -40,44 +40,44 @@ class _MainScaffoldState extends State<MainScaffold> {
         isBilling ? AppColors.billingAccentLight : AppColors.servingAccentLight;
 
     final servingItems = [
-      _NavItem(
+      const _NavItem(
         icon: Icons.home_outlined,
         activeIcon: Icons.home_rounded,
         label: 'Home',
-        screen: const DashboardScreen(),
+        screen: DashboardScreen(),
       ),
-      _NavItem(
+      const _NavItem(
         icon: Icons.receipt_long_outlined,
         activeIcon: Icons.receipt_long_rounded,
         label: 'Orders',
-        screen: const OrdersScreen(),
+        screen: OrdersScreen(),
       ),
-      _NavItem(
+      const _NavItem(
         icon: Icons.grid_view_outlined,
         activeIcon: Icons.grid_view_rounded,
         label: 'Tables',
-        screen: const TablesScreen(),
+        screen: TablesScreen(),
       ),
-      _NavItem(
+      const _NavItem(
         icon: Icons.person_outline_rounded,
         activeIcon: Icons.person_rounded,
         label: 'Profile',
-        screen: const ProfileScreen(),
+        screen: ProfileScreen(),
       ),
     ];
 
     final billingItems = [
-      _NavItem(
+      const _NavItem(
         icon: Icons.account_balance_wallet_outlined,
         activeIcon: Icons.account_balance_wallet_rounded,
         label: 'Billing',
-        screen: const BillingScreen(),
+        screen: BillingScreen(),
       ),
-      _NavItem(
+      const _NavItem(
         icon: Icons.person_outline_rounded,
         activeIcon: Icons.person_rounded,
         label: 'Profile',
-        screen: const ProfileScreen(),
+        screen: ProfileScreen(),
       ),
     ];
 
@@ -271,8 +271,8 @@ class _Sidebar extends StatelessWidget {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              border: const Border(
+            decoration: const BoxDecoration(
+              border: Border(
                 bottom: BorderSide(color: AppColors.slate100),
               ),
             ),
@@ -400,7 +400,7 @@ class _Sidebar extends StatelessWidget {
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [
                         AppColors.primary,
                         AppColors.primaryDark,

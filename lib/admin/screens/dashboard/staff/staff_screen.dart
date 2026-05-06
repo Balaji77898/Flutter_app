@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/core/theme.dart';
+import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
 import 'package:restaurant_unified_app/admin/services/staff_service.dart';
 
@@ -20,8 +19,6 @@ class _StaffScreenState extends State<StaffScreen> {
   List<StaffMember> _allStaff = [];
   List<StaffMember> _filteredStaff = [];
   bool _isLoading = true;
-  String? _error;
-
   final _searchController = TextEditingController();
   String _statusFilter = 'All Status';
 
@@ -56,7 +53,6 @@ class _StaffScreenState extends State<StaffScreen> {
     try {
       setState(() {
         _isLoading = true;
-        _error = null;
       });
       final list = await StaffService.getStaff();
       
@@ -72,7 +68,7 @@ class _StaffScreenState extends State<StaffScreen> {
         _applyFilters();
       });
     } catch (e) {
-      setState(() => _error = e.toString().replaceAll('Exception: ', ''));
+      setState(() => _isLoading = false);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -243,7 +239,7 @@ class _StaffScreenState extends State<StaffScreen> {
                       icon: const Icon(Icons.arrow_back, size: 16),
                       label: const Text('Back to Staff Management'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.1),
+                        backgroundColor: Colors.white.withValues(alpha: 0.1),
                         foregroundColor: AppColors.gold,
                         elevation: 0,
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -259,7 +255,7 @@ class _StaffScreenState extends State<StaffScreen> {
                     const SizedBox(height: 4),
                     Text(_roleSubtitle,
                         style: GoogleFonts.inter(
-                          color: AppColors.gold.withOpacity(0.8), 
+                          color: AppColors.gold.withValues(alpha: 0.8), 
                           fontSize: 16,
                         )),
                   ],
@@ -306,7 +302,7 @@ class _StaffScreenState extends State<StaffScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
+          border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
           boxShadow: AppShadows.card,
         ),
         child: Column(
@@ -327,7 +323,7 @@ class _StaffScreenState extends State<StaffScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
+        border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
         boxShadow: AppShadows.card,
       ),
       child: Row(
@@ -349,7 +345,7 @@ class _StaffScreenState extends State<StaffScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.rubyDark.withOpacity(0.2)),
+              border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2)),
               borderRadius: BorderRadius.circular(8),
             ),
             child: DropdownButtonHideUnderline(
@@ -379,7 +375,7 @@ class _StaffScreenState extends State<StaffScreen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
+            border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
             boxShadow: AppShadows.card,
           ),
           child: Column(
@@ -425,7 +421,7 @@ class _StaffScreenState extends State<StaffScreen> {
         style: GoogleFonts.inter(
           fontSize: 11, 
           fontWeight: FontWeight.w900, 
-          color: AppColors.rubyDark.withOpacity(0.4),
+          color: AppColors.rubyDark.withValues(alpha: 0.4),
           letterSpacing: 1.5,
         )
       )
@@ -514,7 +510,7 @@ class _StaffScreenState extends State<StaffScreen> {
                 child: Switch(
                   value: s.isActive,
                   onChanged: (v) => _toggleStaff(s.id),
-                  activeColor: AppColors.success,
+                   activeThumbColor: AppColors.success,
                 ),
               ),
             ),
@@ -546,47 +542,7 @@ class _StaffScreenState extends State<StaffScreen> {
     );
   }
 
-  Widget _actionIcon(IconData icon, Color color, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, size: 22, color: color),
-        ),
-      ),
-    );
-  }
-}
 
-class _StatusBadge extends StatelessWidget {
-  final bool isActive;
-  const _StatusBadge({required this.isActive});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.green.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(100),
-        border: Border.all(color: Colors.green.withOpacity(0.3)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(width: 6, height: 6, decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle)),
-          const SizedBox(width: 8),
-          Text('LIVE SYSTEM', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w900, color: Colors.green, letterSpacing: 1)),
-        ],
-      ),
-    );
-  }
 }
 
 

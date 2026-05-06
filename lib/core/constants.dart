@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 // ─── Backend Base URL ───────────────────────────────────────────────────────
 const String kBackendBase = 'https://pos-backend-s380.onrender.com';
@@ -9,7 +8,7 @@ class ApiEndpoints {
   static const String login = '/api/auth/login';
   static const String adminLogin = '/api/admin/login';
   static const String staffLogin = '/api/staff/login';
-  static const String me = '/api/auth/me';
+  static const String me = '/api/admin/me';
   
   // Admin Endpoints
   static const String restaurant = '/api/admin/restaurant';
@@ -33,8 +32,8 @@ class ApiEndpoints {
   static String orderById(String id) => '/api/admin/orders/$id';
   
   // Staff Endpoints
-  static const String staffOrders = '/api/staff/orders';
-  static const String staffTables = '/api/staff/tables';
+  static const String staffOrders = '/api/admin/orders';
+  static const String staffTables = '/api/admin/tables';
 }
 
 // ─── Token / Storage Keys ────────────────────────────────────────────────────

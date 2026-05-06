@@ -33,7 +33,7 @@ class PageHeader extends StatelessWidget {
         return Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [
                 AppColors.primary,
                 AppColors.primaryDark,

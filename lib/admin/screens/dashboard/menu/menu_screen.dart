@@ -1,5 +1,4 @@
 import 'package:restaurant_unified_app/core/theme.dart';
-import 'package:restaurant_unified_app/core/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
@@ -84,6 +83,7 @@ class _MenuScreenState extends State<MenuScreen> {
         }
       });
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed: ${e.toString()}')),
       );
@@ -95,6 +95,7 @@ class _MenuScreenState extends State<MenuScreen> {
     try {
       await MenuService.updateSpecialStatus(id, !item.isSpecial);
       _loadData();
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(!item.isSpecial ? 'Added to Today\'s Special' : 'Removed from Specials'),
@@ -102,6 +103,7 @@ class _MenuScreenState extends State<MenuScreen> {
         ),
       );
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $e')));
     }
   }
@@ -132,6 +134,7 @@ class _MenuScreenState extends State<MenuScreen> {
       }
       _loadData();
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: ${e.toString()}')));
     }
   }
@@ -308,7 +311,7 @@ class _MenuScreenState extends State<MenuScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -535,7 +538,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       Switch(
                         value: item.isAvailable,
                         onChanged: (_) => _toggleItem(item.id),
-                        activeColor: AppColors.success,
+                        activeThumbColor: AppColors.success,
                       ),
                     ],
                   ),
@@ -629,21 +632,21 @@ class _SidebarItemState extends State<_SidebarItem> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOutCubic,
-          transform: Matrix4.identity()..scale(_isHovered ? 1.02 : 1.0),
+          transform: Matrix4.diagonal3Values(_isHovered ? 1.02 : 1.0, _isHovered ? 1.02 : 1.0, 1.0),
           decoration: BoxDecoration(
             color: isAllItems 
                 ? AppColors.rubyDark 
-                : (widget.isSelected ? AppColors.rubyDark.withOpacity(0.05) : (_isHovered ? Colors.grey.shade50 : Colors.white)),
+                   : (widget.isSelected ? AppColors.rubyDark.withValues(alpha: 0.05) : (_isHovered ? Colors.grey.shade50 : Colors.white)),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isAllItems 
                   ? Colors.transparent 
-                  : (widget.isSelected ? AppColors.rubyDark.withOpacity(0.5) : (_isHovered ? AppColors.rubyDark.withOpacity(0.3) : AppColors.rubyDark.withOpacity(0.1))),
+                   : (widget.isSelected ? AppColors.rubyDark.withValues(alpha: 0.5) : (_isHovered ? AppColors.rubyDark.withValues(alpha: 0.3) : AppColors.rubyDark.withValues(alpha: 0.1))),
               width: 1.2,
             ),
             boxShadow: _isHovered && !isAllItems ? [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               )
@@ -668,7 +671,7 @@ class _SidebarItemState extends State<_SidebarItem> {
                         style: GoogleFonts.inter(
                           fontSize: 10,
                           fontWeight: FontWeight.w600,
-                          color: isAllItems ? Colors.white.withOpacity(0.7) : Colors.grey.shade500,
+                          color: isAllItems ? Colors.white.withValues(alpha: 0.7) : Colors.grey.shade500,
                           letterSpacing: 0.5,
                         ), 
                         maxLines: 1, 
@@ -680,7 +683,7 @@ class _SidebarItemState extends State<_SidebarItem> {
               ),
               if (!isAllItems && widget.isSelected && widget.onEdit != null) ...[
                 IconButton(
-                  icon: Icon(Icons.edit, size: 16, color: AppColors.rubyDark.withOpacity(0.6)),
+                   icon: Icon(Icons.edit, size: 16, color: AppColors.rubyDark.withValues(alpha: 0.6)),
                   onPressed: widget.onEdit,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -704,7 +707,7 @@ class _SidebarItemState extends State<_SidebarItem> {
 
 class HoverableCard extends StatefulWidget {
   final Widget child;
-  const HoverableCard({Key? key, required this.child}) : super(key: key);
+  const HoverableCard({super.key, required this.child});
 
   @override
   State<HoverableCard> createState() => _HoverableCardState();

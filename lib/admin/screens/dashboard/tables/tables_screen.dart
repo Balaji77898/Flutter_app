@@ -1,10 +1,10 @@
+import 'dart:io';
 import 'dart:ui' as ui;
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
@@ -23,7 +23,6 @@ class _TablesScreenState extends State<TablesScreen> {
   List<TableModel> _tables = [];
   List<TableModel> _filteredTables = [];
   bool _isLoading = true;
-  String? _error;
 
   final _searchController = TextEditingController();
   String _statusFilter = 'All Status';
@@ -51,7 +50,6 @@ class _TablesScreenState extends State<TablesScreen> {
     try {
       setState(() {
         _isLoading = true;
-        _error = null;
       });
       final list = await TablesService.getTables();
       setState(() {
@@ -59,7 +57,7 @@ class _TablesScreenState extends State<TablesScreen> {
         _applyFilters();
       });
     } catch (e) {
-      setState(() => _error = e.toString().replaceAll('Exception: ', ''));
+      debugPrint('Error loading tables: $e');
     } finally {
       setState(() => _isLoading = false);
     }
@@ -128,14 +126,44 @@ class _TablesScreenState extends State<TablesScreen> {
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       if (byteData == null) return;
       final bytes = byteData.buffer.asUint8List();
-      final blob = html.Blob([bytes], 'image/png');
-      final url = html.Url.createObjectUrlFromBlob(blob);
-      final anchor = html.AnchorElement(href: url)
-        ..setAttribute('download', 'table_${t.tableNumber}_qr.png')
-        ..click();
-      html.Url.revokeObjectUrl(url);
+
+      if (kIsWeb) {
+        // Web: use js interop via universal_html (not needed on desktop)
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Download not supported on web in this build.')),
+          );
+        }
+        return;
+      }
+
+      // Desktop / Mobile: save to Downloads or Documents folder
+      Directory? dir;
+      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+        dir = await getDownloadsDirectory() ?? await getApplicationDocumentsDirectory();
+      } else {
+        dir = await getApplicationDocumentsDirectory();
+      }
+
+      final filename = 'table_${t.tableNumber}_qr.png';
+      final file = File('${dir.path}${Platform.pathSeparator}$filename');
+      await file.writeAsBytes(bytes);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('QR saved to ${file.path}'),
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
     } catch (e) {
       debugPrint('Download failed: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save QR: $e')),
+        );
+      }
     }
   }
 
@@ -363,8 +391,8 @@ class _TablesScreenState extends State<TablesScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+          border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -384,8 +412,8 @@ class _TablesScreenState extends State<TablesScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+        border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -407,9 +435,9 @@ class _TablesScreenState extends State<TablesScreen> {
                   decoration: InputDecoration(
                     hintText: 'Search by table number...',
                     prefixIcon: const Icon(Icons.search, size: 20),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.2))),
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.2))),
-                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.5))),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withValues(alpha: 0.2))),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withValues(alpha: 0.2))),
+                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withValues(alpha: 0.5))),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   ),
                 ),
@@ -442,7 +470,7 @@ class _TablesScreenState extends State<TablesScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.2)),
+        border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: DropdownButtonHideUnderline(
@@ -461,8 +489,8 @@ class _TablesScreenState extends State<TablesScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+        border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         children: [
@@ -563,7 +591,7 @@ class _TablesScreenState extends State<TablesScreen> {
               child: Switch(
                 value: t.isActive,
                 onChanged: (v) => _toggleTable(t.id),
-                activeColor: Colors.green,
+                activeThumbColor: Colors.green,
               ),
             ),
           ),

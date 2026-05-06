@@ -46,6 +46,7 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
       );
       
       if (_selectedRole != UserRole.admin) {
+        if (!mounted) return;
         final staffAuth = context.read<StaffAuthProvider>();
         await staffAuth.login(
           _emailController.text,
@@ -79,7 +80,7 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -210,7 +211,7 @@ class _RoleButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+            color: isSelected ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: isSelected ? AppColors.primary : AppColors.slate200),
           ),
@@ -243,7 +244,7 @@ class _SubRoleButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.gold.withOpacity(0.1) : Colors.transparent,
+          color: isSelected ? AppColors.gold.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: isSelected ? AppColors.gold : AppColors.slate200),
         ),

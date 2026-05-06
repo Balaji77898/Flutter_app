@@ -158,7 +158,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     icon: Icons.notifications_active_rounded,
                                     iconColor: const Color(0xFFD97706),
                                     iconBg: const Color(0xFFFFFBEB),
-                                    title: 'Requests',
+                                    title: 'New Orders',
                                     description: 'View incoming orders',
                                     badge: newOrdersCount > 0 ? '$newOrdersCount' : null,
                                     onTap: () => context.push('/staff/new-orders'),
@@ -278,7 +278,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           crossAxisCount: cols,
                                           mainAxisSpacing: 16,
                                           crossAxisSpacing: 16,
-                                          childAspectRatio: isMobile ? 2.5 : 1.6,
+                                          childAspectRatio: isMobile ? 2.1 : 1.6,
                                         ),
                                         itemCount: recentOrders.length,
                                         itemBuilder: (ctx, i) => _MiniOrderCard(order: recentOrders[i])
@@ -487,7 +487,7 @@ class _DashboardHero extends StatelessWidget {
                           _StatPill(
                             icon: Icons.notifications_active_rounded,
                             value: '$newOrdersCount',
-                            label: 'Pending',
+                            label: 'New',
                             isAlert: newOrdersCount > 0,
                           ),
                           _StatPill(
@@ -717,28 +717,28 @@ class _MiniOrderCard extends StatelessWidget {
   _StatusConfig _getStatusConfig(OrderStatus status) {
     switch (status) {
       case OrderStatus.confirmed:
-        return _StatusConfig(
+        return const _StatusConfig(
           label: 'PENDING',
-          bg: const Color(0xFFFEF3C7),
-          color: const Color(0xFFD97706),
-          leftBar: const Color(0xFFF59E0B),
+          bg: Color(0xFFFEF3C7),
+          color: Color(0xFFD97706),
+          leftBar: Color(0xFFF59E0B),
         );
       case OrderStatus.preparing:
-        return _StatusConfig(
+        return const _StatusConfig(
           label: 'PREPARING',
-          bg: const Color(0xFFDBEAFE),
-          color: const Color(0xFF2563EB),
-          leftBar: const Color(0xFF3B82F6),
+          bg: Color(0xFFDBEAFE),
+          color: Color(0xFF2563EB),
+          leftBar: Color(0xFF3B82F6),
         );
       case OrderStatus.ready:
-        return _StatusConfig(
+        return const _StatusConfig(
           label: 'READY',
-          bg: const Color(0xFFD1FAE5),
-          color: const Color(0xFF059669),
-          leftBar: const Color(0xFF10B981),
+          bg: Color(0xFFD1FAE5),
+          color: Color(0xFF059669),
+          leftBar: Color(0xFF10B981),
         );
       default:
-        return _StatusConfig(
+        return const _StatusConfig(
           label: 'SERVED',
           bg: AppColors.slate100,
           color: AppColors.slate500,
@@ -825,6 +825,17 @@ class _MiniOrderCard extends StatelessWidget {
                                 size: 16,
                               ),
                             ),
+                            if (order.customerName != null)
+                              Text(
+                                order.customerName!,
+                                style: AppTheme.sans(
+                                  size: 13,
+                                  color: AppColors.slate700,
+                                  weight: FontWeight.w700,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             Text(
                               '#${order.id.substring(0, 6)}',
                               style: AppTheme.sans(

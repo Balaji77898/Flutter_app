@@ -6,6 +6,7 @@ import '../contexts/orders_provider.dart';
 import '../models/models.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
+import '../utils/printing_utils.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
   final String orderId;
@@ -443,7 +444,18 @@ class _ActionButtons extends StatelessWidget {
             },
           );
         }
-        return const SizedBox.shrink();
+        // Serving staff can print bill
+        return Column(
+          children: [
+            PrimaryButton(
+              label: 'Print Bill',
+              icon: Icons.print_rounded,
+              color: AppColors.gold,
+              textColor: AppColors.primary,
+              onTap: () => PrintingUtils.printOrderBill(order),
+            ),
+          ],
+        );
 
       case OrderStatus.billed:
         final billingRole = context.read<StaffAuthProvider>().role;

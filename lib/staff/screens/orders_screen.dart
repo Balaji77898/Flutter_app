@@ -4,8 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../contexts/orders_provider.dart';
 import '../contexts/auth_provider.dart';
 import '../models/models.dart';
-import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
+import '../theme/app_theme.dart';
+import '../../core/currency_utils.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class OrdersScreen extends StatefulWidget {
@@ -76,7 +77,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
     final allOrders = ordersProvider.orders
         .where(
           (o) =>
-  o.status == OrderStatus.placed ||
   o.status == OrderStatus.confirmed ||
   o.status == OrderStatus.preparing ||
   o.status == OrderStatus.ready ||
@@ -404,7 +404,7 @@ class _OrderCard extends StatelessWidget {
                             color: AppColors.primary.withValues(alpha: 0.05),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.table_bar_rounded,
                             size: 22,
                             color: AppColors.primary,
@@ -422,6 +422,15 @@ class _OrderCard extends StatelessWidget {
                                 color: AppColors.slate900,
                               ),
                             ),
+                            if (order.customerName != null)
+                              Text(
+                                order.customerName!,
+                                style: AppTheme.sans(
+                                  size: 14,
+                                  weight: FontWeight.w700,
+                                  color: AppColors.slate700,
+                                ),
+                              ),
                             Text(
                               '${order.items} items ordered',
                               style: AppTheme.sans(
@@ -435,7 +444,7 @@ class _OrderCard extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      '₹${order.total.round()}',
+                      CurrencyUtils.format(order.total),
                       style: AppTheme.serif(
                         size: 22,
                         weight: FontWeight.w900,
@@ -457,7 +466,7 @@ class _OrderCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.person_outline, size: 14, color: AppColors.slate400),
+                      const Icon(Icons.person_outline, size: 14, color: AppColors.slate400),
                       const SizedBox(width: 6),
                       Text(
                         'Assigned to Staff',

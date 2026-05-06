@@ -214,16 +214,16 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     height: 40,
                     child: ElevatedButton.icon(
                       onPressed: () async {
+                        final navigator = GoRouter.of(context);
+                        final staffAuth = context.read<StaffAuthProvider>();
                         await auth.logout();
-                        if (context.mounted) {
-                          await context.read<StaffAuthProvider>().logout();
-                          context.go('/login');
-                        }
+                        await staffAuth.logout();
+                        navigator.go('/login');
                       },
                       icon: const Icon(Icons.logout_rounded, size: 16, color: Colors.white),
                       label: Text('Logout', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.1),
+                        backgroundColor: Colors.white.withValues(alpha: 0.1),
                         elevation: 0,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
@@ -278,7 +278,7 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.rubyDark.withOpacity(0.12), // Persistent maroon shadow
+                color: AppColors.rubyDark.withValues(alpha: 0.12), // Persistent maroon shadow
                 blurRadius: _isHovered ? 30 : 20,
                 offset: Offset(0, _isHovered ? 15 : 10),
               )
@@ -294,7 +294,7 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
                 decoration: BoxDecoration(
                   color: _isHovered 
                       ? AppColors.rubyRed 
-                      : AppColors.rubyDark.withOpacity(0.05),
+                      : AppColors.rubyDark.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
@@ -400,11 +400,11 @@ class _ProfileChipState extends State<_ProfileChip> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: _isHovered ? Colors.white.withOpacity(0.15) : Colors.white.withOpacity(0.08),
+            color: _isHovered ? Colors.white.withValues(alpha: 0.15) : Colors.white.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(100),
-            border: Border.all(color: _isHovered ? AppColors.gold.withOpacity(0.5) : Colors.white.withOpacity(0.1)),
+            border: Border.all(color: _isHovered ? AppColors.gold.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.1)),
             boxShadow: _isHovered ? [
-              BoxShadow(color: AppColors.gold.withOpacity(0.2), blurRadius: 12, spreadRadius: 2)
+              BoxShadow(color: AppColors.gold.withValues(alpha: 0.2), blurRadius: 12, spreadRadius: 2)
             ] : null,
           ),
           child: Row(
@@ -484,7 +484,7 @@ class _NavigationPulse extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.gold.withOpacity(0.3 * (1 - value)),
+                                color: AppColors.gold.withValues(alpha: 0.3 * (1 - value)),
                                 blurRadius: 20,
                                 spreadRadius: 5,
                               )

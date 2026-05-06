@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
@@ -111,8 +110,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
             icon: const Icon(Icons.arrow_back, color: AppColors.gold, size: 18),
             label: Text('Back to Dashboard', style: GoogleFonts.inter(color: AppColors.gold, fontWeight: FontWeight.bold)),
             style: OutlinedButton.styleFrom(
-              backgroundColor: Colors.white.withOpacity(0.1),
-              side: BorderSide(color: AppColors.gold.withOpacity(0.3)),
+              backgroundColor: Colors.white.withValues(alpha: 0.1),
+              side: BorderSide(color: AppColors.gold.withValues(alpha: 0.3)),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
@@ -157,8 +156,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 4, offset: const Offset(0, 2))],
+          border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.01), blurRadius: 4, offset: const Offset(0, 2))],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,8 +177,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 4, offset: const Offset(0, 2))],
+        border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.01), blurRadius: 4, offset: const Offset(0, 2))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,9 +201,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     hintText: 'Search by Order ID...',
                     hintStyle: GoogleFonts.inter(color: Colors.grey.shade400, fontSize: 14),
                     prefixIcon: Icon(Icons.search, size: 20, color: Colors.grey.shade500),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.2))),
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.1))),
-                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.5))),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withValues(alpha: 0.2))),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withValues(alpha: 0.1))),
+                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withValues(alpha: 0.5))),
                   ),
                 ),
               ),
@@ -217,7 +216,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.rubyDark.withOpacity(0.2)),
+                    border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2)),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
@@ -250,7 +249,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.2)),
+        border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: DropdownButtonHideUnderline(
@@ -270,8 +269,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 4, offset: const Offset(0, 2))],
+        border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.01), blurRadius: 4, offset: const Offset(0, 2))],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
@@ -388,7 +387,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(100), border: Border.all(color: text.withOpacity(0.3))),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(100), border: Border.all(color: text.withValues(alpha: 0.3))),
       child: Text(status.toUpperCase() == 'PLACED' ? 'Placed' : status, style: GoogleFonts.inter(color: text, fontSize: 11, fontWeight: FontWeight.bold)),
     );
   }
@@ -404,7 +403,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(100), border: Border.all(color: text.withOpacity(0.3))),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(100), border: Border.all(color: text.withValues(alpha: 0.3))),
       child: Text(status.toUpperCase() == 'PENDING' ? 'Pending' : status, style: GoogleFonts.inter(color: text, fontSize: 11, fontWeight: FontWeight.bold)),
     );
   }
@@ -626,7 +625,7 @@ class _OrderDetailsDialog extends StatelessWidget {
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: accent.withOpacity(0.1)),
+        border: Border.all(color: accent.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -641,7 +640,7 @@ class _OrderDetailsDialog extends StatelessWidget {
           const SizedBox(height: 8),
           ...lines.map((l) => Padding(
             padding: const EdgeInsets.only(bottom: 4),
-            child: Text(l, style: TextStyle(fontSize: 12, color: accent.withOpacity(0.8), fontWeight: FontWeight.w600)),
+            child: Text(l, style: TextStyle(fontSize: 12, color: accent.withValues(alpha: 0.8), fontWeight: FontWeight.w600)),
           )),
         ],
       ),

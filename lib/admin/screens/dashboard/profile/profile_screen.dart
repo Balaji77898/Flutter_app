@@ -1,7 +1,6 @@
 import 'package:restaurant_unified_app/core/theme.dart';
-import 'package:restaurant_unified_app/core/theme.dart';
-import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';

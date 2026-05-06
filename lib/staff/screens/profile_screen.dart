@@ -75,7 +75,7 @@ class ProfileScreen extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        Divider(color: AppColors.slate100),
+                        const Divider(color: AppColors.slate100),
                         const SizedBox(height: 12),
                         _ProfileRow(
                           icon: Icons.email_outlined,
@@ -159,7 +159,7 @@ class ProfileScreen extends StatelessWidget {
                             accentColor: AppColors.primary,
                             onTap: () => context.push('/staff/orders'),
                           ),
-                          Divider(height: 20, color: AppColors.slate100),
+                          const Divider(height: 20, color: AppColors.slate100),
                           _QuickLink(
                             icon: Icons.table_restaurant_rounded,
                             label: 'Floor Plan',
@@ -232,11 +232,11 @@ class ProfileScreen extends StatelessWidget {
                         // Full-width logout button
                         GestureDetector(
                           onTap: () async {
+                            final navigator = GoRouter.of(context);
+                            final rootAuth = context.read<AuthProvider>();
                             await auth.logout();
-                            if (context.mounted) {
-                              await context.read<AuthProvider>().logout();
-                              context.go('/login');
-                            }
+                            await rootAuth.logout();
+                            navigator.go('/login');
                           },
                           child: Container(
                             width: double.infinity,
@@ -317,7 +317,7 @@ class _ProfileHeroHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [AppColors.primary, AppColors.primaryDark],
           begin: Alignment.topLeft,
@@ -593,7 +593,7 @@ class _QuickLink extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(Icons.arrow_forward_ios_rounded,
+            const Icon(Icons.arrow_forward_ios_rounded,
                 color: AppColors.slate300, size: 16),
           ],
         ),

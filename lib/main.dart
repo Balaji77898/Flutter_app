@@ -25,7 +25,7 @@ void main() async {
     await Future.wait([
       authProvider.loadAuth().timeout(const Duration(seconds: 5), onTimeout: () {}),
       staffAuthProvider.loadAuth().timeout(const Duration(seconds: 5), onTimeout: () {}),
-    ]).catchError((e) => debugPrint("Initialization error: $e"));
+    ]).catchError((e) { debugPrint("Initialization error: $e"); return <void>[]; });
 
     runApp(
       MultiProvider(

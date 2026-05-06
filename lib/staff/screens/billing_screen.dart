@@ -6,6 +6,7 @@ import '../contexts/auth_provider.dart';
 import '../models/models.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
+import '../../core/currency_utils.dart';
 
 class BillingScreen extends StatefulWidget {
   const BillingScreen({super.key});
@@ -157,14 +158,14 @@ class _BillingScreenState extends State<BillingScreen> {
                       iconColor: AppColors.warning,
                       iconBg: AppColors.warningLight,
                       label: 'Total Revenue',
-                      value: '₹${grandTotal.round()}',
+                      value: CurrencyUtils.format(grandTotal),
                     ),
                     StatCard(
                       icon: Icons.payments,
                       iconColor: AppColors.success,
                       iconBg: AppColors.successLight,
                       label: 'Collected',
-                      value: '₹${totalRevenue.round()}',
+                      value: CurrencyUtils.format(totalRevenue),
                     ),
                     if (isWide && constraints.maxWidth >= 1024)
                       StatCard(
@@ -172,7 +173,7 @@ class _BillingScreenState extends State<BillingScreen> {
                         iconColor: AppColors.warning,
                         iconBg: AppColors.warningLight,
                         label: 'Billed',
-                        value: '₹${totalBilled.round()}',
+                        value: CurrencyUtils.format(totalBilled),
                       ),
                   ],
                 );
@@ -456,24 +457,35 @@ class _BillingCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                  order.table,
-                                  style: AppTheme.sans(
-                                    size: isSmall ? 16 : 20,
-                                    weight: FontWeight.w700,
-                                    color: AppColors.slate900,
+                                  Text(
+                                    order.table,
+                                    style: AppTheme.sans(
+                                      size: isSmall ? 16 : 20,
+                                      weight: FontWeight.w700,
+                                      color: AppColors.slate900,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  '${order.items} items',
-                                  style: AppTheme.sans(
-                                    size: isSmall ? 12 : 14,
-                                    color: AppColors.slate500,
+                                  if (order.customerName != null) ...[
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      order.customerName!,
+                                      style: AppTheme.sans(
+                                        size: isSmall ? 13 : 15,
+                                        weight: FontWeight.w700,
+                                        color: AppColors.slate700,
+                                      ),
+                                    ),
+                                  ],
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    '${order.items} items',
+                                    style: AppTheme.sans(
+                                      size: isSmall ? 12 : 14,
+                                      color: AppColors.slate500,
+                                    ),
                                   ),
-                                ),
                               ],
                             ),
                           ),
@@ -486,7 +498,7 @@ class _BillingCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '₹${order.total.round()}',
+                          CurrencyUtils.format(order.total),
                           style: AppTheme.sans(
                             size: isSmall ? 22 : 28,
                             weight: FontWeight.w900,
