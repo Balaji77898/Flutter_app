@@ -116,21 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.go('/admin/dashboard'),
         ),
-        actions: [
-          if (r != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: IconButton(
-                icon: Icon(_isEditing ? Icons.close : Icons.edit, color: Colors.white),
-                onPressed: () {
-                  setState(() {
-                    if (_isEditing) _populateFields(); // Reset fields if cancelling
-                    _isEditing = !_isEditing;
-                  });
-                },
-              ),
-            ),
-        ],
+        actions: const [],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: Container(height: 4, color: AppColors.gold),
@@ -152,16 +138,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       _buildHeaderCard(r),
                       const SizedBox(height: 32),
 
-                      // ── Restaurant Details ─────────────────────────────────────
+                       // ── Restaurant Details ─────────────────────────────────────
+                       Text('Restaurant Details', style: AppTextStyles.title()),
+                       const SizedBox(height: 16),
+                      _buildDetailsGrid(r),
+                      
+                      const SizedBox(height: 32),
+
+                      // ── Contacts Section ───────────────────────────────────────
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Restaurant Details', style: AppTextStyles.title()),
+                          Text('Additional Contacts', style: AppTextStyles.title()),
                           if (_isEditing)
                             TextButton.icon(
-                              onPressed: restaurantProv.isLoading ? null : _saveChanges,
-                              icon: const Icon(Icons.save, size: 18),
-                              label: const Text('Save'),
+                              onPressed: () => setState(() {
+                                _isEditing = false;
+                                _populateFields();
+                              }),
+                              icon: const Icon(Icons.close, size: 18),
+                              label: const Text('Done'),
                               style: TextButton.styleFrom(foregroundColor: AppColors.rubyRed),
                             )
                           else
@@ -173,13 +169,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      _buildDetailsGrid(r),
-                      
-                      const SizedBox(height: 32),
-
-                      // ── Contacts Section ───────────────────────────────────────
-                      Text('Additional Contacts', style: AppTextStyles.title()),
                       const SizedBox(height: 16),
                       _buildContactsSection(restaurantProv),
 
@@ -425,30 +414,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: AppTextStyles.overline()),
-              const SizedBox(height: 4),
-              _isEditing
-                  ? TextFormField(
-                      controller: controller,
-                      maxLines: maxLines,
-                      style: AppTextStyles.body(color: AppColors.slate900),
-                      decoration: InputDecoration(
-                        hintText: hint,
-                        isDense: true,
-                        contentPadding: const EdgeInsets.symmetric(vertical: 8),
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.rubyRed),
-                        ),
-                      ),
-                    )
-                  : Text(
-                      controller.text.isEmpty ? 'Not set' : controller.text,
-                      style: AppTextStyles.body(
-                        color: controller.text.isEmpty ? AppColors.slate400 : AppColors.slate900,
-                      ),
-                    ),
+               Text(label, style: AppTextStyles.overline()),
+               const SizedBox(height: 4),
+               Text(
+                 controller.text.isEmpty ? 'Not set' : controller.text,
+                 style: AppTextStyles.body(
+                   color: controller.text.isEmpty ? AppColors.slate400 : AppColors.slate900,
+                 ),
+               ),
             ],
           ),
         ),
