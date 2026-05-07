@@ -288,14 +288,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(height: 24),
 
                           Center(
-                            child: InkWell(
-                              onTap: () {},
-                              child: Text(
+                            child: OutlinedButton.icon(
+                              onPressed: () => context.pop(),
+                              icon: const Icon(Icons.arrow_back, size: 14, color: AppColors.primary),
+                              label: Text(
                                 'Back to Home',
                                 style: AppTheme.sans(
                                   size: 14,
-                                  color: AppColors.slate500,
-                                ).copyWith(decoration: TextDecoration.underline),
+                                  weight: FontWeight.bold,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: AppColors.primary.withOpacity(0.2)),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                               ),
                             ),
                           ),

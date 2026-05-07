@@ -238,15 +238,16 @@ class _StaffScreenState extends State<StaffScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ElevatedButton.icon(
+                    OutlinedButton.icon(
                       onPressed: () => context.go('/admin/staff'),
-                      icon: const Icon(Icons.arrow_back, size: 16),
-                      label: const Text('Back to Staff Management'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.1),
+                      icon: const Icon(Icons.arrow_back, color: AppColors.gold, size: 18),
+                      label: Text('Back to Staff Management', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.white.withOpacity(0.05),
                         foregroundColor: AppColors.gold,
-                        elevation: 0,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        side: BorderSide(color: AppColors.gold.withOpacity(0.5)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                     ),
                     const SizedBox(height: 24),

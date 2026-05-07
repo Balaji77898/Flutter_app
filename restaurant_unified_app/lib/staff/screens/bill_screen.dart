@@ -290,32 +290,24 @@ class BillScreen extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pop(context); // go back cleanly
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 16,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    borderRadius: BorderRadius.circular(14),
-                                    border: Border.all(
-                                      color: AppColors.slate200,
-                                    ),
-                                  ),
-                                  child: Text(
+                              Center(
+                                child: OutlinedButton.icon(
+                                  onPressed: () => Navigator.pop(context),
+                                  icon: const Icon(Icons.arrow_back, size: 14, color: AppColors.primary),
+                                  label: Text(
                                     auth.role == StaffRole.billingStaff
                                         ? 'Back to Billing'
                                         : 'Back to Dashboard',
-                                    textAlign: TextAlign.center,
                                     style: AppTheme.sans(
-                                      size: 15,
-                                      weight: FontWeight.w700,
-                                      color: AppColors.slate700,
+                                      size: 14,
+                                      weight: FontWeight.bold,
+                                      color: AppColors.primary,
                                     ),
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                    side: BorderSide(color: AppColors.primary.withOpacity(0.2)),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                                   ),
                                 ),
                               ),

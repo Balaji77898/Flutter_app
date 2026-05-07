@@ -183,10 +183,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
             icon: const Icon(Icons.arrow_back, color: AppColors.gold, size: 18),
             label: Text('Back to Dashboard', style: GoogleFonts.inter(color: AppColors.gold, fontWeight: FontWeight.bold)),
             style: OutlinedButton.styleFrom(
-              backgroundColor: Colors.white.withOpacity(0.1),
-              side: BorderSide(color: AppColors.gold.withOpacity(0.3)),
+              backgroundColor: Colors.white.withOpacity(0.05),
+              side: BorderSide(color: AppColors.gold.withOpacity(0.5)),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
           Expanded(

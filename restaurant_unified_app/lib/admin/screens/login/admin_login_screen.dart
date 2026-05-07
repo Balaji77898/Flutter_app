@@ -400,14 +400,20 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
             // Back link
             Center(
-              child: GestureDetector(
-                onTap: () => context.go('/admin'),
-                child: Text('← Back to Landing',
+              child: OutlinedButton.icon(
+                onPressed: () => context.go('/admin'),
+                icon: const Icon(Icons.arrow_back, size: 14, color: AppColors.rubyDark),
+                label: Text('Back to Landing',
                     style: GoogleFonts.inter(
                       fontSize: 13,
-                      color: AppColors.textMuted,
-                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.rubyDark,
                     )),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: AppColors.rubyDark.withOpacity(0.2)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                ),
               ),
             ),
           ],

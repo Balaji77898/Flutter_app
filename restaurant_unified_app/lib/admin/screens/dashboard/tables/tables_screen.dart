@@ -303,11 +303,13 @@ class _TablesScreenState extends State<TablesScreen> {
           children: [
             OutlinedButton.icon(
               onPressed: () => context.go('/admin/dashboard'),
-              icon: const Icon(Icons.arrow_back, color: Colors.white, size: 16),
-              label: Text('Back to Dashboard', style: GoogleFonts.inter(color: Colors.white, fontSize: 14)),
+              icon: const Icon(Icons.arrow_back, color: AppColors.gold, size: 18),
+              label: Text('Back to Dashboard', style: GoogleFonts.inter(color: AppColors.gold, fontSize: 14, fontWeight: FontWeight.bold)),
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.white30),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                backgroundColor: Colors.white.withOpacity(0.05),
+                side: BorderSide(color: AppColors.gold.withOpacity(0.5)),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
             Expanded(
