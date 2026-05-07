@@ -177,8 +177,8 @@ class _RoleAwareBottomNav extends StatelessWidget {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 220),
                     curve: Curves.easeOutCubic,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8, horizontal: 4),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -190,8 +190,8 @@ class _RoleAwareBottomNav extends StatelessWidget {
                               horizontal: 18, vertical: 8),
                           decoration: BoxDecoration(
                             color: isActive
-                                ? accentColor.withValues(alpha:
-                                    isBilling ? 0.12 : 0.15)
+                                ? accentColor.withValues(
+                                    alpha: isBilling ? 0.12 : 0.15)
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(20),
                             border: isActive
@@ -203,8 +203,7 @@ class _RoleAwareBottomNav extends StatelessWidget {
                           ),
                           child: Icon(
                             isActive ? item.activeIcon : item.icon,
-                            color:
-                                isActive ? accentColor : AppColors.slate400,
+                            color: isActive ? accentColor : AppColors.slate400,
                             size: 24,
                           ),
                         ),
@@ -214,11 +213,9 @@ class _RoleAwareBottomNav extends StatelessWidget {
                           duration: const Duration(milliseconds: 220),
                           style: AppTheme.sans(
                             size: 10,
-                            weight: isActive
-                                ? FontWeight.w800
-                                : FontWeight.w500,
-                            color:
-                                isActive ? accentColor : AppColors.slate400,
+                            weight:
+                                isActive ? FontWeight.w800 : FontWeight.w500,
+                            color: isActive ? accentColor : AppColors.slate400,
                           ),
                           child: Text(item.label),
                         ),
@@ -347,9 +344,8 @@ class _Sidebar extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 13),
                         decoration: BoxDecoration(
-                          color: isActive
-                              ? AppColors.primary
-                              : Colors.transparent,
+                          color:
+                              isActive ? AppColors.primary : Colors.transparent,
                           borderRadius: BorderRadius.circular(14),
                           boxShadow: isActive ? AppShadows.primaryGlow : null,
                         ),

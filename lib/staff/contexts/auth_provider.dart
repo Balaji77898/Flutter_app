@@ -58,15 +58,16 @@ class StaffAuthProvider extends ChangeNotifier {
           },
         );
 
-        debugPrint("StaffAuthProvider: FETCH PROFILE ($endpoint) STATUS: ${response.statusCode}");
+        debugPrint(
+            "StaffAuthProvider: FETCH PROFILE ($endpoint) STATUS: ${response.statusCode}");
         if (response.statusCode == 200) {
           final decoded = json.decode(response.body);
-          final data = (decoded is Map && decoded.containsKey('data')) 
-              ? decoded['data'] 
+          final data = (decoded is Map && decoded.containsKey('data'))
+              ? decoded['data']
               : (decoded is Map && decoded.containsKey('user'))
                   ? decoded['user']
                   : decoded;
-          
+
           if (data is Map<String, dynamic>) {
             _user = StaffUser.fromJson(data);
             _role = _user!.role;
@@ -99,8 +100,10 @@ class StaffAuthProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         final decoded = json.decode(response.body);
-        final data = (decoded is Map && decoded.containsKey('data')) ? decoded['data'] : decoded;
-        
+        final data = (decoded is Map && decoded.containsKey('data'))
+            ? decoded['data']
+            : decoded;
+
         // Save token and role
         _token = data['token'] ?? decoded['token'];
         _role = role;
@@ -137,10 +140,10 @@ class StaffAuthProvider extends ChangeNotifier {
     _user = null;
     _role = null;
     _token = null;
-    
+
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(kTokenKey);
-    
+
     notifyListeners();
   }
 }

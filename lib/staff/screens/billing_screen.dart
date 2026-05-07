@@ -30,7 +30,7 @@ class _BillingScreenState extends State<BillingScreen> {
     if (!mounted) return;
     final ordersProvider = context.read<OrdersProvider>();
     final auth = context.read<StaffAuthProvider>();
-    
+
     if (auth.token != null && ordersProvider.orders.isEmpty) {
       await ordersProvider.fetchOrders(auth.token!);
     }
@@ -68,13 +68,13 @@ class _BillingScreenState extends State<BillingScreen> {
     final ordersProvider = context.watch<OrdersProvider>();
     // In actual app, we only show billed/paid or served items in billing
     final billingOrders = ordersProvider.orders
-    .where(
-      (o) =>
-          o.status == OrderStatus.served ||
-          o.status == OrderStatus.billed ||
-          o.status == OrderStatus.paid,
-    )
-    .toList();
+        .where(
+          (o) =>
+              o.status == OrderStatus.served ||
+              o.status == OrderStatus.billed ||
+              o.status == OrderStatus.paid,
+        )
+        .toList();
 
     final totalRevenue = billingOrders
         .where((o) => o.status == OrderStatus.paid)
@@ -105,9 +105,8 @@ class _BillingScreenState extends State<BillingScreen> {
       {
         'id': 'paid',
         'label': 'Paid',
-        'count': billingOrders
-            .where((o) => o.status == OrderStatus.paid)
-            .length,
+        'count':
+            billingOrders.where((o) => o.status == OrderStatus.paid).length,
       },
     ];
 
@@ -123,9 +122,8 @@ class _BillingScreenState extends State<BillingScreen> {
           )
           .toList();
     } else {
-      filteredOrders = billingOrders
-          .where((o) => o.status == OrderStatus.paid)
-          .toList();
+      filteredOrders =
+          billingOrders.where((o) => o.status == OrderStatus.paid).toList();
     }
 
     return Scaffold(
@@ -136,23 +134,21 @@ class _BillingScreenState extends State<BillingScreen> {
             title: 'Billing & Payments',
             subtitle: 'Manage Transactions and Revenue',
           ),
-
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
                 final isWide = constraints.maxWidth >= 768;
 
                 // Revenue Stats Row
-                    final statsRow = GridView.count(
-                      crossAxisCount: isWide
-                          ? (constraints.maxWidth >= 1024 ? 3 : 2)
-                          : 1,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
-                      childAspectRatio: isWide ? 2.5 : 2.7,
-                      children: [
+                final statsRow = GridView.count(
+                  crossAxisCount:
+                      isWide ? (constraints.maxWidth >= 1024 ? 3 : 2) : 1,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  childAspectRatio: isWide ? 2.5 : 2.7,
+                  children: [
                     StatCard(
                       icon: Icons.account_balance_wallet,
                       iconColor: AppColors.warning,
@@ -357,11 +353,11 @@ class _BillingCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-  if (order.status == OrderStatus.served ||
-      order.status == OrderStatus.billed) {
-    context.push('/staff/payment/${order.id}');
-  }
-},
+        if (order.status == OrderStatus.served ||
+            order.status == OrderStatus.billed) {
+          context.push('/staff/payment/${order.id}');
+        }
+      },
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -457,35 +453,35 @@ class _BillingCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                  Text(
-                                    order.table,
-                                    style: AppTheme.sans(
-                                      size: isSmall ? 16 : 20,
-                                      weight: FontWeight.w700,
-                                      color: AppColors.slate900,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                Text(
+                                  order.table,
+                                  style: AppTheme.sans(
+                                    size: isSmall ? 16 : 20,
+                                    weight: FontWeight.w700,
+                                    color: AppColors.slate900,
                                   ),
-                                  if (order.customerName != null) ...[
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      order.customerName!,
-                                      style: AppTheme.sans(
-                                        size: isSmall ? 13 : 15,
-                                        weight: FontWeight.w700,
-                                        color: AppColors.slate700,
-                                      ),
-                                    ),
-                                  ],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                if (order.customerName != null) ...[
                                   const SizedBox(height: 2),
                                   Text(
-                                    '${order.items} items',
+                                    order.customerName!,
                                     style: AppTheme.sans(
-                                      size: isSmall ? 12 : 14,
-                                      color: AppColors.slate500,
+                                      size: isSmall ? 13 : 15,
+                                      weight: FontWeight.w700,
+                                      color: AppColors.slate700,
                                     ),
                                   ),
+                                ],
+                                const SizedBox(height: 2),
+                                Text(
+                                  '${order.items} items',
+                                  style: AppTheme.sans(
+                                    size: isSmall ? 12 : 14,
+                                    color: AppColors.slate500,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -513,7 +509,8 @@ class _BillingCard extends StatelessWidget {
                             child: PrimaryButton(
                               label: 'Pay Now',
                               color: AppColors.gold,
-                              onTap: () => context.push('/staff/payment/${order.id}'),
+                              onTap: () =>
+                                  context.push('/staff/payment/${order.id}'),
                             ),
                           ),
                         ],

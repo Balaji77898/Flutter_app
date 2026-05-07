@@ -17,8 +17,7 @@ class OrdersProvider extends ChangeNotifier {
 
   List<Order> get activeOrders => _orders
       .where((o) =>
-          o.status != OrderStatus.placed &&
-          o.status != OrderStatus.cancelled)
+          o.status != OrderStatus.placed && o.status != OrderStatus.cancelled)
       .toList();
 
   Order? findById(String id) {
@@ -49,11 +48,9 @@ class OrdersProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         final decoded = json.decode(response.body);
 
-final List ordersList = decoded['data']; // 🔥 FIX
+        final List ordersList = decoded['data']; // 🔥 FIX
 
-_orders = ordersList
-    .map((o) => Order.fromJson(o))
-    .toList();
+        _orders = ordersList.map((o) => Order.fromJson(o)).toList();
       } else {
         debugPrint("Failed to load orders: ${response.body}");
       }
@@ -91,46 +88,46 @@ _orders = ordersList
   }
 
   Future<void> payOrder(String orderId, String token) async {
-  try {
-    // 🔥 STEP 1 → SERVED → BILLED
-    final billedResponse = await http.patch(
-      Uri.parse("$kBackendBase${ApiEndpoints.ordersList}/$orderId/status"),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token",
-      },
-      body: json.encode({
-        "status": "BILLED",
-      }),
-    );
+    try {
+      // 🔥 STEP 1 → SERVED → BILLED
+      final billedResponse = await http.patch(
+        Uri.parse("$kBackendBase${ApiEndpoints.ordersList}/$orderId/status"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+        body: json.encode({
+          "status": "BILLED",
+        }),
+      );
 
-    debugPrint("BILLED STATUS: ${billedResponse.statusCode}");
-    debugPrint("BILLED BODY: ${billedResponse.body}");
+      debugPrint("BILLED STATUS: ${billedResponse.statusCode}");
+      debugPrint("BILLED BODY: ${billedResponse.body}");
 
-    // 🔥 STEP 2 → BILLED → PAID
-    final paidResponse = await http.patch(
-      Uri.parse("$kBackendBase${ApiEndpoints.ordersList}/$orderId/status"),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token",
-      },
-      body: json.encode({
-        "status": "PAID",
-        "payment_status": "PAID",
-      }),
-    );
+      // 🔥 STEP 2 → BILLED → PAID
+      final paidResponse = await http.patch(
+        Uri.parse("$kBackendBase${ApiEndpoints.ordersList}/$orderId/status"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+        body: json.encode({
+          "status": "PAID",
+          "payment_status": "PAID",
+        }),
+      );
 
-    debugPrint("PAID STATUS: ${paidResponse.statusCode}");
-    debugPrint("PAID BODY: ${paidResponse.body}");
+      debugPrint("PAID STATUS: ${paidResponse.statusCode}");
+      debugPrint("PAID BODY: ${paidResponse.body}");
 
-    // 🔥 REFRESH UI
-    if (paidResponse.statusCode == 200) {
-      await fetchOrders(token);
+      // 🔥 REFRESH UI
+      if (paidResponse.statusCode == 200) {
+        await fetchOrders(token);
+      }
+    } catch (e) {
+      debugPrint("PAY ERROR: $e");
     }
-  } catch (e) {
-    debugPrint("PAY ERROR: $e");
   }
-}
 
   Future<void> createOrder(Map<String, dynamic> body, String token) async {
     _isLoading = true;

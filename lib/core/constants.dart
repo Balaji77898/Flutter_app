@@ -9,28 +9,28 @@ class ApiEndpoints {
   static const String adminLogin = '/api/admin/login';
   static const String staffLogin = '/api/staff/login';
   static const String me = '/api/admin/me';
-  
+
   // Admin Endpoints
   static const String restaurant = '/api/admin/restaurant';
   static const String staffList = '/api/admin/staff';
   static String staffById(String id) => '/api/admin/staff/$id';
   static String toggleStaff(String id) => '/api/admin/staff/$id/toggle';
-  
+
   static const String tablesList = '/api/admin/tables';
   static String tableById(String id) => '/api/admin/tables/$id';
   static String toggleTable(String id) => '/api/admin/tables/$id/toggle';
   static String deleteTable(String id) => '/api/admin/tables/$id';
-  
+
   static const String menuCategoriesList = '/api/admin/menu/categories';
   static String menuCategoryById(String id) => '/api/admin/menu/categories/$id';
-  
+
   static const String menuItemsList = '/api/admin/menu/items';
   static String menuItemById(String id) => '/api/admin/menu/items/$id';
   static String toggleMenuItem(String id) => '/api/admin/menu/items/$id/toggle';
-  
+
   static const String ordersList = '/api/admin/orders';
   static String orderById(String id) => '/api/admin/orders/$id';
-  
+
   // Staff Endpoints
   static const String staffOrders = '/api/admin/orders';
   static const String staffTables = '/api/admin/tables';
@@ -43,6 +43,7 @@ const String kRoleKey = 'user_role';
 
 // ─── Enums ───────────────────────────────────────────────────────────────────
 enum UserRole { admin, servingStaff, billingStaff }
+
 enum StaffRole { servingStaff, billingStaff }
 
 // ─── Colors ──────────────────────────────────────────────────────────────────
@@ -55,7 +56,7 @@ class AppColors {
   static const Color goldDark = Color(0xFFD9A820);
   static const Color ivory = Color(0xFFFAF4E8);
   static const Color ivoryDark = Color(0xFFF1E6D2);
-  
+
   static const Color rubyRed = Color(0xFF7B1D2A);
   static const Color rubyDark = Color(0xFF5C1020);
 

@@ -410,8 +410,8 @@ class _ActionButtons extends StatelessWidget {
         return PrimaryButton(
           label: 'Mark as Preparing',
           color: const Color(0xFF2563EB),
-          onTap: () =>
-              provider.updateOrderStatus(order.id, OrderStatus.preparing, token),
+          onTap: () => provider.updateOrderStatus(
+              order.id, OrderStatus.preparing, token),
         );
 
       case OrderStatus.preparing:

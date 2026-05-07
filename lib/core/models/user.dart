@@ -27,8 +27,11 @@ class UserProfile {
       email: json['email'] ?? '',
       role: role,
       phone: json['phone']?.toString(),
-      restaurantName: json['restaurant_name']?.toString() ?? json['restaurant']?.toString(),
-      createdAt: createdAtRaw != null ? DateTime.tryParse(createdAtRaw.toString()) : null,
+      restaurantName:
+          json['restaurant_name']?.toString() ?? json['restaurant']?.toString(),
+      createdAt: createdAtRaw != null
+          ? DateTime.tryParse(createdAtRaw.toString())
+          : null,
     );
   }
 }

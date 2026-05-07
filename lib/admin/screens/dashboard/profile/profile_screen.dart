@@ -93,7 +93,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Text(r?.restaurantType ?? 'Fine Dining',
                                   style: GoogleFonts.inter(
                                     fontSize: 13,
-                                    color: AppColors.gold.withValues(alpha: 0.9),
+                                    color:
+                                        AppColors.gold.withValues(alpha: 0.9),
                                     fontWeight: FontWeight.w500,
                                   )),
                             ],
@@ -271,5 +272,3 @@ class _InfoRow {
   const _InfoRow(
       {required this.icon, required this.label, required this.value});
 }
-
-

@@ -55,8 +55,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final recentOrders = ordersProvider.activeOrders.take(4).toList();
     final newOrdersCount = ordersProvider.newOrders.length;
     final activeOrdersCount = ordersProvider.activeOrders.length;
-    final availableTablesCount =
-        tablesProvider.tables.where((t) => t.status == TableStatus.available).length;
+    final availableTablesCount = tablesProvider.tables
+        .where((t) => t.status == TableStatus.available)
+        .length;
 
     final userName = auth.user?.name ?? 'Staff';
     final firstName = userName.split(' ').first;
@@ -76,7 +77,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
           ),
-          
+
           Column(
             children: [
               // ── Hero Greeting Banner ──────────────────────────────────────
@@ -149,10 +150,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   _FeatureCard(
                                     icon: Icons.add_shopping_cart_rounded,
                                     iconColor: AppColors.primary,
-                                    iconBg: AppColors.primary.withValues(alpha: 0.08),
+                                    iconBg: AppColors.primary
+                                        .withValues(alpha: 0.08),
                                     title: 'Create Order',
                                     description: 'Start a new table order',
-                                    onTap: () => context.push('/staff/create-order'),
+                                    onTap: () =>
+                                        context.push('/staff/create-order'),
                                   ),
                                   _FeatureCard(
                                     icon: Icons.notifications_active_rounded,
@@ -160,8 +163,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     iconBg: const Color(0xFFFFFBEB),
                                     title: 'New Orders',
                                     description: 'View incoming orders',
-                                    badge: newOrdersCount > 0 ? '$newOrdersCount' : null,
-                                    onTap: () => context.push('/staff/new-orders'),
+                                    badge: newOrdersCount > 0
+                                        ? '$newOrdersCount'
+                                        : null,
+                                    onTap: () =>
+                                        context.push('/staff/new-orders'),
                                   ),
                                   _FeatureCard(
                                     icon: Icons.receipt_long_rounded,
@@ -169,7 +175,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     iconBg: const Color(0xFFF0FDFA),
                                     title: 'Active Orders',
                                     description: 'Manage live orders',
-                                    badge: activeOrdersCount > 0 ? '$activeOrdersCount' : null,
+                                    badge: activeOrdersCount > 0
+                                        ? '$activeOrdersCount'
+                                        : null,
                                     onTap: () => context.push('/staff/orders'),
                                   ),
                                   _FeatureCard(
@@ -178,7 +186,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     iconBg: AppColors.slate50,
                                     title: 'Tables',
                                     description: 'Floor plan overview',
-                                    badge: availableTablesCount > 0 ? '$availableTablesCount free' : null,
+                                    badge: availableTablesCount > 0
+                                        ? '$availableTablesCount free'
+                                        : null,
                                     badgeColor: AppColors.success,
                                     onTap: () => context.push('/staff/tables'),
                                   ),
@@ -186,9 +196,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     .asMap()
                                     .entries
                                     .map((e) => e.value
-                                        .animate(delay: Duration(milliseconds: e.key * 80))
+                                        .animate(
+                                            delay: Duration(
+                                                milliseconds: e.key * 80))
                                         .fade(duration: 400.ms)
-                                        .slideY(begin: 0.15, end: 0, duration: 400.ms, curve: Curves.easeOutQuad))
+                                        .slideY(
+                                            begin: 0.15,
+                                            end: 0,
+                                            duration: 400.ms,
+                                            curve: Curves.easeOutQuad))
                                     .toList(),
                               );
                             },
@@ -211,12 +227,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               children: [
                                 // Header row
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             'Active Orders',
@@ -245,7 +263,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     GoldButton(
                                       label: isMobile ? 'All' : 'View All',
                                       icon: Icons.arrow_forward_rounded,
-                                      onTap: () => context.push('/staff/orders'),
+                                      onTap: () =>
+                                          context.push('/staff/orders'),
                                     ),
                                   ],
                                 ),
@@ -272,25 +291,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                                       return GridView.builder(
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
                                         gridDelegate:
                                             SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: cols,
                                           mainAxisSpacing: 16,
                                           crossAxisSpacing: 16,
-                                          childAspectRatio: isMobile ? 2.1 : 1.6,
+                                          childAspectRatio:
+                                              isMobile ? 2.1 : 1.6,
                                         ),
                                         itemCount: recentOrders.length,
-                                        itemBuilder: (ctx, i) => _MiniOrderCard(order: recentOrders[i])
-                                            .animate(delay: Duration(milliseconds: i * 60))
+                                        itemBuilder: (ctx, i) => _MiniOrderCard(
+                                                order: recentOrders[i])
+                                            .animate(
+                                                delay: Duration(
+                                                    milliseconds: i * 60))
                                             .fade(duration: 300.ms)
-                                            .slideY(begin: 0.1, end: 0, duration: 300.ms),
+                                            .slideY(
+                                                begin: 0.1,
+                                                end: 0,
+                                                duration: 300.ms),
                                       );
                                     },
                                   ),
                               ],
                             ),
-                          ).animate().fade(duration: 500.ms, delay: 300.ms).slideY(begin: 0.05, duration: 500.ms, curve: Curves.easeOutQuad),
+                          )
+                              .animate()
+                              .fade(duration: 500.ms, delay: 300.ms)
+                              .slideY(
+                                  begin: 0.05,
+                                  duration: 500.ms,
+                                  curve: Curves.easeOutQuad),
                         ],
                       ),
                     ),
@@ -303,7 +336,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
-
 }
 
 // ─── Hero Greeting Banner ──────────────────────────────────────────────────
@@ -329,7 +361,8 @@ class _DashboardHero extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.primaryDark,
         image: DecorationImage(
-          image: const NetworkImage('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop'),
+          image: const NetworkImage(
+              'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop'),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
             AppColors.primaryDark.withValues(alpha: 0.85),
@@ -361,7 +394,7 @@ class _DashboardHero extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Background decorative elements
           Positioned(
             top: -100,
@@ -393,11 +426,13 @@ class _DashboardHero extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 7),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(30),
-                          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                          border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.2)),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -464,7 +499,10 @@ class _DashboardHero extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ).animate().fade(duration: 600.ms, delay: 200.ms).slideX(begin: -0.1),
+                  )
+                      .animate()
+                      .fade(duration: 600.ms, delay: 200.ms)
+                      .slideX(begin: -0.1),
 
                   const SizedBox(height: 32),
 
@@ -498,7 +536,10 @@ class _DashboardHero extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ).animate().fade(duration: 600.ms, delay: 400.ms).slideY(begin: 0.2),
+                  )
+                      .animate()
+                      .fade(duration: 600.ms, delay: 400.ms)
+                      .slideY(begin: 0.2),
                 ],
               ),
             ),
@@ -528,7 +569,9 @@ class _StatPill extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-        color: isAlert ? AppColors.danger.withValues(alpha: 0.2) : Colors.transparent,
+        color: isAlert
+            ? AppColors.danger.withValues(alpha: 0.2)
+            : Colors.transparent,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -568,7 +611,6 @@ class _StatPill extends StatelessWidget {
     );
   }
 }
-
 
 // ─── Feature Card ──────────────────────────────────────────────────────────
 class _FeatureCard extends StatefulWidget {
@@ -708,7 +750,6 @@ class _FeatureCardState extends State<_FeatureCard> {
   }
 }
 
-
 // ─── Mini Order Card ───────────────────────────────────────────────────────
 class _MiniOrderCard extends StatelessWidget {
   final Order order;
@@ -774,7 +815,8 @@ class _MiniOrderCard extends StatelessWidget {
               top: 0,
               right: 0,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: config.bg,
                   borderRadius: const BorderRadius.only(
@@ -792,7 +834,7 @@ class _MiniOrderCard extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -849,16 +891,17 @@ class _MiniOrderCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
+
                   const Spacer(),
-                  
+
                   // Details Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.shopping_bag_outlined, size: 14, color: AppColors.slate400),
+                          const Icon(Icons.shopping_bag_outlined,
+                              size: 14, color: AppColors.slate400),
                           const SizedBox(width: 4),
                           Text(
                             '${order.items} items',
@@ -902,4 +945,3 @@ class _StatusConfig {
     required this.leftBar,
   });
 }
-

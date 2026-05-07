@@ -28,12 +28,12 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
   String? _selectedTableId;
   String _paymentMode = 'Cash';
   String _orderMode = 'Dine-in';
-  
+
   bool _isLoadingTables = true;
   bool _isSubmitting = false;
 
   final Map<String, int> _selectedItems = {}; // menuItemId -> quantity
-  
+
   // Navigation State for Menu Items
   String _viewMode = 'categories'; // 'categories' or 'items'
   MenuCategory? _activeCategory;
@@ -80,11 +80,13 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
   Future<void> _submitOrder() async {
     if (!_formKey.currentState!.validate()) return;
     if (_orderMode == 'Dine-in' && _selectedTableId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a table for Dine-in')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select a table for Dine-in')));
       return;
     }
     if (_selectedItems.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please add at least one item')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please add at least one item')));
       return;
     }
 
@@ -118,13 +120,17 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
       if (mounted) {
         Navigator.pop(context, true);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Order created successfully!'), backgroundColor: AppColors.success),
+          const SnackBar(
+              content: Text('Order created successfully!'),
+              backgroundColor: AppColors.success),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create order: $e'), backgroundColor: AppColors.danger),
+          SnackBar(
+              content: Text('Failed to create order: $e'),
+              backgroundColor: AppColors.danger),
         );
       }
     } finally {
@@ -153,13 +159,19 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               decoration: const BoxDecoration(
                 color: AppColors.rubyDark,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20)),
               ),
               child: Row(
                 children: [
                   const Icon(Icons.receipt_long, color: Colors.white, size: 28),
                   const SizedBox(width: 16),
-                  Text('Create Manual Order', style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
+                  Text('Create Manual Order',
+                      style: GoogleFonts.playfairDisplay(
+                          color: Colors.white,
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold)),
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.white70),
@@ -180,7 +192,9 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border(top: BorderSide(color: Colors.grey.shade100)),
-                borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -189,15 +203,24 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Total Amount', style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: 13)),
-                      Text('₹${_totalAmount.toStringAsFixed(2)}', style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.rubyRed)),
+                      Text('Total Amount',
+                          style: GoogleFonts.inter(
+                              color: AppColors.textMuted, fontSize: 13)),
+                      Text('₹${_totalAmount.toStringAsFixed(2)}',
+                          style: GoogleFonts.inter(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.rubyRed)),
                     ],
                   ),
                   Row(
                     children: [
                       TextButton(
-                        onPressed: _isSubmitting ? null : () => Navigator.pop(context),
-                        style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 24)),
+                        onPressed:
+                            _isSubmitting ? null : () => Navigator.pop(context),
+                        style: TextButton.styleFrom(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 24)),
                         child: const Text('Cancel'),
                       ),
                       const SizedBox(width: 16),
@@ -205,12 +228,21 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                         onPressed: _isSubmitting ? null : _submitOrder,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.rubyRed,
-                          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 18),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
                         ),
                         child: _isSubmitting
-                            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                            : const Text('Submit Order', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                    color: Colors.white, strokeWidth: 2))
+                            : const Text('Submit Order',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
@@ -232,7 +264,8 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
           flex: 4,
           child: Container(
             padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(border: Border(right: BorderSide(color: Colors.grey.shade100))),
+            decoration: BoxDecoration(
+                border: Border(right: BorderSide(color: Colors.grey.shade100))),
             child: SingleChildScrollView(child: _buildOrderDetailsForm()),
           ),
         ),
@@ -253,12 +286,15 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
       children: [
         Expanded(
           flex: 2,
-          child: SingleChildScrollView(padding: const EdgeInsets.all(24), child: _buildOrderDetailsForm()),
+          child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: _buildOrderDetailsForm()),
         ),
         Container(height: 1, color: Colors.grey.shade200),
         Expanded(
           flex: 3,
-          child: Container(color: const Color(0xFFF9FAFB), child: _buildMenuSelection()),
+          child: Container(
+              color: const Color(0xFFF9FAFB), child: _buildMenuSelection()),
         ),
       ],
     );
@@ -270,16 +306,29 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Order Configuration', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.rubyDark)),
+          Text('Order Configuration',
+              style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.rubyDark)),
           const SizedBox(height: 24),
-          
+
           // Order Mode
           _fieldLabel('Order Mode'),
           SegmentedButton<String>(
             segments: const [
-              ButtonSegment(value: 'Dine-in', label: Text('Dine-in'), icon: Icon(Icons.restaurant, size: 14)),
-              ButtonSegment(value: 'Takeaway', label: Text('Takeaway'), icon: Icon(Icons.shopping_bag, size: 14)),
-              ButtonSegment(value: 'Delivery', label: Text('Delivery'), icon: Icon(Icons.delivery_dining, size: 14)),
+              ButtonSegment(
+                  value: 'Dine-in',
+                  label: Text('Dine-in'),
+                  icon: Icon(Icons.restaurant, size: 14)),
+              ButtonSegment(
+                  value: 'Takeaway',
+                  label: Text('Takeaway'),
+                  icon: Icon(Icons.shopping_bag, size: 14)),
+              ButtonSegment(
+                  value: 'Delivery',
+                  label: Text('Delivery'),
+                  icon: Icon(Icons.delivery_dining, size: 14)),
             ],
             selected: {_orderMode},
             onSelectionChanged: (v) => setState(() => _orderMode = v.first),
@@ -287,11 +336,12 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
             style: SegmentedButton.styleFrom(
               selectedBackgroundColor: AppColors.rubyRed,
               selectedForegroundColor: Colors.white,
-              textStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+              textStyle:
+                  const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
               visualDensity: VisualDensity.compact,
             ),
           ),
-          
+
           const SizedBox(height: 20),
 
           // Table selection (only for Dine-in)
@@ -301,11 +351,19 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                 ? const LinearProgressIndicator()
                 : DropdownButtonFormField<String>(
                     initialValue: _selectedTableId,
-                    decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16)),
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 16)),
                     hint: const Text('Choose a table'),
-                    items: _tables.map((t) => DropdownMenuItem(value: t.id, child: Text('Table ${t.tableNumber}'))).toList(),
+                    items: _tables
+                        .map((t) => DropdownMenuItem(
+                            value: t.id, child: Text('Table ${t.tableNumber}')))
+                        .toList(),
                     onChanged: (v) => setState(() => _selectedTableId = v),
-                    validator: (v) => _orderMode == 'Dine-in' && v == null ? 'Required' : null,
+                    validator: (v) => _orderMode == 'Dine-in' && v == null
+                        ? 'Required'
+                        : null,
                   ),
             const SizedBox(height: 20),
           ],
@@ -314,8 +372,13 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
           _fieldLabel('Payment Mode'),
           DropdownButtonFormField<String>(
             initialValue: _paymentMode,
-            decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16)),
-            items: ['Cash', 'Card', 'UPI', 'Online'].map((m) => DropdownMenuItem(value: m, child: Text(m))).toList(),
+            decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 16)),
+            items: ['Cash', 'Card', 'UPI', 'Online']
+                .map((m) => DropdownMenuItem(value: m, child: Text(m)))
+                .toList(),
             onChanged: (v) => setState(() => _paymentMode = v!),
           ),
 
@@ -325,11 +388,12 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
           TextFormField(
             controller: _nameCtrl,
             decoration: const InputDecoration(
-              border: OutlineInputBorder(), 
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              border: OutlineInputBorder(),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             ),
           ),
-          
+
           const SizedBox(height: 20),
 
           _fieldLabel('Customer Phone (Optional)'),
@@ -337,8 +401,9 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
             controller: _phoneCtrl,
             keyboardType: TextInputType.phone,
             decoration: const InputDecoration(
-              border: OutlineInputBorder(), 
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              border: OutlineInputBorder(),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             ),
           ),
         ],
@@ -349,7 +414,11 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
   Widget _fieldLabel(String label) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textDark)),
+      child: Text(label,
+          style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              color: AppColors.textDark)),
     );
   }
 
@@ -371,7 +440,9 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
             children: [
               const Icon(Icons.category_rounded, color: AppColors.rubyRed),
               const SizedBox(width: 12),
-              Text('Select Category', style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text('Select Category',
+                  style: GoogleFonts.inter(
+                      fontSize: 16, fontWeight: FontWeight.bold)),
             ],
           ),
         ),
@@ -404,8 +475,10 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
   }
 
   Widget _buildItemsList() {
-    final items = widget.menuItems.where((i) => i.isAvailable && i.categoryId == _activeCategory?.id).toList();
-    
+    final items = widget.menuItems
+        .where((i) => i.isAvailable && i.categoryId == _activeCategory?.id)
+        .toList();
+
     return Column(
       children: [
         // Back Header
@@ -419,88 +492,121 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                 onPressed: () => setState(() => _viewMode = 'categories'),
               ),
               const SizedBox(width: 8),
-              Text(_activeCategory?.name ?? 'Items', style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(_activeCategory?.name ?? 'Items',
+                  style: GoogleFonts.inter(
+                      fontSize: 16, fontWeight: FontWeight.bold)),
               const Spacer(),
-              Text('${items.length} items', style: GoogleFonts.inter(color: Colors.grey, fontSize: 13)),
+              Text('${items.length} items',
+                  style: GoogleFonts.inter(color: Colors.grey, fontSize: 13)),
             ],
           ),
         ),
-        
+
         Expanded(
-          child: items.isEmpty 
-          ? const Center(child: Text('No items in this category.'))
-          : ListView.separated(
-            padding: const EdgeInsets.all(20),
-            itemCount: items.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
-            itemBuilder: (ctx, i) {
-              final item = items[i];
-              final qty = _selectedItems[item.id] ?? 0;
-              
-              return Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 8, offset: const Offset(0, 2))],
-                  border: Border.all(color: qty > 0 ? AppColors.rubyRed.withValues(alpha: 0.4) : AppColors.rubyDark.withValues(alpha: 0.12), width: 1.5),
-                ),
-                child: Row(
-                  children: [
-                    if (item.imageUrl != null && item.imageUrl!.isNotEmpty)
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(item.imageUrl!, width: 64, height: 64, fit: BoxFit.cover),
-                      )
-                    else
-                      Container(
-                        width: 64, height: 64,
-                        decoration: BoxDecoration(color: Colors.grey.shade50, borderRadius: BorderRadius.circular(12)),
-                        child: const Icon(Icons.restaurant, color: Colors.grey, size: 28),
+          child: items.isEmpty
+              ? const Center(child: Text('No items in this category.'))
+              : ListView.separated(
+                  padding: const EdgeInsets.all(20),
+                  itemCount: items.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  itemBuilder: (ctx, i) {
+                    final item = items[i];
+                    final qty = _selectedItems[item.id] ?? 0;
+
+                    return Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.03),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2))
+                        ],
+                        border: Border.all(
+                            color: qty > 0
+                                ? AppColors.rubyRed.withValues(alpha: 0.4)
+                                : AppColors.rubyDark.withValues(alpha: 0.12),
+                            width: 1.5),
                       ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
                         children: [
-                          Text(item.name, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 15)),
-                          const SizedBox(height: 4),
-                          Text('₹${item.price.toStringAsFixed(2)}', style: GoogleFonts.inter(color: AppColors.rubyRed, fontWeight: FontWeight.w600)),
+                          if (item.imageUrl != null &&
+                              item.imageUrl!.isNotEmpty)
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.network(item.imageUrl!,
+                                  width: 64, height: 64, fit: BoxFit.cover),
+                            )
+                          else
+                            Container(
+                              width: 64,
+                              height: 64,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey.shade50,
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: const Icon(Icons.restaurant,
+                                  color: Colors.grey, size: 28),
+                            ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(item.name,
+                                    style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15)),
+                                const SizedBox(height: 4),
+                                Text('₹${item.price.toStringAsFixed(2)}',
+                                    style: GoogleFonts.inter(
+                                        color: AppColors.rubyRed,
+                                        fontWeight: FontWeight.w600)),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              if (qty > 0) ...[
+                                IconButton(
+                                  icon: const Icon(Icons.remove_circle_outline,
+                                      color: AppColors.rubyRed, size: 24),
+                                  onPressed: () {
+                                    setState(() {
+                                      if (qty == 1) {
+                                        _selectedItems.remove(item.id);
+                                      } else {
+                                        _selectedItems[item.id] = qty - 1;
+                                      }
+                                    });
+                                  },
+                                ),
+                                Text('$qty',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16)),
+                              ],
+                              IconButton(
+                                icon: Icon(
+                                    qty > 0
+                                        ? Icons.add_circle
+                                        : Icons.add_circle_outline,
+                                    color: AppColors.success,
+                                    size: 24),
+                                onPressed: () {
+                                  setState(() {
+                                    _selectedItems[item.id] = qty + 1;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
                         ],
                       ),
-                    ),
-                    Row(
-                      children: [
-                        if (qty > 0) ...[
-                          IconButton(
-                            icon: const Icon(Icons.remove_circle_outline, color: AppColors.rubyRed, size: 24),
-                            onPressed: () {
-                              setState(() {
-                                if (qty == 1) {
-                                  _selectedItems.remove(item.id);
-                                } else {
-                                  _selectedItems[item.id] = qty - 1;
-                                }
-                              });
-                            },
-                          ),
-                          Text('$qty', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                        ],
-                        IconButton(
-                          icon: Icon(qty > 0 ? Icons.add_circle : Icons.add_circle_outline, color: AppColors.success, size: 24),
-                          onPressed: () {
-                            setState(() {
-                              _selectedItems[item.id] = qty + 1;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ),
       ],
     );
@@ -530,7 +636,9 @@ class _CategoryCardState extends State<_CategoryCard> {
         onTap: widget.onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          transform: _isHovered ? Matrix4.diagonal3Values(1.02, 1.02, 1.0) : Matrix4.identity(),
+          transform: _isHovered
+              ? Matrix4.diagonal3Values(1.02, 1.02, 1.0)
+              : Matrix4.identity(),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -542,7 +650,9 @@ class _CategoryCardState extends State<_CategoryCard> {
               )
             ],
             border: Border.all(
-              color: _isHovered ? AppColors.rubyDark : AppColors.rubyDark.withValues(alpha: 0.2),
+              color: _isHovered
+                  ? AppColors.rubyDark
+                  : AppColors.rubyDark.withValues(alpha: 0.2),
               width: _isHovered ? 2 : 1.5,
             ),
           ),
@@ -552,7 +662,8 @@ class _CategoryCardState extends State<_CategoryCard> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: (_isHovered ? AppColors.rubyRed : AppColors.rubyRed).withValues(alpha: _isHovered ? 0.15 : 0.08),
+                  color: (_isHovered ? AppColors.rubyRed : AppColors.rubyRed)
+                      .withValues(alpha: _isHovered ? 0.15 : 0.08),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(

@@ -39,10 +39,10 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
   Widget build(BuildContext context) {
     final provider = context.watch<OrdersProvider>();
     final newOrders = List<Order>.from(provider.newOrders);
-    
+
     // Sort by createdAt
-    newOrders.sort((a, b) => _showNewestFirst 
-        ? a.createdAt.compareTo(b.createdAt) 
+    newOrders.sort((a, b) => _showNewestFirst
+        ? a.createdAt.compareTo(b.createdAt)
         : b.createdAt.compareTo(a.createdAt));
 
     final acceptedCount = provider.activeOrders.length;
@@ -52,31 +52,34 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
       body: Column(
         children: [
           PageHeader(
-  title: 'New Orders',
-  subtitle: 'Incoming Kitchen Orders',
-  actions: [
-    HeaderIconButton(
-      icon: Icons.arrow_back,
-      onTap: () => Navigator.pop(context),
-    ),
-    const SizedBox(width: 8),
-    HeaderIconButton(
-      icon: Icons.refresh,
-      onTap: () {
-        final token = context.read<StaffAuthProvider>().token;
-        if (token != null) {
-          context.read<OrdersProvider>().fetchOrders(token);
-        }
-      },
-    ),
-    const SizedBox(width: 8),
-    HeaderIconButton(
-      icon: _showNewestFirst ? Icons.arrow_downward : Icons.arrow_upward,
-      label: _showNewestFirst ? 'Newest First' : 'Oldest First',
-      onTap: () => setState(() => _showNewestFirst = !_showNewestFirst),
-    ),
-  ],
-),
+            title: 'New Orders',
+            subtitle: 'Incoming Kitchen Orders',
+            actions: [
+              HeaderIconButton(
+                icon: Icons.arrow_back,
+                onTap: () => Navigator.pop(context),
+              ),
+              const SizedBox(width: 8),
+              HeaderIconButton(
+                icon: Icons.refresh,
+                onTap: () {
+                  final token = context.read<StaffAuthProvider>().token;
+                  if (token != null) {
+                    context.read<OrdersProvider>().fetchOrders(token);
+                  }
+                },
+              ),
+              const SizedBox(width: 8),
+              HeaderIconButton(
+                icon: _showNewestFirst
+                    ? Icons.arrow_downward
+                    : Icons.arrow_upward,
+                label: _showNewestFirst ? 'Newest First' : 'Oldest First',
+                onTap: () =>
+                    setState(() => _showNewestFirst = !_showNewestFirst),
+              ),
+            ],
+          ),
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,7 +115,10 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
                     iconBg: const Color(0xFFFEE2E2),
                     label: 'New Orders',
                     value: '${newOrders.length}',
-                  ).animate().fade().scale(curve: Curves.easeOutBack, duration: 400.ms),
+                  )
+                      .animate()
+                      .fade()
+                      .scale(curve: Curves.easeOutBack, duration: 400.ms),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -122,7 +128,10 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
                     iconBg: const Color(0xFFFEF9E7),
                     label: 'Accepted',
                     value: '$acceptedCount',
-                  ).animate().fade().scale(curve: Curves.easeOutBack, duration: 400.ms, delay: 100.ms),
+                  ).animate().fade().scale(
+                      curve: Curves.easeOutBack,
+                      duration: 400.ms,
+                      delay: 100.ms),
                 ),
               ],
             ),
@@ -133,14 +142,20 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
                 icon: Icons.receipt_long_outlined,
                 title: 'No orders yet',
                 subtitle: 'New customer orders will appear here',
-              ).animate().fade(duration: 400.ms).slideY(begin: 0.1, duration: 400.ms, curve: Curves.easeOutQuad)
+              ).animate().fade(duration: 400.ms).slideY(
+                  begin: 0.1, duration: 400.ms, curve: Curves.easeOutQuad)
             else
               ...newOrders.asMap().entries.map(
-                (entry) => _OrderCard(order: entry.value, provider: provider)
-                    .animate()
-                    .fade(duration: 400.ms, delay: (entry.key * 100).ms)
-                    .slideX(begin: 0.1, end: 0, duration: 400.ms, curve: Curves.easeOutQuad),
-              ),
+                    (entry) =>
+                        _OrderCard(order: entry.value, provider: provider)
+                            .animate()
+                            .fade(duration: 400.ms, delay: (entry.key * 100).ms)
+                            .slideX(
+                                begin: 0.1,
+                                end: 0,
+                                duration: 400.ms,
+                                curve: Curves.easeOutQuad),
+                  ),
           ],
         ),
       ),
@@ -463,9 +478,7 @@ class _OrderCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      ...order.itemsPreview
-                          .take(3)
-                          .map(
+                      ...order.itemsPreview.take(3).map(
                             (item) => Padding(
                               padding: const EdgeInsets.only(bottom: 4),
                               child: Row(
@@ -511,7 +524,8 @@ class _OrderCard extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       final token = context.read<StaffAuthProvider>().token;
-                      provider.updateOrderStatus(order.id, OrderStatus.confirmed, token!);
+                      provider.updateOrderStatus(
+                          order.id, OrderStatus.confirmed, token!);
                       context.push('/staff/order-details/${order.id}');
                     },
                     child: Container(
@@ -553,7 +567,8 @@ class _OrderCard extends StatelessWidget {
                   )
                 else
                   GestureDetector(
-                    onTap: () => context.push('/staff/order-details/${order.id}'),
+                    onTap: () =>
+                        context.push('/staff/order-details/${order.id}'),
                     child: Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 14),

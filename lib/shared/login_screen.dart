@@ -4,7 +4,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/core/auth_provider.dart';
 import 'package:restaurant_unified_app/staff/contexts/auth_provider.dart';
-import 'package:restaurant_unified_app/staff/models/models.dart' as staff_models;
+import 'package:restaurant_unified_app/staff/models/models.dart'
+    as staff_models;
 import '../core/theme.dart';
 
 class UnifiedLoginScreen extends StatefulWidget {
@@ -44,15 +45,15 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
         _passwordController.text,
         _selectedRole,
       );
-      
+
       if (_selectedRole != UserRole.admin) {
         if (!mounted) return;
         final staffAuth = context.read<StaffAuthProvider>();
         await staffAuth.login(
           _emailController.text,
           _passwordController.text,
-          _selectedRole == UserRole.servingStaff 
-              ? staff_models.StaffRole.servingStaff 
+          _selectedRole == UserRole.servingStaff
+              ? staff_models.StaffRole.servingStaff
               : staff_models.StaffRole.billingStaff,
         );
       }
@@ -103,24 +104,26 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
                   style: AppTheme.sans(color: AppColors.textMuted),
                 ),
                 const SizedBox(height: 32),
-                
+
                 // Role Selector
                 Row(
                   children: [
                     _RoleButton(
                       label: 'Admin',
                       isSelected: _selectedRole == UserRole.admin,
-                      onTap: () => setState(() => _selectedRole = UserRole.admin),
+                      onTap: () =>
+                          setState(() => _selectedRole = UserRole.admin),
                     ),
                     const SizedBox(width: 12),
                     _RoleButton(
                       label: 'Staff',
                       isSelected: _selectedRole != UserRole.admin,
-                      onTap: () => setState(() => _selectedRole = UserRole.servingStaff),
+                      onTap: () =>
+                          setState(() => _selectedRole = UserRole.servingStaff),
                     ),
                   ],
                 ),
-                
+
                 if (_selectedRole != UserRole.admin) ...[
                   const SizedBox(height: 16),
                   Row(
@@ -129,7 +132,8 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
                         child: _SubRoleButton(
                           label: 'Serving',
                           isSelected: _selectedRole == UserRole.servingStaff,
-                          onTap: () => setState(() => _selectedRole = UserRole.servingStaff),
+                          onTap: () => setState(
+                              () => _selectedRole = UserRole.servingStaff),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -137,7 +141,8 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
                         child: _SubRoleButton(
                           label: 'Billing',
                           isSelected: _selectedRole == UserRole.billingStaff,
-                          onTap: () => setState(() => _selectedRole = UserRole.billingStaff),
+                          onTap: () => setState(
+                              () => _selectedRole = UserRole.billingStaff),
                         ),
                       ),
                     ],
@@ -146,7 +151,9 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
 
                 const SizedBox(height: 24),
                 if (_error != null) ...[
-                  Text(_error!, style: const TextStyle(color: AppColors.danger, fontSize: 12)),
+                  Text(_error!,
+                      style: const TextStyle(
+                          color: AppColors.danger, fontSize: 12)),
                   const SizedBox(height: 16),
                 ],
 
@@ -165,13 +172,16 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
                     labelText: 'Password',
                     hintText: 'Enter your password',
                     suffixIcon: IconButton(
-                      icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
-                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                      icon: Icon(_obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility),
+                      onPressed: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
                     ),
                   ),
                 ),
                 const SizedBox(height: 32),
-                
+
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -180,16 +190,21 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: auth.isLoading 
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Login', style: TextStyle(fontWeight: FontWeight.bold)),
+                    child: auth.isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text('Login',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],
             ),
-          ).animate().fade(duration: 500.ms).scale(begin: const Offset(0.9, 0.9)),
+          )
+              .animate()
+              .fade(duration: 500.ms)
+              .scale(begin: const Offset(0.9, 0.9)),
         ),
       ),
     );
@@ -201,7 +216,8 @@ class _RoleButton extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const _RoleButton({required this.label, required this.isSelected, required this.onTap});
+  const _RoleButton(
+      {required this.label, required this.isSelected, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -211,9 +227,12 @@ class _RoleButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
+            color: isSelected
+                ? AppColors.primary.withValues(alpha: 0.1)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: isSelected ? AppColors.primary : AppColors.slate200),
+            border: Border.all(
+                color: isSelected ? AppColors.primary : AppColors.slate200),
           ),
           child: Center(
             child: Text(
@@ -235,7 +254,8 @@ class _SubRoleButton extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const _SubRoleButton({required this.label, required this.isSelected, required this.onTap});
+  const _SubRoleButton(
+      {required this.label, required this.isSelected, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -244,9 +264,12 @@ class _SubRoleButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.gold.withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected
+              ? AppColors.gold.withValues(alpha: 0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: isSelected ? AppColors.gold : AppColors.slate200),
+          border: Border.all(
+              color: isSelected ? AppColors.gold : AppColors.slate200),
         ),
         child: Center(
           child: Text(

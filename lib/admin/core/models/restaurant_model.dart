@@ -94,9 +94,12 @@ class MenuItem {
       price: double.tryParse(json['price']?.toString() ?? '0') ?? 0,
       categoryId: (json['category_id'] ?? json['categoryId'])?.toString() ?? '',
       imageUrl: (json['image_url'] ?? json['imageUrl'])?.toString(),
-      isAvailable: (json['is_available'] ?? json['isAvailable']) == true || (json['is_available'] ?? json['isAvailable']) == 1,
-      preparationTime: (json['preparation_time'] ?? json['preparationTime'])?.toString(),
-      isSpecial: (json['is_special'] ?? json['isSpecial']) == true || (json['is_special'] ?? json['isSpecial']) == 1,
+      isAvailable: (json['is_available'] ?? json['isAvailable']) == true ||
+          (json['is_available'] ?? json['isAvailable']) == 1,
+      preparationTime:
+          (json['preparation_time'] ?? json['preparationTime'])?.toString(),
+      isSpecial: (json['is_special'] ?? json['isSpecial']) == true ||
+          (json['is_special'] ?? json['isSpecial']) == 1,
       restaurantId: (json['restaurant_id'] ?? json['restaurantId'])?.toString(),
     );
   }
@@ -193,38 +196,46 @@ class OrderModel {
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     final rawTotal = json['total_amount'] ?? json['totalAmount'];
     final rawItems = json['items'] as List<dynamic>? ?? [];
-    
-    double parsedAmount = double.tryParse(
-      (rawTotal ?? 
-       json['amount'] ?? 
-       json['final_amount'] ?? 
-       json['bill_amount'] ?? 
-       '0').toString()
-    ) ?? 0;
+
+    double parsedAmount = double.tryParse((rawTotal ??
+                json['amount'] ??
+                json['final_amount'] ??
+                json['bill_amount'] ??
+                '0')
+            .toString()) ??
+        0;
 
     final items = rawItems.map((i) => OrderItem.fromJson(i)).toList();
-    
+
     // Fallback to calculated subtotal if totalAmount is 0
     if (parsedAmount == 0 && items.isNotEmpty) {
-      parsedAmount = items.fold(0, (sum, item) => sum + (item.price * item.quantity));
+      parsedAmount =
+          items.fold(0, (sum, item) => sum + (item.price * item.quantity));
     }
 
     return OrderModel(
       id: json['id']?.toString() ?? '',
       status: json['status']?.toString() ?? 'PLACED',
-      orderType: (json['order_type'] ?? json['orderType'])?.toString() ?? 'DINE_IN',
+      orderType:
+          (json['order_type'] ?? json['orderType'])?.toString() ?? 'DINE_IN',
       totalAmount: parsedAmount,
-      paymentStatus: (json['payment_status'] ?? json['paymentStatus'])?.toString() ?? 'PENDING',
-      paymentMethod: (json['payment_method'] ?? json['paymentMethod'])?.toString(),
+      paymentStatus:
+          (json['payment_status'] ?? json['paymentStatus'])?.toString() ??
+              'PENDING',
+      paymentMethod:
+          (json['payment_method'] ?? json['paymentMethod'])?.toString(),
       createdAt: (json['created_at'] ?? json['createdAt'])?.toString() ?? '',
       updatedAt: (json['updated_at'] ?? json['updatedAt'])?.toString(),
       tableNumber: (json['table_number'] ?? json['tableNumber'])?.toString(),
-      customerName: (json['customer_name'] ?? json['customerName'])?.toString() ?? 'Guest',
+      customerName:
+          (json['customer_name'] ?? json['customerName'])?.toString() ??
+              'Guest',
       items: items,
     );
   }
 
-  double get calculatedSubtotal => items.fold(0, (sum, item) => sum + (item.price * item.quantity));
+  double get calculatedSubtotal =>
+      items.fold(0, (sum, item) => sum + (item.price * item.quantity));
 }
 
 class OrderItem {
@@ -251,7 +262,8 @@ class OrderItem {
       itemPrice = double.tryParse(json['price'].toString()) ?? 0;
     } else if (json['unit_price'] != null) {
       itemPrice = double.tryParse(json['unit_price'].toString()) ?? 0;
-    } else if (json['menu_item'] != null && json['menu_item']['price'] != null) {
+    } else if (json['menu_item'] != null &&
+        json['menu_item']['price'] != null) {
       itemPrice = double.tryParse(json['menu_item']['price'].toString()) ?? 0;
     } else if (json['amount'] != null) {
       itemPrice = double.tryParse(json['amount'].toString()) ?? 0;
@@ -264,4 +276,3 @@ class OrderItem {
     );
   }
 }
-

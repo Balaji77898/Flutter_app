@@ -332,8 +332,8 @@ class AdminLandingScreen extends StatelessWidget {
                           )),
                     ),
                     const Text('✦',
-                        style: TextStyle(
-                            color: Color(0xFFC09020), fontSize: 10)),
+                        style:
+                            TextStyle(color: Color(0xFFC09020), fontSize: 10)),
                   ])
               .toList(),
         ),
@@ -418,7 +418,8 @@ class AdminLandingScreen extends StatelessWidget {
                           style: GoogleFonts.jost(
                             fontSize: 11,
                             letterSpacing: 2,
-                            color: const Color(0xFF1A0A06).withValues(alpha: 0.5),
+                            color:
+                                const Color(0xFF1A0A06).withValues(alpha: 0.5),
                           )),
                     ],
                   ))
@@ -509,7 +510,8 @@ class AdminLandingScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
-                          color: const Color(0xFF5C1020).withValues(alpha: 0.08)),
+                          color:
+                              const Color(0xFF5C1020).withValues(alpha: 0.08)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -518,7 +520,8 @@ class AdminLandingScreen extends StatelessWidget {
                             style: GoogleFonts.playfairDisplaySc(
                               fontSize: 48,
                               fontWeight: FontWeight.w900,
-                              color: const Color(0xFF5C1020).withValues(alpha: 0.06),
+                              color: const Color(0xFF5C1020)
+                                  .withValues(alpha: 0.06),
                               height: 1,
                             )),
                         Text(f[0], style: const TextStyle(fontSize: 36)),
@@ -533,7 +536,8 @@ class AdminLandingScreen extends StatelessWidget {
                         Text(f[2],
                             style: GoogleFonts.jost(
                               fontSize: 13,
-                              color: const Color(0xFF1A0A06).withValues(alpha: 0.55),
+                              color: const Color(0xFF1A0A06)
+                                  .withValues(alpha: 0.55),
                               height: 1.6,
                             )),
                       ],
@@ -714,5 +718,3 @@ class AdminLandingScreen extends StatelessWidget {
     );
   }
 }
-
-

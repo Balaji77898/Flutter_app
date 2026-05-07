@@ -60,16 +60,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (mounted) {
         if (_selectedRole == StaffRole.billingStaff) {
-          Navigator.of(context)
-              .pushReplacementNamed('/billing');
+          Navigator.of(context).pushReplacementNamed('/billing');
         } else {
-          Navigator.of(context)
-              .pushReplacementNamed('/dashboard');
+          Navigator.of(context).pushReplacementNamed('/dashboard');
         }
       }
     } catch (e) {
-      setState(() =>
-          _error = 'Login failed. Please check your credentials.');
+      setState(() => _error = 'Login failed. Please check your credentials.');
     }
   }
 
@@ -95,8 +92,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   shape: BoxShape.circle,
                   color: AppColors.gold.withValues(alpha: 0.1), // gold-start/10
                 ),
-              ).animate(onPlay: (controller) => controller.repeat(reverse: true))
-               .moveY(begin: 0, end: 15, duration: 3.seconds, curve: Curves.easeInOut),
+              )
+                  .animate(
+                      onPlay: (controller) => controller.repeat(reverse: true))
+                  .moveY(
+                      begin: 0,
+                      end: 15,
+                      duration: 3.seconds,
+                      curve: Curves.easeInOut),
             ),
             Positioned(
               bottom: -80,
@@ -106,10 +109,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 300,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.primary.withValues(alpha: 0.05), // ruby-red/5
+                  color:
+                      AppColors.primary.withValues(alpha: 0.05), // ruby-red/5
                 ),
-              ).animate(onPlay: (controller) => controller.repeat(reverse: true))
-               .moveY(begin: 0, end: -15, duration: 4.seconds, curve: Curves.easeInOut),
+              )
+                  .animate(
+                      onPlay: (controller) => controller.repeat(reverse: true))
+                  .moveY(
+                      begin: 0,
+                      end: -15,
+                      duration: 4.seconds,
+                      curve: Curves.easeInOut),
             ),
             SafeArea(
               child: Center(
@@ -118,7 +128,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Center(
                     child: Container(
                       width: double.infinity,
-                      constraints: const BoxConstraints(maxWidth: 448), // max-w-md is 448px (28rem)
+                      constraints: const BoxConstraints(
+                          maxWidth: 448), // max-w-md is 448px (28rem)
                       decoration: BoxDecoration(
                         color: AppColors.white,
                         borderRadius: BorderRadius.circular(16), // rounded-2xl
@@ -130,7 +141,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                         border: Border.all(
-                          color: AppColors.gold.withValues(alpha: 0.2), // border-gold-start/20
+                          color: AppColors.gold
+                              .withValues(alpha: 0.2), // border-gold-start/20
                         ),
                       ),
                       padding: const EdgeInsets.all(32), // p-8
@@ -251,13 +263,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                 gradient: const LinearGradient(
                                   colors: [
                                     AppColors.gold,
-                                    AppColors.goldLight, // bg-linear-to-r from-gold-start to-gold-end
+                                    AppColors
+                                        .goldLight, // bg-linear-to-r from-gold-start to-gold-end
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.gold.withValues(alpha: 0.3),
+                                    color:
+                                        AppColors.gold.withValues(alpha: 0.3),
                                     blurRadius: 8,
                                     offset: const Offset(0, 4),
                                   ),
@@ -295,15 +309,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: AppTheme.sans(
                                   size: 14,
                                   color: AppColors.slate500,
-                                ).copyWith(decoration: TextDecoration.underline),
+                                ).copyWith(
+                                    decoration: TextDecoration.underline),
                               ),
                             ),
                           ),
                         ],
                       ),
-                    ).animate()
-                     .fade(duration: 500.ms)
-                     .scale(begin: const Offset(0.95, 0.95), end: const Offset(1, 1), duration: 500.ms, curve: Curves.easeOutBack),
+                    ).animate().fade(duration: 500.ms).scale(
+                        begin: const Offset(0.95, 0.95),
+                        end: const Offset(1, 1),
+                        duration: 500.ms,
+                        curve: Curves.easeOutBack),
                   ),
                 ),
               ),
@@ -341,7 +358,9 @@ class _RoleButton extends StatelessWidget {
               : Colors.transparent,
           borderRadius: BorderRadius.circular(8), // rounded-lg
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.gold.withValues(alpha: 0.3),
+            color: isSelected
+                ? AppColors.primary
+                : AppColors.gold.withValues(alpha: 0.3),
           ),
         ),
         child: Center(

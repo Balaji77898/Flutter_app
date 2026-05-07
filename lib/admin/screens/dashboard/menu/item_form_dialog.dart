@@ -22,7 +22,7 @@ class ItemFormDialog extends StatefulWidget {
 
 class _ItemFormDialogState extends State<ItemFormDialog> {
   final _formKey = GlobalKey<FormState>();
-  
+
   late String _name;
   late String _description;
   late String _price;
@@ -44,10 +44,11 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
     _imageController.text = _imageUrl;
     _cleanedPreview = _cleanImageUrl(_imageUrl);
     _isAvailable = widget.item?.isAvailable ?? true;
-    
+
     if (widget.item != null) {
       _selectedCategoryId = widget.item!.categoryId;
-    } else if (widget.initialCategoryId != null && widget.initialCategoryId!.isNotEmpty) {
+    } else if (widget.initialCategoryId != null &&
+        widget.initialCategoryId!.isNotEmpty) {
       _selectedCategoryId = widget.initialCategoryId;
     } else if (widget.categories.isNotEmpty) {
       _selectedCategoryId = widget.categories.first.id;
@@ -56,7 +57,7 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
 
   String _cleanImageUrl(String url) {
     if (url.isEmpty) return '';
-    
+
     // Handle Google Search Redirects
     if (url.contains('google.com/imgres')) {
       try {
@@ -65,7 +66,7 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
         if (imgUrl != null && imgUrl.isNotEmpty) return imgUrl;
       } catch (_) {}
     }
-    
+
     // Handle Bing Search Redirects
     if (url.contains('bing.com/images/search')) {
       try {
@@ -74,10 +75,10 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
         if (imgUrl != null && imgUrl.isNotEmpty) return imgUrl;
       } catch (_) {}
     }
-    
+
     // Handle base64 or data urls (optional, but good to keep)
     if (url.startsWith('data:image')) return url;
-    
+
     // Basic validation: if it doesn't start with http, it's likely invalid
     if (!url.startsWith('http')) return '';
 
@@ -93,10 +94,11 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedCategoryId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a category')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select a category')));
       return;
     }
-    
+
     _formKey.currentState!.save();
     setState(() => _isLoading = true);
 
@@ -115,12 +117,14 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
       } else {
         await MenuService.updateItem(widget.item!.id, body);
       }
-      
+
       if (mounted) Navigator.of(context).pop(true);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed: ${e.toString().replaceAll('Exception: ', '')}')),
+        SnackBar(
+            content:
+                Text('Failed: ${e.toString().replaceAll('Exception: ', '')}')),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -132,9 +136,11 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
     if (widget.categories.isEmpty) {
       return AlertDialog(
         title: const Text('Error'),
-        content: const Text('You must create a category first before adding an item.'),
+        content: const Text(
+            'You must create a category first before adding an item.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK'))
+          TextButton(
+              onPressed: () => Navigator.pop(context), child: const Text('OK'))
         ],
       );
     }
@@ -171,15 +177,21 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                 TextFormField(
                   initialValue: _name,
                   decoration: const InputDecoration(labelText: 'Item Name'),
-                  validator: (val) => val == null || val.trim().isEmpty ? 'Required' : null,
+                  validator: (val) =>
+                      val == null || val.trim().isEmpty ? 'Required' : null,
                   onSaved: (val) => _name = val!.trim(),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   initialValue: _price,
-                  decoration: const InputDecoration(labelText: 'Price (₹)', prefixText: '₹ '),
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  validator: (val) => val == null || double.tryParse(val) == null ? 'Valid price required' : null,
+                  decoration: const InputDecoration(
+                      labelText: 'Price (₹)', prefixText: '₹ '),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  validator: (val) =>
+                      val == null || double.tryParse(val) == null
+                          ? 'Valid price required'
+                          : null,
                   onSaved: (val) => _price = val!.trim(),
                 ),
                 const SizedBox(height: 16),
@@ -188,21 +200,28 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                   decoration: InputDecoration(
                     labelText: 'Image URL',
                     hintText: 'https://example.com/image.jpg',
-                    helperText: '💡 Tip: Right-click any image online and select "Copy Image Address"',
-                    helperStyle: TextStyle(color: AppColors.rubyRed.withValues(alpha: 0.8), fontWeight: FontWeight.w500, fontSize: 11),
-                    suffixIcon: _imageController.text.isNotEmpty 
-                      ? IconButton(icon: const Icon(Icons.clear, size: 18), onPressed: () {
-                          _imageController.clear();
-                          setState(() => _cleanedPreview = '');
-                        }) 
-                      : null,
+                    helperText:
+                        '💡 Tip: Right-click any image online and select "Copy Image Address"',
+                    helperStyle: TextStyle(
+                        color: AppColors.rubyRed.withValues(alpha: 0.8),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 11),
+                    suffixIcon: _imageController.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear, size: 18),
+                            onPressed: () {
+                              _imageController.clear();
+                              setState(() => _cleanedPreview = '');
+                            })
+                        : null,
                   ),
                   onChanged: (val) {
                     setState(() {
                       _cleanedPreview = _cleanImageUrl(val.trim());
                     });
                   },
-                  onSaved: (val) => _imageUrl = _cleanImageUrl(val?.trim() ?? ''),
+                  onSaved: (val) =>
+                      _imageUrl = _cleanImageUrl(val?.trim() ?? ''),
                 ),
                 const SizedBox(height: 12),
                 // --- Image Preview Section ---
@@ -218,9 +237,12 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.image_outlined, color: Colors.grey.shade400, size: 32),
+                            Icon(Icons.image_outlined,
+                                color: Colors.grey.shade400, size: 32),
                             const SizedBox(height: 4),
-                            Text('Image Preview', style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
+                            Text('Image Preview',
+                                style: TextStyle(
+                                    color: Colors.grey.shade500, fontSize: 12)),
                           ],
                         )
                       : ClipRRect(
@@ -231,20 +253,27 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                             errorBuilder: (ctx, err, stack) => const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.broken_image, color: AppColors.danger, size: 32),
+                                Icon(Icons.broken_image,
+                                    color: AppColors.danger, size: 32),
                                 SizedBox(height: 4),
-                                Text('Invalid Image URL', style: TextStyle(color: AppColors.danger, fontSize: 11)),
+                                Text('Invalid Image URL',
+                                    style: TextStyle(
+                                        color: AppColors.danger, fontSize: 11)),
                               ],
                             ),
                           ),
                         ),
                 ),
-                if (_cleanedPreview.isNotEmpty && _cleanedPreview != _imageController.text)
+                if (_cleanedPreview.isNotEmpty &&
+                    _cleanedPreview != _imageController.text)
                   const Padding(
                     padding: EdgeInsets.only(top: 8),
                     child: Text(
                       'Direct Link Extracted Successfully!',
-                      style: TextStyle(fontSize: 10, color: AppColors.success, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: AppColors.success,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 const SizedBox(height: 16),
@@ -260,7 +289,8 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                     Expanded(
                       child: SwitchListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: const Text('Available', style: TextStyle(fontSize: 14)),
+                        title: const Text('Available',
+                            style: TextStyle(fontSize: 14)),
                         activeThumbColor: AppColors.success,
                         value: _isAvailable,
                         onChanged: (val) => setState(() => _isAvailable = val),
@@ -276,13 +306,18 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text('Cancel', style: GoogleFonts.inter(color: AppColors.textMuted)),
+          child: Text('Cancel',
+              style: GoogleFonts.inter(color: AppColors.textMuted)),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _submit,
-          child: _isLoading 
-            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-            : Text(widget.item == null ? 'Add Item' : 'Save Changes'),
+          child: _isLoading
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2, color: Colors.white))
+              : Text(widget.item == null ? 'Add Item' : 'Save Changes'),
         ),
       ],
     );

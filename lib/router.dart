@@ -39,8 +39,11 @@ GoRouter createRouter(AuthProvider authProvider) {
         final role = authProvider.role;
         if (role == UserRole.admin) {
           return '/admin/dashboard';
-        } else if (role == UserRole.billingStaff || role == UserRole.servingStaff) {
-          return role == UserRole.billingStaff ? '/staff/billing' : '/staff/dashboard';
+        } else if (role == UserRole.billingStaff ||
+            role == UserRole.servingStaff) {
+          return role == UserRole.billingStaff
+              ? '/staff/billing'
+              : '/staff/dashboard';
         } else {
           // If logged in but no role (shouldn't happen with fixed loadAuth), go to login
           return '/login';

@@ -122,7 +122,8 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ).animate().fade(duration: 400.ms).slideY(begin: 0.06, duration: 400.ms, curve: Curves.easeOutQuad),
+                  ).animate().fade(duration: 400.ms).slideY(
+                      begin: 0.06, duration: 400.ms, curve: Curves.easeOutQuad),
 
                   const SizedBox(height: 16),
 
@@ -176,7 +177,8 @@ class ProfileScreen extends StatelessWidget {
                         ],
                       ],
                     ),
-                  ).animate().fade(duration: 400.ms, delay: 80.ms).slideY(begin: 0.06, duration: 400.ms, curve: Curves.easeOutQuad),
+                  ).animate().fade(duration: 400.ms, delay: 80.ms).slideY(
+                      begin: 0.06, duration: 400.ms, curve: Curves.easeOutQuad),
 
                   const SizedBox(height: 16),
 
@@ -271,7 +273,8 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ).animate().fade(duration: 400.ms, delay: 160.ms).slideY(begin: 0.06, duration: 400.ms, curve: Curves.easeOutQuad),
+                  ).animate().fade(duration: 400.ms, delay: 160.ms).slideY(
+                      begin: 0.06, duration: 400.ms, curve: Curves.easeOutQuad),
 
                   const SizedBox(height: 8),
                 ],
@@ -290,8 +293,18 @@ class ProfileScreen extends StatelessWidget {
 
   String _month(int m) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return months[m - 1];
   }
@@ -414,8 +427,11 @@ class _ProfileHeroHeader extends StatelessWidget {
                               width: 2,
                             ),
                           ),
-                        ).animate(onPlay: (c) => c.repeat(reverse: true))
-                         .scale(begin: const Offset(0.85, 0.85), end: const Offset(1.1, 1.1), duration: 1500.ms, curve: Curves.easeInOut),
+                        ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(
+                            begin: const Offset(0.85, 0.85),
+                            end: const Offset(1.1, 1.1),
+                            duration: 1500.ms,
+                            curve: Curves.easeInOut),
                       ),
                     ],
                   ),
@@ -484,7 +500,10 @@ class _ProfileHeroHeader extends StatelessWidget {
                     ),
                   ),
                 ],
-              ).animate().fade(duration: 400.ms).slideX(begin: -0.05, curve: Curves.easeOutQuad),
+              )
+                  .animate()
+                  .fade(duration: 400.ms)
+                  .slideX(begin: -0.05, curve: Curves.easeOutQuad),
             ),
           ),
         ],

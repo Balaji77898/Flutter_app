@@ -42,8 +42,8 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final endpoint = role == UserRole.admin 
-          ? ApiEndpoints.adminLogin 
+      final endpoint = role == UserRole.admin
+          ? ApiEndpoints.adminLogin
           : ApiEndpoints.staffLogin;
 
       final response = await http.post(
@@ -57,7 +57,10 @@ class AuthProvider extends ChangeNotifier {
         _token = data['token'];
         _role = role;
 
-        final userData = data['user'] ?? data['data']?['user'] ?? data['staff'] ?? data['data']?['staff'];
+        final userData = data['user'] ??
+            data['data']?['user'] ??
+            data['staff'] ??
+            data['data']?['staff'];
         if (userData != null) {
           _user = UserProfile.fromJson(userData, role);
         }
@@ -65,7 +68,7 @@ class AuthProvider extends ChangeNotifier {
         final prefs = await SharedPreferences.getInstance();
         if (_token != null) await prefs.setString(kTokenKey, _token!);
         await prefs.setString(kRoleKey, role.name);
-        
+
         notifyListeners();
       } else {
         throw Exception('Login failed: ${response.body}');
@@ -80,7 +83,7 @@ class AuthProvider extends ChangeNotifier {
     _token = token;
     _user = user;
     _role = user.role;
-    
+
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(kTokenKey, _token!);
     await prefs.setString(kRoleKey, _role!.name);

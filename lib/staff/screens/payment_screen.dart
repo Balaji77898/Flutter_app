@@ -197,14 +197,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-
-                        if (order.subtotal > 0) _AmountRow('Subtotal', '₹${order.subtotal.round()}'),
-                        if (order.tax > 0) _AmountRow('Tax', '₹${order.tax.round()}'),
-
+                        if (order.subtotal > 0)
+                          _AmountRow('Subtotal', '₹${order.subtotal.round()}'),
+                        if (order.tax > 0)
+                          _AmountRow('Tax', '₹${order.tax.round()}'),
                         const SizedBox(height: 10),
                         const Divider(),
                         const SizedBox(height: 10),
-
                         _AmountRow(
                           'Total',
                           '₹$finalTotal',
@@ -298,8 +297,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     onTap: (_selectedMethod == null || _isProcessing)
                         ? null
                         : () async {
-                            await _handlePayment(
-                                context, provider, finalTotal);
+                            await _handlePayment(context, provider, finalTotal);
                           },
                   ),
 
@@ -320,9 +318,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   // 🔥 CLEAN HANDLER
   Future<void> _handlePayment(
-      BuildContext context,
-      OrdersProvider provider,
-      int finalTotal) async {
+      BuildContext context, OrdersProvider provider, int finalTotal) async {
     setState(() => _isProcessing = true);
 
     final token = context.read<StaffAuthProvider>().token;

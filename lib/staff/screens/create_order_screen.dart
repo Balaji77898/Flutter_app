@@ -76,24 +76,25 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
       if (token == null) throw Exception("No authentication token found.");
 
       await ordersProvider.createOrder(
-            {
-              "table_id": _selectedTableId,
-              "order_type": _selectedTableId == null ? "TAKEAWAY" : "DINE_IN",
-              "customer_name": _nameCtrl.text.trim().isEmpty
-                  ? 'Walk-in Customer'
-                  : _nameCtrl.text.trim(),
-              "customer_phone": _phoneCtrl.text.trim(),
-              "items": _orderItems,
-            },
-            token,
-          );
+        {
+          "table_id": _selectedTableId,
+          "order_type": _selectedTableId == null ? "TAKEAWAY" : "DINE_IN",
+          "customer_name": _nameCtrl.text.trim().isEmpty
+              ? 'Walk-in Customer'
+              : _nameCtrl.text.trim(),
+          "customer_phone": _phoneCtrl.text.trim(),
+          "items": _orderItems,
+        },
+        token,
+      );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Order created successfully!'),
           backgroundColor: AppColors.success,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
       Navigator.pop(context);
@@ -104,7 +105,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
           content: Text(e.toString().replaceFirst('Exception: ', '')),
           backgroundColor: AppColors.danger,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
     } finally {
@@ -198,13 +200,19 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
           icon: Icons.table_restaurant,
           title: 'Table & Customer',
           child: _buildTableAndCustomer(tables),
-        ).animate().fade(duration: 350.ms).slideY(begin: 0.1, duration: 350.ms, curve: Curves.easeOut),
+        )
+            .animate()
+            .fade(duration: 350.ms)
+            .slideY(begin: 0.1, duration: 350.ms, curve: Curves.easeOut),
         const SizedBox(height: 20),
         _buildSection(
           icon: Icons.restaurant_menu,
           title: 'Menu Items',
           child: _buildMenuSection(grouped, menu),
-        ).animate().fade(duration: 350.ms, delay: 80.ms).slideY(begin: 0.1, duration: 350.ms, curve: Curves.easeOut),
+        )
+            .animate()
+            .fade(duration: 350.ms, delay: 80.ms)
+            .slideY(begin: 0.1, duration: 350.ms, curve: Curves.easeOut),
       ],
     );
   }
@@ -269,7 +277,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
   // ── Table & Customer fields ──────────────────────────────────────
   Widget _buildTableAndCustomer(List<TableModel> tables) {
-    final availableTables = tables.where((t) => t.status == TableStatus.available).toList();
+    final availableTables =
+        tables.where((t) => t.status == TableStatus.available).toList();
     final tableOptions = <DropdownMenuItem<String>>[
       const DropdownMenuItem(
         value: '',
@@ -359,12 +368,13 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
       Map<String, List<MenuItem>> grouped, MenuProvider menu) {
     if (menu.isLoading) {
       return Column(
-        children: List.generate(5, (index) => 
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: ShimmerLoading(width: double.infinity, height: 60, borderRadius: 12),
-          )
-        ),
+        children: List.generate(
+            5,
+            (index) => const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: ShimmerLoading(
+                      width: double.infinity, height: 60, borderRadius: 12),
+                )),
       );
     }
     if (menu.error != null || menu.items.isEmpty) {
@@ -376,9 +386,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                 size: 48, color: AppColors.slate300),
             const SizedBox(height: 12),
             Text(
-              menu.error != null
-                  ? menu.error!
-                  : 'No menu items available',
+              menu.error != null ? menu.error! : 'No menu items available',
               style: AppTheme.sans(size: 14, color: AppColors.slate500),
               textAlign: TextAlign.center,
             ),
@@ -428,8 +436,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
             ...entry.value.map((item) => _MenuItemRow(
                   item: item,
                   qty: _qty[item.id] ?? 0,
-                  onAdd: () => setState(() =>
-                      _qty[item.id] = (_qty[item.id] ?? 0) + 1),
+                  onAdd: () =>
+                      setState(() => _qty[item.id] = (_qty[item.id] ?? 0) + 1),
                   onRemove: () {
                     final cur = _qty[item.id] ?? 0;
                     setState(() {
@@ -539,12 +547,15 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 24),
                           child: Column(
                             children: [
-                              const Icon(Icons.shopping_basket_outlined, size: 32, color: AppColors.slate200),
+                              const Icon(Icons.shopping_basket_outlined,
+                                  size: 32, color: AppColors.slate200),
                               const SizedBox(height: 12),
                               Text(
                                 'No items selected',
                                 style: AppTheme.sans(
-                                    size: 14, color: AppColors.slate400, weight: FontWeight.w500),
+                                    size: 14,
+                                    color: AppColors.slate400,
+                                    weight: FontWeight.w500),
                               ),
                             ],
                           ),
@@ -560,8 +571,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                 width: 26,
                                 height: 26,
                                 decoration: BoxDecoration(
-                                  color: AppColors.primary
-                                      .withValues(alpha: 0.1),
+                                  color:
+                                      AppColors.primary.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Center(
@@ -580,7 +591,9 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                 child: Text(
                                   e.item.name,
                                   style: AppTheme.sans(
-                                      size: 14, color: AppColors.slate700, weight: FontWeight.w600),
+                                      size: 14,
+                                      color: AppColors.slate700,
+                                      weight: FontWeight.w600),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -597,46 +610,49 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                         ),
                       ),
 
-                     if (selected.isNotEmpty) ...[
-                       const Padding(
-                         padding: EdgeInsets.symmetric(vertical: 16),
-                         child: Divider(height: 1, color: AppColors.slate100),
-                       ),
-                       _SummaryDetailRow(
-                         label: 'Subtotal',
-                         value: '₹${total.toStringAsFixed(0)}',
-                       ),
-                       const SizedBox(height: 8),
-                       _SummaryDetailRow(
-                         label: 'Tax (5%)',
-                         value: '₹${(total * 0.05).toStringAsFixed(0)}',
-                       ),
-                       const SizedBox(height: 16),
-                       Row(
-                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                         children: [
-                           Text('Total Amount',
-                               style: AppTheme.sans(
-                                   size: 14,
-                                   weight: FontWeight.w700,
-                                   color: AppColors.slate500)),
-                           Text(
-                             '₹${(total * 1.05).toStringAsFixed(0)}',
-                             style: AppTheme.serif(
-                               size: 24,
-                               weight: FontWeight.w900,
-                               color: AppColors.primary,
-                             ),
-                           ),
-                         ],
-                       ),
-                     ],
+                    if (selected.isNotEmpty) ...[
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        child: Divider(height: 1, color: AppColors.slate100),
+                      ),
+                      _SummaryDetailRow(
+                        label: 'Subtotal',
+                        value: '₹${total.toStringAsFixed(0)}',
+                      ),
+                      const SizedBox(height: 8),
+                      _SummaryDetailRow(
+                        label: 'Tax (5%)',
+                        value: '₹${(total * 0.05).toStringAsFixed(0)}',
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Total Amount',
+                              style: AppTheme.sans(
+                                  size: 14,
+                                  weight: FontWeight.w700,
+                                  color: AppColors.slate500)),
+                          Text(
+                            '₹${(total * 1.05).toStringAsFixed(0)}',
+                            style: AppTheme.serif(
+                              size: 24,
+                              weight: FontWeight.w900,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),
             ],
           ),
-        ).animate().fade(duration: 400.ms, delay: 200.ms).slideY(begin: 0.05, curve: Curves.easeOutQuad),
+        )
+            .animate()
+            .fade(duration: 400.ms, delay: 200.ms)
+            .slideY(begin: 0.05, curve: Curves.easeOutQuad),
 
         const SizedBox(height: 20),
 
@@ -648,7 +664,10 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
           color: AppColors.gold,
           textColor: AppColors.white,
           icon: Icons.check_circle_rounded,
-        ).animate().fade(duration: 400.ms, delay: 300.ms).scale(begin: const Offset(0.95, 0.95), curve: Curves.easeOutBack),
+        )
+            .animate()
+            .fade(duration: 400.ms, delay: 300.ms)
+            .scale(begin: const Offset(0.95, 0.95), curve: Curves.easeOutBack),
       ],
     );
   }
@@ -751,7 +770,8 @@ class _MenuItemRow extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Icon(Icons.add_rounded, color: Colors.white, size: 20),
+                child: const Icon(Icons.add_rounded,
+                    color: Colors.white, size: 20),
               ),
             )
           else
@@ -792,15 +812,17 @@ class _MenuItemRow extends StatelessWidget {
                       color: AppColors.primary,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(Icons.add_rounded, color: Colors.white, size: 20),
+                    child: const Icon(Icons.add_rounded,
+                        color: Colors.white, size: 20),
                   ),
                 ),
               ],
             ),
         ],
       ),
-    ).animate(target: isSelected ? 1 : 0)
-     .shimmer(duration: 400.ms, color: Colors.white.withValues(alpha: 0.2));
+    )
+        .animate(target: isSelected ? 1 : 0)
+        .shimmer(duration: 400.ms, color: Colors.white.withValues(alpha: 0.2));
   }
 }
 
@@ -819,8 +841,7 @@ class _SummaryRow extends StatelessWidget {
       children: [
         Icon(icon, size: 16, color: AppColors.slate400),
         const SizedBox(width: 8),
-        Text(label,
-            style: AppTheme.sans(size: 12, color: AppColors.slate500)),
+        Text(label, style: AppTheme.sans(size: 12, color: AppColors.slate500)),
         const SizedBox(width: 6),
         Expanded(
           child: Text(
@@ -837,6 +858,7 @@ class _SummaryRow extends StatelessWidget {
     );
   }
 }
+
 class _SummaryDetailRow extends StatelessWidget {
   final String label;
   final String value;
@@ -850,14 +872,10 @@ class _SummaryDetailRow extends StatelessWidget {
       children: [
         Text(label,
             style: AppTheme.sans(
-                size: 13,
-                color: AppColors.slate400,
-                weight: FontWeight.w500)),
+                size: 13, color: AppColors.slate400, weight: FontWeight.w500)),
         Text(value,
             style: AppTheme.sans(
-                size: 13,
-                color: AppColors.slate700,
-                weight: FontWeight.w600)),
+                size: 13, color: AppColors.slate700, weight: FontWeight.w600)),
       ],
     );
   }

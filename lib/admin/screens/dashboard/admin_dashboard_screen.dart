@@ -32,10 +32,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       _navStartPos = startPos;
       _isNavigating = true;
     });
-    
+
     // Wait for the animation to complete (approx 600ms)
     await Future.delayed(const Duration(milliseconds: 650));
-    
+
     if (mounted) {
       setState(() => _isNavigating = false);
       context.go(route);
@@ -107,7 +107,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     ),
                   ),
                 ),
-                
+
                 // Dashboard Cards
                 SingleChildScrollView(
                   padding: EdgeInsets.symmetric(
@@ -118,11 +118,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 1200),
                       child: LayoutBuilder(builder: (ctx, constraints) {
-                        final cols = constraints.maxWidth > 900 ? 4 : (constraints.maxWidth > 600 ? 2 : 1);
+                        final cols = constraints.maxWidth > 900
+                            ? 4
+                            : (constraints.maxWidth > 600 ? 2 : 1);
                         return GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: cols,
                             crossAxisSpacing: 24,
                             mainAxisSpacing: 24,
@@ -132,7 +135,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           itemBuilder: (ctx, i) => _HoverableDashCard(
                             option: _dashboardOptions[i],
                             index: i,
-                            onTap: (details) => _triggerNavAnimation(details.globalPosition, _dashboardOptions[i].route),
+                            onTap: (details) => _triggerNavAnimation(
+                                details.globalPosition,
+                                _dashboardOptions[i].route),
                           ),
                         );
                       }),
@@ -144,8 +149,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   const LinearProgressIndicator(color: AppColors.rubyRed),
 
                 // Royal Navigation Pulse
-                if (_isNavigating)
-                  _NavigationPulse(startPos: _navStartPos),
+                if (_isNavigating) _NavigationPulse(startPos: _navStartPos),
               ],
             ),
           ),
@@ -154,9 +158,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     ).animate().fadeIn();
   }
 
-
-
-  Widget _buildHeader(BuildContext context, AuthProvider auth, dynamic restaurant) {
+  Widget _buildHeader(
+      BuildContext context, AuthProvider auth, dynamic restaurant) {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -201,7 +204,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 ),
               ],
             ),
-            
+
             // Right Side Profile & Logout (Stacked)
             Positioned(
               right: 0,
@@ -220,12 +223,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         await staffAuth.logout();
                         navigator.go('/login');
                       },
-                      icon: const Icon(Icons.logout_rounded, size: 16, color: Colors.white),
-                      label: Text('Logout', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+                      icon: const Icon(Icons.logout_rounded,
+                          size: 16, color: Colors.white),
+                      label: Text('Logout',
+                          style: GoogleFonts.inter(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white.withValues(alpha: 0.1),
                         elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
                       ),
                     ),
                   ),
@@ -278,7 +286,8 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.rubyDark.withValues(alpha: 0.12), // Persistent maroon shadow
+                color: AppColors.rubyDark
+                    .withValues(alpha: 0.12), // Persistent maroon shadow
                 blurRadius: _isHovered ? 30 : 20,
                 offset: Offset(0, _isHovered ? 15 : 10),
               )
@@ -292,18 +301,17 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
                 width: 72,
                 height: 72,
                 decoration: BoxDecoration(
-                  color: _isHovered 
-                      ? AppColors.rubyRed 
+                  color: _isHovered
+                      ? AppColors.rubyRed
                       : AppColors.rubyDark.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
-                  widget.option.icon, 
-                  color: _isHovered ? Colors.white : AppColors.rubyDark, 
+                  widget.option.icon,
+                  color: _isHovered ? Colors.white : AppColors.rubyDark,
                   size: 32,
                 ),
               ),
-
               const SizedBox(height: 24),
               Text(
                 widget.option.title,
@@ -327,18 +335,23 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
               ),
             ],
           ),
-        ).animate().fadeIn(delay: (widget.index * 100).ms).slideY(begin: 0.1, curve: Curves.easeOutCirc),
+        )
+            .animate()
+            .fadeIn(delay: (widget.index * 100).ms)
+            .slideY(begin: 0.1, curve: Curves.easeOutCirc),
       ),
     );
   }
 }
 
-
 class _DashOption {
-
   final String title, description, route;
   final IconData icon;
-  const _DashOption({required this.title, required this.description, required this.icon, required this.route});
+  const _DashOption(
+      {required this.title,
+      required this.description,
+      required this.icon,
+      required this.route});
 }
 
 class _StatusBadge extends StatelessWidget {
@@ -359,7 +372,8 @@ class _StatusBadge extends StatelessWidget {
           Container(
             width: 8,
             height: 8,
-            decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle),
+            decoration: const BoxDecoration(
+                color: Colors.green, shape: BoxShape.circle),
           ),
           const SizedBox(width: 8),
           Text(
@@ -400,27 +414,36 @@ class _ProfileChipState extends State<_ProfileChip> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: _isHovered ? Colors.white.withValues(alpha: 0.15) : Colors.white.withValues(alpha: 0.08),
+            color: _isHovered
+                ? Colors.white.withValues(alpha: 0.15)
+                : Colors.white.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(100),
-            border: Border.all(color: _isHovered ? AppColors.gold.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.1)),
-            boxShadow: _isHovered ? [
-              BoxShadow(color: AppColors.gold.withValues(alpha: 0.2), blurRadius: 12, spreadRadius: 2)
-            ] : null,
+            border: Border.all(
+                color: _isHovered
+                    ? AppColors.gold.withValues(alpha: 0.5)
+                    : Colors.white.withValues(alpha: 0.1)),
+            boxShadow: _isHovered
+                ? [
+                    BoxShadow(
+                        color: AppColors.gold.withValues(alpha: 0.2),
+                        blurRadius: 12,
+                        spreadRadius: 2)
+                  ]
+                : null,
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.person_pin_rounded, color: _isHovered ? Colors.white : AppColors.gold, size: 20),
+              Icon(Icons.person_pin_rounded,
+                  color: _isHovered ? Colors.white : AppColors.gold, size: 20),
               const SizedBox(width: 8),
               Text(
                 widget.email,
                 style: GoogleFonts.inter(
-                  color: Colors.white, 
-                  fontSize: 13, 
-                  fontWeight: _isHovered ? FontWeight.bold : FontWeight.w600
-                ),
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: _isHovered ? FontWeight.bold : FontWeight.w600),
               ),
-
             ],
           ),
         ),
@@ -447,14 +470,16 @@ class _NavigationPulse extends StatelessWidget {
               // Convert global to local (approximate since we're in a fill Stack)
               final x = startPos.dx;
               final y = startPos.dy - 100; // Account for header height approx
-              
+
               return Stack(
                 children: [
                   // Trail Particles
                   ...List.generate(5, (i) {
-                    final particleProgress = (value - (i * 0.1)).clamp(0.0, 1.0);
-                    if (particleProgress <= 0 || particleProgress >= 0.8) return const SizedBox();
-                    
+                    final particleProgress =
+                        (value - (i * 0.1)).clamp(0.0, 1.0);
+                    if (particleProgress <= 0 || particleProgress >= 0.8)
+                      return const SizedBox();
+
                     return Positioned(
                       left: x + (particleProgress * 150),
                       top: y - (particleProgress * 50),
@@ -464,7 +489,8 @@ class _NavigationPulse extends StatelessWidget {
                           scale: 0.5 + (particleProgress * 0.5),
                           child: Transform.rotate(
                             angle: -0.5,
-                            child: const Icon(Icons.navigation_rounded, color: AppColors.gold, size: 20),
+                            child: const Icon(Icons.navigation_rounded,
+                                color: AppColors.gold, size: 20),
                           ),
                         ),
                       ),
@@ -484,7 +510,8 @@ class _NavigationPulse extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.gold.withValues(alpha: 0.3 * (1 - value)),
+                                color: AppColors.gold
+                                    .withValues(alpha: 0.3 * (1 - value)),
                                 blurRadius: 20,
                                 spreadRadius: 5,
                               )
@@ -492,7 +519,8 @@ class _NavigationPulse extends StatelessWidget {
                           ),
                           child: Transform.rotate(
                             angle: -0.5,
-                            child: const Icon(Icons.navigation_rounded, color: AppColors.gold, size: 40),
+                            child: const Icon(Icons.navigation_rounded,
+                                color: AppColors.gold, size: 40),
                           ),
                         ),
                       ),

@@ -42,19 +42,29 @@ class AppShadows {
 }
 
 class AppTextStyles {
-  static TextStyle display({Color color = AppColors.slate900, double size = 40}) =>
+  static TextStyle display(
+          {Color color = AppColors.slate900, double size = 40}) =>
       AppTheme.serif(size: size, weight: FontWeight.w800, color: color);
-  static TextStyle headline({Color color = AppColors.slate900, double size = 28}) =>
+  static TextStyle headline(
+          {Color color = AppColors.slate900, double size = 28}) =>
       AppTheme.serif(size: size, weight: FontWeight.w700, color: color);
-  static TextStyle title({Color color = AppColors.slate900, double size = 20}) =>
+  static TextStyle title(
+          {Color color = AppColors.slate900, double size = 20}) =>
       AppTheme.serif(size: size, weight: FontWeight.w700, color: color);
-  static TextStyle label({Color color = AppColors.slate700, double size = 14}) =>
+  static TextStyle label(
+          {Color color = AppColors.slate700, double size = 14}) =>
       AppTheme.sans(size: size, weight: FontWeight.w600, color: color);
   static TextStyle body({Color color = AppColors.slate500, double size = 13}) =>
       AppTheme.sans(size: size, color: color);
-  static TextStyle overline({Color color = AppColors.slate400, double size = 10}) =>
-      AppTheme.sans(size: size, weight: FontWeight.w700, color: color, letterSpacing: 1.5);
-  static TextStyle numeric({Color color = AppColors.slate900, double size = 24}) =>
+  static TextStyle overline(
+          {Color color = AppColors.slate400, double size = 10}) =>
+      AppTheme.sans(
+          size: size,
+          weight: FontWeight.w700,
+          color: color,
+          letterSpacing: 1.5);
+  static TextStyle numeric(
+          {Color color = AppColors.slate900, double size = 24}) =>
       AppTheme.sans(size: size, weight: FontWeight.w900, color: color);
 }
 
@@ -96,7 +106,8 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: AppColors.slate200),

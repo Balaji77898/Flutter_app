@@ -113,10 +113,7 @@ class Order {
     final order = Order(
       id: json['id'] ?? '',
 
-      orderNumber: (json['id'] ?? '')
-          .toString()
-          .substring(0, 6)
-          .toUpperCase(),
+      orderNumber: (json['id'] ?? '').toString().substring(0, 6).toUpperCase(),
 
       table: "Table $tableNumber",
 
@@ -125,8 +122,7 @@ class Order {
       items: itemsList.length,
 
       total: double.tryParse(json['total_amount']?.toString() ?? "0") ?? 0,
-      subtotal:
-          double.tryParse(json['subtotal']?.toString() ?? "0") ?? 0,
+      subtotal: double.tryParse(json['subtotal']?.toString() ?? "0") ?? 0,
       tax: double.tryParse(json['tax_amount']?.toString() ?? "0") ?? 0,
 
       status: parsedStatus, // ✅ IMPORTANT FIX
@@ -149,10 +145,11 @@ class Order {
     );
 
     if (order.subtotal == 0 && order.itemsDetails.isNotEmpty) {
-      double calcSubtotal = order.itemsDetails.fold(0.0, (sum, item) => sum + item.total);
+      double calcSubtotal =
+          order.itemsDetails.fold(0.0, (sum, item) => sum + item.total);
       double calcTax = calcSubtotal * 0.05; // Default 5% tax
       double calcTotal = calcSubtotal + calcTax;
-      
+
       return order.copyWith(
         subtotal: calcSubtotal,
         tax: calcTax,
@@ -181,7 +178,20 @@ class Order {
       final period = dt.hour >= 12 ? 'PM' : 'AM';
 
       final day = dt.day.toString().padLeft(2, '0');
-      final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      final months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
+      ];
       final month = months[dt.month - 1];
 
       return '$day $month, $hour:$minute $period';
@@ -240,9 +250,12 @@ class TableModel {
   });
 
   factory TableModel.fromJson(Map<String, dynamic> json) {
-    final statusStr = (json['table_status'] ?? json['status'] ?? '').toString().toUpperCase();
+    final statusStr =
+        (json['table_status'] ?? json['status'] ?? '').toString().toUpperCase();
     TableStatus status;
-    if (statusStr == 'AVAILABLE' || statusStr == 'EMPTY' || statusStr == 'FREE') {
+    if (statusStr == 'AVAILABLE' ||
+        statusStr == 'EMPTY' ||
+        statusStr == 'FREE') {
       status = TableStatus.available;
     } else {
       // Anything else (Occupied, Busy, Reserved, Needs Bill, etc.) is considered 'occupied'
@@ -250,9 +263,16 @@ class TableModel {
     }
     return TableModel(
       id: (json['id'] ?? json['_id'] ?? '').toString(),
-      name: (json['table_number'] ?? json['tableNumber'] ?? json['name'] ?? 'Table').toString(),
+      name: (json['table_number'] ??
+              json['tableNumber'] ??
+              json['name'] ??
+              'Table')
+          .toString(),
       status: status,
-      seats: int.tryParse(json['capacity']?.toString() ?? json['seats']?.toString() ?? '4') ?? 4,
+      seats: int.tryParse(json['capacity']?.toString() ??
+              json['seats']?.toString() ??
+              '4') ??
+          4,
       server: json['current_server_name'] ?? json['server'],
     );
   }
@@ -289,7 +309,9 @@ class StaffUser {
           : StaffRole.billingStaff,
       phone: json['phone']?.toString(),
       restaurantName: json['restaurant_name']?.toString(),
-      createdAt: createdAtRaw != null ? DateTime.tryParse(createdAtRaw.toString()) : null,
+      createdAt: createdAtRaw != null
+          ? DateTime.tryParse(createdAtRaw.toString())
+          : null,
     );
   }
 }

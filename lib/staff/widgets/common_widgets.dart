@@ -115,10 +115,16 @@ class PageHeader extends StatelessWidget {
                                   isWide: isWide,
                                 ),
                               ],
-                            ).animate().fade(duration: 600.ms).slideX(begin: -0.2, curve: Curves.easeOutQuad),
+                            )
+                                .animate()
+                                .fade(duration: 600.ms)
+                                .slideX(begin: -0.2, curve: Curves.easeOutQuad),
                             if (actions != null)
                               Row(children: actions!)
-                                .animate().fade(duration: 600.ms, delay: 200.ms).slideX(begin: 0.2, curve: Curves.easeOutQuad),
+                                  .animate()
+                                  .fade(duration: 600.ms, delay: 200.ms)
+                                  .slideX(
+                                      begin: 0.2, curve: Curves.easeOutQuad),
                           ],
                         )
                       : Column(
@@ -128,19 +134,30 @@ class PageHeader extends StatelessWidget {
                               title: title,
                               textAlign: textAlign,
                               isWide: isWide,
-                            ).animate().fade(duration: 600.ms).slideY(begin: -0.2, curve: Curves.easeOutQuad),
+                            )
+                                .animate()
+                                .fade(duration: 600.ms)
+                                .slideY(begin: -0.2, curve: Curves.easeOutQuad),
                             const SizedBox(height: 8),
                             _Subtitle(
                               subtitle: subtitle,
                               textAlign: textAlign,
                               isWide: isWide,
-                            ).animate().fade(duration: 600.ms, delay: 100.ms).slideY(begin: -0.1, curve: Curves.easeOutQuad),
+                            )
+                                .animate()
+                                .fade(duration: 600.ms, delay: 100.ms)
+                                .slideY(begin: -0.1, curve: Curves.easeOutQuad),
                             if (actions != null) ...[
                               const SizedBox(height: 24),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: actions!,
-                              ).animate().fade(duration: 600.ms, delay: 300.ms).scale(begin: const Offset(0.8, 0.8), curve: Curves.easeOutBack),
+                              )
+                                  .animate()
+                                  .fade(duration: 600.ms, delay: 300.ms)
+                                  .scale(
+                                      begin: const Offset(0.8, 0.8),
+                                      curve: Curves.easeOutBack),
                             ],
                           ],
                         ),
@@ -479,7 +496,8 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (widget.icon != null) ...[
-                        Icon(widget.icon, color: textC, size: isSmall ? 16 : 20),
+                        Icon(widget.icon,
+                            color: textC, size: isSmall ? 16 : 20),
                         const SizedBox(width: 8),
                       ],
                       Text(
@@ -498,7 +516,6 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       ),
     );
   }
-
 }
 
 // ─── Gold Button ───────────────────────────────────────────────────────────
@@ -602,8 +619,7 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: 1500.ms)..repeat();
+    _controller = AnimationController(vsync: this, duration: 1500.ms)..repeat();
   }
 
   @override
@@ -687,8 +703,10 @@ class EmptyState extends StatelessWidget {
             ),
           ],
         ],
-      ).animate().fade(duration: 600.ms).scale(
-          begin: const Offset(0.9, 0.9), curve: Curves.easeOutBack),
+      )
+          .animate()
+          .fade(duration: 600.ms)
+          .scale(begin: const Offset(0.9, 0.9), curve: Curves.easeOutBack),
     );
   }
 }
@@ -811,7 +829,6 @@ class StatCard extends StatelessWidget {
     );
   }
 }
-
 
 // ─── Compact Stat Chip — for Dashboard stat strip ─────────────────────────
 class CompactStatChip extends StatelessWidget {

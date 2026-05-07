@@ -32,7 +32,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     // Use read instead of watch in methods
     final ordersProvider = context.read<OrdersProvider>();
     final auth = context.read<StaffAuthProvider>();
-    
+
     if (auth.token != null && ordersProvider.orders.isEmpty) {
       await ordersProvider.fetchOrders(auth.token!);
     }
@@ -75,13 +75,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     final ordersProvider = context.watch<OrdersProvider>();
     final allOrders = ordersProvider.orders
-        .where(
-          (o) =>
-  o.status == OrderStatus.confirmed ||
-  o.status == OrderStatus.preparing ||
-  o.status == OrderStatus.ready ||
-  o.status == OrderStatus.served
-        )
+        .where((o) =>
+            o.status == OrderStatus.confirmed ||
+            o.status == OrderStatus.preparing ||
+            o.status == OrderStatus.ready ||
+            o.status == OrderStatus.served)
         .toList();
 
     final filters = [
@@ -89,16 +87,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
       {
         'id': 'CONFIRMED',
         'label': 'Confirmed',
-        'count': allOrders
-            .where((o) => o.status == OrderStatus.confirmed)
-            .length,
+        'count':
+            allOrders.where((o) => o.status == OrderStatus.confirmed).length,
       },
       {
         'id': 'PREPARING',
         'label': 'Preparing',
-        'count': allOrders
-            .where((o) => o.status == OrderStatus.preparing)
-            .length,
+        'count':
+            allOrders.where((o) => o.status == OrderStatus.preparing).length,
       },
       {
         'id': 'READY',
@@ -125,9 +121,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
         'SERVED': OrderStatus.served,
       };
       final targetStatus = statusMap[_activeFilter];
-      filteredOrders = ordersProvider.orders
-          .where((o) => o.status == targetStatus)
-          .toList();
+      filteredOrders =
+          ordersProvider.orders.where((o) => o.status == targetStatus).toList();
     }
 
     return Scaffold(
@@ -146,7 +141,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
               ),
             ],
           ),
-
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -189,7 +183,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               : 1, // lg: 3, md: 2, default: 1
                           crossAxisSpacing: 24,
                           mainAxisSpacing: 24,
-                          childAspectRatio: 1.15, // Further increased height to avoid overflow
+                          childAspectRatio:
+                              1.15, // Further increased height to avoid overflow
                         ),
                         itemCount: filteredOrders.length,
                         itemBuilder: (context, index) {
@@ -198,7 +193,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           return _OrderCard(order: order, config: config)
                               .animate()
                               .fade(duration: 400.ms, delay: (index * 50).ms)
-                              .slideY(begin: 0.2, end: 0, duration: 400.ms, curve: Curves.easeOutQuad);
+                              .slideY(
+                                  begin: 0.2,
+                                  end: 0,
+                                  duration: 400.ms,
+                                  curve: Curves.easeOutQuad);
                         },
                       );
 
@@ -247,7 +246,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                       const SizedBox(height: 16),
                                       filterList,
                                     ],
-                                  ).animate().fade().slideX(begin: -0.1, duration: 400.ms, curve: Curves.easeOutQuad),
+                                  ).animate().fade().slideX(
+                                      begin: -0.1,
+                                      duration: 400.ms,
+                                      curve: Curves.easeOutQuad),
                                 ),
                                 // Grid
                                 Expanded(child: content),
@@ -318,7 +320,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
           ),
         ),
       ),
-    ).animate().fade(duration: 300.ms).scale(begin: const Offset(0.95, 0.95), end: const Offset(1, 1), curve: Curves.easeOutBack);
+    ).animate().fade(duration: 300.ms).scale(
+        begin: const Offset(0.95, 0.95),
+        end: const Offset(1, 1),
+        curve: Curves.easeOutBack);
   }
 }
 
@@ -332,8 +337,7 @@ class _OrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppCard(
       padding: EdgeInsets.zero,
-      onTap: () =>
-          context.push('/staff/order-details/${order.id}'),
+      onTap: () => context.push('/staff/order-details/${order.id}'),
       child: Column(
         children: [
           // Status Banner
@@ -373,7 +377,8 @@ class _OrderCard extends StatelessWidget {
                         style: AppTheme.sans(
                           size: 12,
                           weight: FontWeight.w600,
-                          color: (config['color'] as Color).withValues(alpha: 0.7),
+                          color:
+                              (config['color'] as Color).withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -453,12 +458,13 @@ class _OrderCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Quick actions or more info could go here
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: AppColors.slate50,
                     borderRadius: BorderRadius.circular(10),
@@ -466,7 +472,8 @@ class _OrderCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.person_outline, size: 14, color: AppColors.slate400),
+                      const Icon(Icons.person_outline,
+                          size: 14, color: AppColors.slate400),
                       const SizedBox(width: 6),
                       Text(
                         'Assigned to Staff',

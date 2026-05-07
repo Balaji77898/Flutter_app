@@ -60,12 +60,14 @@ class _TablesScreenState extends State<TablesScreen> {
       {
         'id': 'available',
         'label': 'Available',
-        'count': allTables.where((t) => t.status == TableStatus.available).length,
+        'count':
+            allTables.where((t) => t.status == TableStatus.available).length,
       },
       {
         'id': 'occupied',
         'label': 'Occupied',
-        'count': allTables.where((t) => t.status == TableStatus.occupied).length,
+        'count':
+            allTables.where((t) => t.status == TableStatus.occupied).length,
       },
     ];
 
@@ -88,7 +90,6 @@ class _TablesScreenState extends State<TablesScreen> {
             title: 'Floor Plan',
             subtitle: 'Real-time Table Status',
           ),
-
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -108,8 +109,7 @@ class _TablesScreenState extends State<TablesScreen> {
                           children: filters
                               .map((f) => Padding(
                                     padding: const EdgeInsets.only(right: 10),
-                                    child:
-                                        _buildFilterButton(f, isWide: false),
+                                    child: _buildFilterButton(f, isWide: false),
                                   ))
                               .toList(),
                         ),
@@ -148,8 +148,7 @@ class _TablesScreenState extends State<TablesScreen> {
                               final config = _getStatusConfig(table);
                               return _TableCard(table: table, config: config)
                                   .animate(
-                                      delay: Duration(
-                                          milliseconds: index * 60))
+                                      delay: Duration(milliseconds: index * 60))
                                   .fade(duration: 350.ms)
                                   .slideY(
                                       begin: 0.1,
@@ -160,8 +159,8 @@ class _TablesScreenState extends State<TablesScreen> {
                           );
 
                 return SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 24),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
                   child: Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 1280),
@@ -177,8 +176,8 @@ class _TablesScreenState extends State<TablesScreen> {
                                   decoration: BoxDecoration(
                                     color: AppColors.white,
                                     borderRadius: BorderRadius.circular(24),
-                                    border: Border.all(
-                                        color: AppColors.slate100),
+                                    border:
+                                        Border.all(color: AppColors.slate100),
                                     boxShadow: AppShadows.card,
                                   ),
                                   child: Column(
@@ -261,8 +260,7 @@ class _TablesScreenState extends State<TablesScreen> {
                 ),
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
                 decoration: BoxDecoration(
                   color: isActive
                       ? AppColors.primary.withValues(alpha: 0.15)
@@ -363,8 +361,8 @@ class _TableCard extends StatelessWidget {
                   ),
                   // Status pill on right
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: config.bg,
                       borderRadius: BorderRadius.circular(20),
