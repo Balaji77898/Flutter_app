@@ -445,6 +445,7 @@ class _ActionButtons extends StatelessWidget {
           );
         }
         // Serving staff can print bill
+        final authUser = context.read<StaffAuthProvider>().user;
         return Column(
           children: [
             PrimaryButton(
@@ -452,7 +453,20 @@ class _ActionButtons extends StatelessWidget {
               icon: Icons.print_rounded,
               color: AppColors.gold,
               textColor: AppColors.primary,
-              onTap: () => PrintingUtils.printOrderBill(order),
+              onTap: () => PrintingUtils.printOrderBill(
+                order,
+                restaurantName: authUser?.restaurantName,
+              ),
+            ),
+            const SizedBox(height: 12),
+            PrimaryButton(
+              label: 'Download as PDF',
+              icon: Icons.picture_as_pdf_rounded,
+              color: AppColors.primary,
+              onTap: () => PrintingUtils.downloadOrderBillPdf(
+                order,
+                restaurantName: authUser?.restaurantName,
+              ),
             ),
           ],
         );

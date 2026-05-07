@@ -5,7 +5,7 @@ import '../models/models.dart';
 import '../../core/currency_utils.dart';
 
 class PrintingUtils {
-  static Future<void> printOrderBill(Order order) async {
+  static Future<pw.Document> _generateBillPdf(Order order, {String? restaurantName}) async {
     final font = await PdfGoogleFonts.notoSansRegular();
     final boldFont = await PdfGoogleFonts.notoSansBold();
     final pdf = pw.Document();
@@ -24,7 +24,7 @@ class PrintingUtils {
                 child: pw.Column(
                   children: [
                     pw.Text(
-                      'RESTAURANT',
+                      restaurantName?.isNotEmpty == true ? restaurantName!.toUpperCase() : 'RESTAURANT',
                       style: pw.TextStyle(
                         fontSize: 28,
                         fontWeight: pw.FontWeight.bold,
@@ -178,10 +178,24 @@ class PrintingUtils {
         },
       ),
     );
+    return pdf;
+  }
 
+  static Future<void> printOrderBill(Order order, {String? restaurantName}) async {
+    final pdf = await _generateBillPdf(order, restaurantName: restaurantName);
+    final billNumber = 'BILL-${order.id.substring(0, order.id.length < 8 ? order.id.length : 8).toUpperCase()}';
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => pdf.save(),
       name: 'Bill_$billNumber',
+    );
+  }
+
+  static Future<void> downloadOrderBillPdf(Order order, {String? restaurantName}) async {
+    final pdf = await _generateBillPdf(order, restaurantName: restaurantName);
+    final billNumber = 'BILL-${order.id.substring(0, order.id.length < 8 ? order.id.length : 8).toUpperCase()}';
+    await Printing.sharePdf(
+      bytes: await pdf.save(),
+      filename: 'Bill_$billNumber.pdf',
     );
   }
 

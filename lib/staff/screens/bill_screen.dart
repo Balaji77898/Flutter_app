@@ -284,7 +284,19 @@ class BillScreen extends StatelessWidget {
                               // Action buttons
                               PrimaryButton(
                                 label: 'Print Receipt',
-                                onTap: () => _generateAndPrintPdf(
+                                icon: Icons.print_rounded,
+                                onTap: () => _printReceiptPdf(
+                                  context,
+                                  order,
+                                  billNumber,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              PrimaryButton(
+                                label: 'Download as PDF',
+                                icon: Icons.picture_as_pdf_rounded,
+                                color: AppColors.slate900,
+                                onTap: () => _downloadReceiptPdf(
                                   context,
                                   order,
                                   billNumber,
@@ -335,11 +347,12 @@ class BillScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _generateAndPrintPdf(
+  Future<pw.Document> _generatePdfDoc(
     BuildContext context,
     dynamic order,
     String billNumber,
   ) async {
+    final restaurantName = context.read<StaffAuthProvider>().user?.restaurantName;
     final font = await PdfGoogleFonts.notoSansRegular();
     final boldFont = await PdfGoogleFonts.notoSansBold();
     final pdf = pw.Document();
@@ -357,7 +370,7 @@ class BillScreen extends StatelessWidget {
                 child: pw.Column(
                   children: [
                     pw.Text(
-                      'RESTAURANT',
+                      restaurantName?.isNotEmpty == true ? restaurantName!.toUpperCase() : 'RESTAURANT',
                       style: pw.TextStyle(
                         fontSize: 28,
                         fontWeight: pw.FontWeight.bold,
@@ -510,9 +523,30 @@ class BillScreen extends StatelessWidget {
       ),
     );
 
+    return pdf;
+  }
+
+  Future<void> _printReceiptPdf(
+    BuildContext context,
+    dynamic order,
+    String billNumber,
+  ) async {
+    final pdf = await _generatePdfDoc(context, order, billNumber);
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => pdf.save(),
       name: 'Receipt_$billNumber',
+    );
+  }
+
+  Future<void> _downloadReceiptPdf(
+    BuildContext context,
+    dynamic order,
+    String billNumber,
+  ) async {
+    final pdf = await _generatePdfDoc(context, order, billNumber);
+    await Printing.sharePdf(
+      bytes: await pdf.save(),
+      filename: 'Receipt_$billNumber.pdf',
     );
   }
 
