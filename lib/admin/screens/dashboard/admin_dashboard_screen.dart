@@ -477,8 +477,9 @@ class _NavigationPulse extends StatelessWidget {
                   ...List.generate(5, (i) {
                     final particleProgress =
                         (value - (i * 0.1)).clamp(0.0, 1.0);
-                    if (particleProgress <= 0 || particleProgress >= 0.8)
+                    if (particleProgress <= 0 || particleProgress >= 0.8) {
                       return const SizedBox();
+                    }
 
                     return Positioned(
                       left: x + (particleProgress * 150),

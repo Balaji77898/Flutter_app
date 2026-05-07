@@ -317,9 +317,10 @@ class _TablesScreenState extends State<TablesScreen> {
                 });
                 _loadTables();
               } catch (e) {
-                if (mounted)
+                if (mounted) {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('Failed: $e')));
+                }
               }
             },
             child: const Text('Add', style: TextStyle(color: Colors.white)),

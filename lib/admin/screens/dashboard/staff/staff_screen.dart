@@ -190,9 +190,10 @@ class _StaffScreenState extends State<StaffScreen> {
                 });
                 _loadStaff();
               } catch (e) {
-                if (mounted)
+                if (mounted) {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('Failed: $e')));
+                }
               }
             },
             child: const Text('Add', style: TextStyle(color: Colors.white)),
