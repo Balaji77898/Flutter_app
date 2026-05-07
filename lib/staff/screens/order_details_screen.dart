@@ -444,7 +444,10 @@ class _ActionButtons extends StatelessWidget {
             },
           );
         }
-        // Serving staff can print bill
+        // Serving staff: Print Bill + Download as PDF
+        final restaurantName =
+            context.read<StaffAuthProvider>().user?.restaurantName ??
+                'RESTAURANT';
         return Column(
           children: [
             PrimaryButton(
@@ -452,7 +455,53 @@ class _ActionButtons extends StatelessWidget {
               icon: Icons.print_rounded,
               color: AppColors.gold,
               textColor: AppColors.primary,
-              onTap: () => PrintingUtils.printOrderBill(order),
+              onTap: () => PrintingUtils.printOrderBill(
+                order,
+                restaurantName: restaurantName,
+              ),
+            ),
+            const SizedBox(height: 12),
+            GestureDetector(
+              onTap: () => PrintingUtils.downloadOrderBill(
+                order,
+                restaurantName: restaurantName,
+              ),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF0D9488), Color(0xFF0F766E)],
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF0D9488).withValues(alpha: 0.35),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.download_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Download as PDF',
+                      style: AppTheme.sans(
+                        size: 15,
+                        weight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         );

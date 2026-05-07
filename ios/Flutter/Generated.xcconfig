@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
 FLUTTER_ROOT=C:\Users\LENOVO\Downloads\flutter_windows_3.41.2-stable\flutter
-FLUTTER_APPLICATION_PATH=C:\Users\LENOVO\restaurant_app\Flutter_app\restaurant_unified_app\restaurant_unified_app
+FLUTTER_APPLICATION_PATH=C:\Users\LENOVO\rest_app\Flutter_app
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_TARGET=lib\main.dart
 FLUTTER_BUILD_DIR=build

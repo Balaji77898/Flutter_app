@@ -5,11 +5,16 @@ import '../models/models.dart';
 import '../../core/currency_utils.dart';
 
 class PrintingUtils {
-  static Future<void> printOrderBill(Order order) async {
+  // ─── Shared PDF builder ────────────────────────────────────────────────────
+  static Future<pw.Document> _buildOrderPdf(
+    Order order,
+    String restaurantName,
+  ) async {
     final font = await PdfGoogleFonts.notoSansRegular();
     final boldFont = await PdfGoogleFonts.notoSansBold();
     final pdf = pw.Document();
-    final billNumber = 'BILL-${order.id.substring(0, order.id.length < 8 ? order.id.length : 8).toUpperCase()}';
+    final billNumber =
+        'BILL-${order.id.substring(0, order.id.length < 8 ? order.id.length : 8).toUpperCase()}';
 
     pdf.addPage(
       pw.Page(
@@ -24,7 +29,7 @@ class PrintingUtils {
                 child: pw.Column(
                   children: [
                     pw.Text(
-                      'RESTAURANT',
+                      restaurantName.toUpperCase(),
                       style: pw.TextStyle(
                         fontSize: 28,
                         fontWeight: pw.FontWeight.bold,
@@ -46,7 +51,7 @@ class PrintingUtils {
               // Bill info
               _pdfInfoRow('Bill Number', billNumber, font, boldFont),
               _pdfInfoRow('Table', order.table, font, boldFont),
-              if (order.customerName != null) 
+              if (order.customerName != null)
                 _pdfInfoRow('Customer', order.customerName!, font, boldFont),
               _pdfInfoRow('Date', _formatDate(), font, boldFont),
 
@@ -64,7 +69,7 @@ class PrintingUtils {
                 ),
               ),
               pw.SizedBox(height: 10),
-              
+
               // Items table
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey300),
@@ -83,21 +88,24 @@ class PrintingUtils {
                         padding: const pw.EdgeInsets.all(6),
                         child: pw.Text(
                           'Item',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: boldFont),
+                          style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.bold, font: boldFont),
                         ),
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(6),
                         child: pw.Text(
                           'Qty',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: boldFont),
+                          style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.bold, font: boldFont),
                         ),
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(6),
                         child: pw.Text(
                           'Amount',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: boldFont),
+                          style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.bold, font: boldFont),
                           textAlign: pw.TextAlign.right,
                         ),
                       ),
@@ -108,16 +116,20 @@ class PrintingUtils {
                       children: [
                         pw.Padding(
                           padding: const pw.EdgeInsets.all(6),
-                          child: pw.Text(item.name, style: pw.TextStyle(font: font)),
+                          child: pw.Text(item.name,
+                              style: pw.TextStyle(font: font)),
                         ),
                         pw.Padding(
                           padding: const pw.EdgeInsets.all(6),
-                          child: pw.Text('${item.quantity}', style: pw.TextStyle(font: font)),
+                          child: pw.Text('${item.quantity}',
+                              style: pw.TextStyle(font: font)),
                         ),
                         pw.Padding(
                           padding: const pw.EdgeInsets.all(6),
                           child: pw.Text(
-                            CurrencyUtils.format((item.quantity * (double.tryParse(item.price) ?? 0)).round()),
+                            CurrencyUtils.format((item.quantity *
+                                    (double.tryParse(item.price) ?? 0))
+                                .round()),
                             style: pw.TextStyle(font: font),
                             textAlign: pw.TextAlign.right,
                           ),
@@ -132,8 +144,12 @@ class PrintingUtils {
               // Totals
               pw.Container(height: 1, color: PdfColors.grey400),
               pw.SizedBox(height: 10),
-              if (order.subtotal > 0) _pdfInfoRow('Subtotal', CurrencyUtils.format(order.subtotal.round()), font, boldFont),
-              if (order.tax > 0) _pdfInfoRow('Tax', CurrencyUtils.format(order.tax.round()), font, boldFont),
+              if (order.subtotal > 0)
+                _pdfInfoRow('Subtotal',
+                    CurrencyUtils.format(order.subtotal.round()), font, boldFont),
+              if (order.tax > 0)
+                _pdfInfoRow('Tax',
+                    CurrencyUtils.format(order.tax.round()), font, boldFont),
               pw.SizedBox(height: 6),
               pw.Container(height: 1, color: PdfColors.grey400),
               pw.SizedBox(height: 6),
@@ -179,13 +195,41 @@ class PrintingUtils {
       ),
     );
 
+    return pdf;
+  }
+
+  // ─── Print (opens print dialog) ───────────────────────────────────────────
+  static Future<void> printOrderBill(
+    Order order, {
+    String restaurantName = 'RESTAURANT',
+  }) async {
+    final billNumber =
+        'BILL-${order.id.substring(0, order.id.length < 8 ? order.id.length : 8).toUpperCase()}';
+    final pdf = await _buildOrderPdf(order, restaurantName);
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => pdf.save(),
       name: 'Bill_$billNumber',
     );
   }
 
-  static pw.Widget _pdfInfoRow(String label, String value, pw.Font font, pw.Font boldFont) {
+  // ─── Download / Share (opens native share/save dialog) ────────────────────
+  static Future<void> downloadOrderBill(
+    Order order, {
+    String restaurantName = 'RESTAURANT',
+  }) async {
+    final billNumber =
+        'BILL-${order.id.substring(0, order.id.length < 8 ? order.id.length : 8).toUpperCase()}';
+    final pdf = await _buildOrderPdf(order, restaurantName);
+    final bytes = await pdf.save();
+    await Printing.sharePdf(
+      bytes: bytes,
+      filename: 'Bill_$billNumber.pdf',
+    );
+  }
+
+  // ─── Helpers ──────────────────────────────────────────────────────────────
+  static pw.Widget _pdfInfoRow(
+      String label, String value, pw.Font font, pw.Font boldFont) {
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 3),
       child: pw.Row(
@@ -194,7 +238,8 @@ class PrintingUtils {
           pw.Text(label, style: pw.TextStyle(fontSize: 12, font: font)),
           pw.Text(
             value,
-            style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, font: boldFont),
+            style: pw.TextStyle(
+                fontSize: 12, fontWeight: pw.FontWeight.bold, font: boldFont),
           ),
         ],
       ),

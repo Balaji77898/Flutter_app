@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=C:\Users\LENOVO\Downloads\flutter_windows_3.41.2-stable\flutter"
-export "FLUTTER_APPLICATION_PATH=C:\Users\LENOVO\restaurant_app\Flutter_app\restaurant_unified_app\restaurant_unified_app"
+export "FLUTTER_APPLICATION_PATH=C:\Users\LENOVO\rest_app\Flutter_app"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib\main.dart"
 export "FLUTTER_BUILD_DIR=build"

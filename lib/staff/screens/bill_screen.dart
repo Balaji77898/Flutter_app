@@ -29,6 +29,7 @@ class BillScreen extends StatelessWidget {
     final provider = context.watch<OrdersProvider>();
     final auth = context.read<StaffAuthProvider>();
     final order = provider.findById(orderId);
+    final restaurantName = auth.user?.restaurantName ?? 'RESTAURANT';
     final billNumber =
         'BILL-${orderId.substring(0, orderId.length < 8 ? orderId.length : 8).toUpperCase()}';
 
@@ -288,6 +289,57 @@ class BillScreen extends StatelessWidget {
                                   context,
                                   order,
                                   billNumber,
+                                  restaurantName,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              GestureDetector(
+                                onTap: () => _generateAndDownloadPdf(
+                                  context,
+                                  order,
+                                  billNumber,
+                                  restaurantName,
+                                ),
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xFF0D9488),
+                                        Color(0xFF0F766E),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(14),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(0xFF0D9488).withValues(alpha: 0.35),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        Icons.download_rounded,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Download as PDF',
+                                        style: AppTheme.sans(
+                                          size: 15,
+                                          weight: FontWeight.w700,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 12),
@@ -335,10 +387,11 @@ class BillScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _generateAndPrintPdf(
-    BuildContext context,
+  /// Builds the shared PDF document used for both printing and downloading.
+  Future<pw.Document> _buildPdf(
     dynamic order,
     String billNumber,
+    String restaurantName,
   ) async {
     final font = await PdfGoogleFonts.notoSansRegular();
     final boldFont = await PdfGoogleFonts.notoSansBold();
@@ -357,7 +410,7 @@ class BillScreen extends StatelessWidget {
                 child: pw.Column(
                   children: [
                     pw.Text(
-                      'RESTAURANT',
+                      restaurantName.toUpperCase(),
                       style: pw.TextStyle(
                         fontSize: 28,
                         fontWeight: pw.FontWeight.bold,
@@ -380,7 +433,7 @@ class BillScreen extends StatelessWidget {
               _pdfInfoRow('Bill Number', billNumber, font, boldFont),
               if (order != null) ...[
                 _pdfInfoRow('Table', order.table, font, boldFont),
-                if (order.customerName != null) 
+                if (order.customerName != null)
                   _pdfInfoRow('Customer', order.customerName!, font, boldFont),
               ],
               _pdfInfoRow('Date', _formatDate(), font, boldFont),
@@ -509,11 +562,45 @@ class BillScreen extends StatelessWidget {
         },
       ),
     );
+    return pdf;
+  }
 
+  Future<void> _generateAndPrintPdf(
+    BuildContext context,
+    dynamic order,
+    String billNumber,
+    String restaurantName,
+  ) async {
+    final pdf = await _buildPdf(order, billNumber, restaurantName);
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => pdf.save(),
       name: 'Receipt_$billNumber',
     );
+  }
+
+  Future<void> _generateAndDownloadPdf(
+    BuildContext context,
+    dynamic order,
+    String billNumber,
+    String restaurantName,
+  ) async {
+    try {
+      final pdf = await _buildPdf(order, billNumber, restaurantName);
+      final bytes = await pdf.save();
+      await Printing.sharePdf(
+        bytes: bytes,
+        filename: 'Receipt_$billNumber.pdf',
+      );
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to download PDF: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   pw.Widget _pdfInfoRow(String label, String value, pw.Font font, pw.Font boldFont) {
