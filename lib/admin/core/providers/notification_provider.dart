@@ -16,7 +16,7 @@ class NotificationProvider with ChangeNotifier {
   void startPolling() {
     if (_isPolling) return;
     _isPolling = true;
-    _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       _checkForNewOrders();
     });
     // Initial check
@@ -38,17 +38,26 @@ class NotificationProvider with ChangeNotifier {
 
       if (_lastCheckedOrderId == null) {
         _lastCheckedOrderId = newestOrder.id;
-        // Don't return here, if we want to notify about the latest one immediately on first load
-        _addOrderNotification(newestOrder);
+        // Load the last 20 orders as initial notifications so the admin sees recent history
+        // Mark them as read so they don't trigger new-order toasts
+        final initialOrders = orders.take(20).toList();
+        for (var order in initialOrders.reversed) {
+          _addOrderNotification(order, isRead: true);
+        }
         notifyListeners();
         return;
       }
 
       if (newestOrder.id != _lastCheckedOrderId) {
-        // New orders found!
-        final newOrders = orders.where((o) => _isOrderNewerThanLast(o, _lastCheckedOrderId!)).toList();
+        // New orders found! Find all orders above the last seen one
+        final newOrders = <OrderModel>[];
+        for (var order in orders) {
+          if (order.id == _lastCheckedOrderId) break;
+          newOrders.add(order);
+        }
         
-        for (var order in newOrders.reversed) { // Add in chronological order
+        // Add them in chronological order
+        for (var order in newOrders.reversed) {
           _addOrderNotification(order);
         }
         
@@ -60,29 +69,38 @@ class NotificationProvider with ChangeNotifier {
     }
   }
 
-  bool _isOrderNewerThanLast(OrderModel order, String lastId) {
-    // This is a simple check. In a real app, we might compare timestamps.
-    // For now, if the ID is different and it's in the top of the list, we treat it as new.
-    return order.id != lastId;
-  }
-
-  void _addOrderNotification(OrderModel order) {
-    // Parse the order's creation time, fallback to now if parsing fails
-    DateTime orderTime = DateTime.tryParse(order.createdAt) ?? DateTime.now();
+  void _addOrderNotification(OrderModel order, {bool isRead = false}) {
+    // Robust parsing of the order's creation time
+    DateTime orderTime = _parseDateTime(order.createdAt);
     
-    // If the parsed time is in UTC, convert it to local for correct difference calculation
-    if (orderTime.isUtc) {
-      orderTime = orderTime.toLocal();
-    }
-
     final notification = NotificationModel(
       id: '${order.id}_${DateTime.now().millisecondsSinceEpoch}',
       orderId: order.id,
       customerName: order.customerName,
-      message: 'Order no ${order.id.substring(0, 8)} is placed by ${order.customerName}',
+      message: 'Order no ${order.id.length > 8 ? order.id.substring(0, 8) : order.id} is placed by ${order.customerName}',
       createdAt: orderTime,
     );
+    notification.isRead = isRead;
     _notifications.insert(0, notification);
+  }
+
+  DateTime _parseDateTime(String dateStr) {
+    if (dateStr.isEmpty) return DateTime.now();
+    
+    // Try standard ISO
+    DateTime? dt = DateTime.tryParse(dateStr);
+    
+    // Fallback: If it has a space instead of T, replace it (common in some backends)
+    if (dt == null && dateStr.contains(' ')) {
+      dt = DateTime.tryParse(dateStr.replaceFirst(' ', 'T'));
+    }
+
+    if (dt == null) return DateTime.now();
+
+    // Ensure we are comparing like-with-like (Local vs Local or UTC vs UTC)
+    // Most APIs return UTC. If it doesn't specify, we'll assume it might be UTC 
+    // and convert it to Local for the "time ago" calculation.
+    return dt.isUtc ? dt.toLocal() : dt;
   }
 
   void markAsRead(String id) {

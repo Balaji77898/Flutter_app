@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -967,5 +968,50 @@ class CompactStatChip extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+// ─── Live Time Ago Component ─────────────────────────────────────────────
+class LiveTimeAgo extends StatefulWidget {
+  final DateTime dt;
+  final TextStyle? style;
+  const LiveTimeAgo({super.key, required this.dt, this.style});
+
+  @override
+  State<LiveTimeAgo> createState() => _LiveTimeAgoState();
+}
+
+class _LiveTimeAgoState extends State<LiveTimeAgo> {
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    // Refresh every 30 seconds to keep the "time ago" accurate
+    _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      _format(widget.dt),
+      style: widget.style ?? AppTheme.sans(size: 11, color: AppColors.slate500),
+    );
+  }
+
+  String _format(DateTime dt) {
+    final diff = DateTime.now().difference(dt);
+    if (diff.inMinutes < 1) return 'Just now';
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
+    if (diff.inHours < 24) return '${diff.inHours}h ago';
+    return '${diff.inDays}d ago';
   }
 }

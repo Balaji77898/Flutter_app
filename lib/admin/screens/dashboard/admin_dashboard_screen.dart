@@ -712,10 +712,7 @@ class _NotificationButtonState extends State<_NotificationButton> {
                             color: AppColors.slate900,
                           ),
                         ),
-                        subtitle: Text(
-                          _formatTime(n.createdAt),
-                          style: GoogleFonts.inter(fontSize: 11, color: AppColors.slate400),
-                        ),
+                        subtitle: _LiveTimeAgo(dt: n.createdAt),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
                       );
                     },
@@ -729,7 +726,43 @@ class _NotificationButtonState extends State<_NotificationButton> {
     );
   }
 
-  String _formatTime(DateTime dt) {
+}
+
+class _LiveTimeAgo extends StatefulWidget {
+  final DateTime dt;
+  const _LiveTimeAgo({required this.dt});
+
+  @override
+  State<_LiveTimeAgo> createState() => _LiveTimeAgoState();
+}
+
+class _LiveTimeAgoState extends State<_LiveTimeAgo> {
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    // Refresh every 30 seconds to keep the "time ago" accurate
+    _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      _format(widget.dt),
+      style: GoogleFonts.inter(fontSize: 11, color: AppColors.slate400),
+    );
+  }
+
+  String _format(DateTime dt) {
     final diff = DateTime.now().difference(dt);
     if (diff.inMinutes < 1) return 'Just now';
     if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';

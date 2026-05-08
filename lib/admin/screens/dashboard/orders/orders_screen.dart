@@ -437,7 +437,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             ))),
             DataCell(anim(Text('₹${o.totalAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(fontWeight: FontWeight.w800, color: AppColors.rubyDark, fontSize: 14)))),
             DataCell(anim(_paymentBadge(o.paymentStatus))),
-            DataCell(anim(Text(dateFormat.format(DateTime.tryParse(o.createdAt) ?? DateTime.now()), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted)))),
+            DataCell(anim(Text(dateFormat.format((DateTime.tryParse(o.createdAt) ?? DateTime.now()).toLocal()), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted)))),
             DataCell(anim(ElevatedButton.icon(
               onPressed: () => _showOrderDetails(o),
               icon: const Icon(Icons.visibility, size: 14),

@@ -373,8 +373,8 @@ class _OrderCard extends StatelessWidget {
                           letterSpacing: 1.0,
                         ),
                       ),
-                      Text(
-                        order.time,
+                      LiveTimeAgo(
+                        dt: order.createdAt,
                         style: AppTheme.sans(
                           size: 12,
                           weight: FontWeight.w600,

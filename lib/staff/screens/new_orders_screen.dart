@@ -294,8 +294,8 @@ class _OrderCard extends StatelessWidget {
                             color: AppColors.white,
                           ),
                         ),
-                        Text(
-                          order.time,
+                        LiveTimeAgo(
+                          dt: order.createdAt,
                           style: AppTheme.sans(
                             size: 12,
                             color: Colors.white.withValues(alpha: 0.7),
