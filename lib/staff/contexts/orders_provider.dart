@@ -158,4 +158,35 @@ class OrdersProvider extends ChangeNotifier {
       rethrow;
     }
   }
+
+  // 🔥 CUSTOMER PLACE ORDER (NO TOKEN)
+  Future<void> placeCustomerOrder(Map<String, dynamic> orderData) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      // Using the endpoint structure recommended by the web team
+      // Usually /api/orders or similar for public orders
+      final response = await http.post(
+        Uri.parse("$kBackendBase/api/orders"),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(orderData),
+      );
+
+      debugPrint("CUSTOMER ORDER STATUS: ${response.statusCode}");
+      debugPrint("CUSTOMER ORDER BODY: ${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Success!
+      } else {
+        throw Exception("Failed to place order: ${response.statusCode}");
+      }
+    } catch (e) {
+      debugPrint("Customer Order Error: $e");
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }

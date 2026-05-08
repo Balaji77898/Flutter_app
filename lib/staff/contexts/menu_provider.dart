@@ -28,20 +28,17 @@ class MenuProvider extends ChangeNotifier {
       final String? token = authToken ??
           (await SharedPreferences.getInstance()).getString('auth_token');
 
-      if (token == null || token.isEmpty) {
-        _error = 'Not authenticated — please log in first';
-        _isLoading = false;
-        notifyListeners();
-        return;
+      // If no token, we still proceed to try public endpoints
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token != null && token.isNotEmpty) {
+        headers['Authorization'] = 'Bearer $token';
       }
 
-      final headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
-
-      debugPrint('MenuProvider: Token length: ${token.length}');
-      if (token.length > 10) {
+      debugPrint('MenuProvider: Token length: ${token?.length ?? 0}');
+      if (token != null && token.length > 10) {
         debugPrint(
             'MenuProvider: Token starts with: ${token.substring(0, 10)}...');
       }

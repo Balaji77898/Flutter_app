@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -140,7 +141,10 @@ class _TablesScreenState extends State<TablesScreen> {
   }
 
   void _showQRDialog(TableModel t) {
-    final qrData = (t.qrCode != null && t.qrCode!.isNotEmpty) ? t.qrCode! : '$_kCustomerPortalBase?table=${t.id}';
+    final baseUrl = 'https://customerfinal1.vercel.app/customer/scan-qr';
+    final qrData = (t.qrCode != null && t.qrCode!.isNotEmpty) 
+        ? '$baseUrl?token=${t.qrCode}' 
+        : '$baseUrl?table=${t.id}';
     showDialog(
       context: context,
       builder: (ctx) => Dialog(
@@ -159,9 +163,9 @@ class _TablesScreenState extends State<TablesScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Table ${t.tableNumber}',
+                        Text('QR Code - Table ${t.tableNumber}',
                             style: GoogleFonts.playfairDisplay(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.rubyDark)),
-                        Text('${t.capacity} seats • Scan to place order',
+                        Text('Table ${t.tableNumber}',
                             style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted)),
                       ],
                     ),
@@ -196,14 +200,6 @@ class _TablesScreenState extends State<TablesScreen> {
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => Navigator.pop(ctx),
-                      icon: const Icon(Icons.close, size: 16),
-                      label: const Text('Close'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {
                         Navigator.pop(ctx);
@@ -211,7 +207,29 @@ class _TablesScreenState extends State<TablesScreen> {
                       },
                       icon: const Icon(Icons.download_rounded, size: 16, color: Colors.white),
                       label: const Text('Download PNG', style: TextStyle(color: Colors.white)),
-                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.rubyDark),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.rubyDark,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: qrData));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Link copied to clipboard')),
+                        );
+                      },
+                      icon: const Icon(Icons.copy, size: 16, color: Colors.white),
+                      label: const Text('Copy Link', style: TextStyle(color: Colors.white)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF2563EB),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
                     ),
                   ),
                 ],
@@ -494,7 +512,10 @@ class _TablesScreenState extends State<TablesScreen> {
   }
 
   Widget _buildTableRow(TableModel t, int index) {
-    final qrData = (t.qrCode != null && t.qrCode!.isNotEmpty) ? t.qrCode! : '$_kCustomerPortalBase?table=${t.id}';
+    final baseUrl = 'https://customerfinal1.vercel.app/customer/scan-qr';
+    final qrData = (t.qrCode != null && t.qrCode!.isNotEmpty) 
+        ? '$baseUrl?token=${t.qrCode}' 
+        : '$baseUrl?table=${t.id}';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),

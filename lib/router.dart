@@ -22,6 +22,8 @@ import 'staff/screens/create_order_screen.dart';
 import 'staff/screens/order_details_screen.dart';
 import 'staff/screens/payment_screen.dart';
 import 'staff/screens/bill_screen.dart';
+import 'customer/screens/welcome_screen.dart';
+import 'customer/screens/menu_screen.dart';
 
 GoRouter createRouter(AuthProvider authProvider) {
   return GoRouter(
@@ -32,7 +34,9 @@ GoRouter createRouter(AuthProvider authProvider) {
       final isLoggingIn = state.matchedLocation == '/login';
       final isForgotPassword = state.matchedLocation == '/forgot-password';
       final isResetPassword = state.matchedLocation.startsWith('/reset-password');
-      final isAuthRoute = isLoggingIn || isForgotPassword || isResetPassword;
+      final isCustomerScan = state.matchedLocation == '/customer/scan-qr';
+      final isCustomerMenu = state.matchedLocation == '/customer/menu';
+      final isAuthRoute = isLoggingIn || isForgotPassword || isResetPassword || isCustomerScan || isCustomerMenu;
       final isRoot = state.matchedLocation == '/';
 
       if (!isLoggedIn) {
@@ -161,6 +165,18 @@ GoRouter createRouter(AuthProvider authProvider) {
             paymentMethod: extra['paymentMethod'] as String? ?? 'cash',
           );
         },
+      ),
+      GoRoute(
+        path: '/customer/scan-qr',
+        builder: (context, state) {
+          final table = state.uri.queryParameters['table'];
+          final token = state.uri.queryParameters['token'];
+          return WelcomeScreen(tableNumber: table ?? token);
+        },
+      ),
+      GoRoute(
+        path: '/customer/menu',
+        builder: (context, state) => const CustomerMenuScreen(),
       ),
     ],
   );
