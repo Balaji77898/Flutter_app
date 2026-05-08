@@ -252,9 +252,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               width: 72,
               height: 72,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withOpacity(0.2)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
               ),
               child: const Icon(Icons.restaurant_rounded,
                   color: Colors.white, size: 36),
@@ -274,7 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Text(r?.restaurantType ?? 'Restaurant Type',
                     style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: AppColors.gold.withOpacity(0.9),
+                      color: AppColors.gold.withValues(alpha: 0.9),
                       fontWeight: FontWeight.w600,
                     )),
               ],
@@ -292,13 +292,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
         color: isActive
-            ? AppColors.success.withOpacity(0.2)
-            : AppColors.warning.withOpacity(0.2),
+            ? AppColors.success.withValues(alpha: 0.2)
+            : AppColors.warning.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(100),
         border: Border.all(
           color: isActive
-              ? AppColors.success.withOpacity(0.5)
-              : AppColors.warning.withOpacity(0.5),
+              ? AppColors.success.withValues(alpha: 0.5)
+              : AppColors.warning.withValues(alpha: 0.5),
         ),
       ),
       child: Row(
@@ -414,7 +414,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.rubyRed.withOpacity(0.05),
+            color: AppColors.rubyRed.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: AppColors.rubyRed, size: 20),

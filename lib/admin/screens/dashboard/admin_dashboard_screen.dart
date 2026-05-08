@@ -278,7 +278,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                               color: Colors.white,
                               fontWeight: FontWeight.bold)),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.1),
+                        backgroundColor: Colors.white.withValues(alpha: 0.1),
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
@@ -335,7 +335,7 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
             boxShadow: [
               BoxShadow(
                 color: AppColors.rubyDark
-                    .withOpacity(0.12), // Persistent maroon shadow
+                    .withValues(alpha: 0.12), // Persistent maroon shadow
                 blurRadius: _isHovered ? 30 : 20,
                 offset: Offset(0, _isHovered ? 15 : 10),
               )
@@ -351,7 +351,7 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
                 decoration: BoxDecoration(
                   color: _isHovered
                       ? AppColors.rubyRed
-                      : AppColors.rubyDark.withOpacity(0.05),
+                      : AppColors.rubyDark.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
@@ -463,17 +463,17 @@ class _ProfileChipState extends State<_ProfileChip> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
             color: _isHovered
-                ? Colors.white.withOpacity(0.15)
-                : Colors.white.withOpacity(0.08),
+                ? Colors.white.withValues(alpha: 0.15)
+                : Colors.white.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(100),
             border: Border.all(
                 color: _isHovered
-                    ? AppColors.gold.withOpacity(0.5)
-                    : Colors.white.withOpacity(0.1)),
+                    ? AppColors.gold.withValues(alpha: 0.5)
+                    : Colors.white.withValues(alpha: 0.1)),
             boxShadow: _isHovered
                 ? [
                     BoxShadow(
-                        color: AppColors.gold.withOpacity(0.2),
+                        color: AppColors.gold.withValues(alpha: 0.2),
                         blurRadius: 12,
                         spreadRadius: 2)
                   ]
@@ -559,7 +559,7 @@ class _NavigationPulse extends StatelessWidget {
                             boxShadow: [
                               BoxShadow(
                                 color: AppColors.gold
-                                    .withOpacity(0.3 * (1 - value)),
+                                    .withValues(alpha: 0.3 * (1 - value)),
                                 blurRadius: 20,
                                 spreadRadius: 5,
                               )
@@ -608,13 +608,13 @@ class _NotificationButtonState extends State<_NotificationButton> {
           height: 48,
           decoration: BoxDecoration(
             color: _isHovered
-                ? Colors.white.withOpacity(0.15)
-                : Colors.white.withOpacity(0.08),
+                ? Colors.white.withValues(alpha: 0.15)
+                : Colors.white.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
                 color: _isHovered
-                    ? AppColors.gold.withOpacity(0.5)
-                    : Colors.white.withOpacity(0.1)),
+                    ? AppColors.gold.withValues(alpha: 0.5)
+                    : Colors.white.withValues(alpha: 0.1)),
           ),
           child: Center(
             child: Stack(
@@ -658,7 +658,7 @@ class _NotificationButtonState extends State<_NotificationButton> {
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 40,
                   offset: const Offset(0, 10))
             ],
@@ -742,7 +742,7 @@ class _NotificationButtonState extends State<_NotificationButton> {
                           decoration: BoxDecoration(
                             color: n.isRead
                                 ? AppColors.ivory
-                                : AppColors.rubyRed.withOpacity(0.05),
+                                : AppColors.rubyRed.withValues(alpha: 0.05),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -883,12 +883,13 @@ class _TopToastWidgetState extends State<_TopToastWidget>
               constraints: const BoxConstraints(maxWidth: 600),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.95), // Transparent white
+                color:
+                    Colors.white.withValues(alpha: 0.95), // Transparent white
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withOpacity(0.5)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   )
@@ -899,7 +900,7 @@ class _TopToastWidgetState extends State<_TopToastWidget>
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: AppColors.rubyRed.withOpacity(0.1),
+                      color: AppColors.rubyRed.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(Icons.receipt_long_rounded,

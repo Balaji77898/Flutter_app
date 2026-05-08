@@ -5,15 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
 import 'package:restaurant_unified_app/admin/services/tables_service.dart';
 
 import 'package:restaurant_unified_app/staff/widgets/common_widgets.dart';
-
-const String _kCustomerPortalBase = 'https://pos-frontend-two.vercel.app/order';
 
 class TablesScreen extends StatefulWidget {
   const TablesScreen({super.key});
@@ -309,9 +306,10 @@ class _TablesScreenState extends State<TablesScreen> {
                 });
                 _loadTables();
               } catch (e) {
-                if (mounted)
+                if (mounted) {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('Failed: $e')));
+                }
               }
             },
             child: const Text('Add', style: TextStyle(color: Colors.white)),
@@ -430,11 +428,11 @@ class _TablesScreenState extends State<TablesScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border:
-              Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
+          border: Border.all(
+              color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 4))
           ],
@@ -461,11 +459,11 @@ class _TablesScreenState extends State<TablesScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border:
-            Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
+        border: Border.all(
+            color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4))
         ],
@@ -496,15 +494,15 @@ class _TablesScreenState extends State<TablesScreen> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                            color: AppColors.rubyDark.withOpacity(0.2))),
+                            color: AppColors.rubyDark.withValues(alpha: 0.2))),
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                            color: AppColors.rubyDark.withOpacity(0.2))),
+                            color: AppColors.rubyDark.withValues(alpha: 0.2))),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                            color: AppColors.rubyDark.withOpacity(0.5))),
+                            color: AppColors.rubyDark.withValues(alpha: 0.5))),
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 12),
                   ),
@@ -540,7 +538,7 @@ class _TablesScreenState extends State<TablesScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.2)),
+        border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: DropdownButtonHideUnderline(
@@ -563,11 +561,11 @@ class _TablesScreenState extends State<TablesScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border:
-            Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
+        border: Border.all(
+            color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4))
         ],
@@ -698,7 +696,7 @@ class _TablesScreenState extends State<TablesScreen> {
               child: Switch(
                 value: t.isActive,
                 onChanged: (v) => _toggleTable(t.id),
-                activeColor: Colors.green,
+                activeThumbColor: Colors.green,
               ),
             ),
           ),

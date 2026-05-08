@@ -251,11 +251,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border:
-              Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
+          border: Border.all(
+              color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withOpacity(0.01),
+                color: Colors.black.withValues(alpha: 0.01),
                 blurRadius: 4,
                 offset: const Offset(0, 2))
           ],
@@ -284,11 +284,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border:
-            Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
+        border: Border.all(
+            color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.01),
+              color: Colors.black.withValues(alpha: 0.01),
               blurRadius: 4,
               offset: const Offset(0, 2))
         ],
@@ -324,15 +324,15 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                            color: AppColors.rubyDark.withOpacity(0.2))),
+                            color: AppColors.rubyDark.withValues(alpha: 0.2))),
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                            color: AppColors.rubyDark.withOpacity(0.1))),
+                            color: AppColors.rubyDark.withValues(alpha: 0.1))),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                            color: AppColors.rubyDark.withOpacity(0.5))),
+                            color: AppColors.rubyDark.withValues(alpha: 0.5))),
                   ),
                 ),
               ),
@@ -362,8 +362,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    border:
-                        Border.all(color: AppColors.rubyDark.withOpacity(0.2)),
+                    border: Border.all(
+                        color: AppColors.rubyDark.withValues(alpha: 0.2)),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
@@ -409,7 +409,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.2)),
+        border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: DropdownButtonHideUnderline(
@@ -436,11 +436,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border:
-            Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
+        border: Border.all(
+            color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.01),
+              color: Colors.black.withValues(alpha: 0.01),
               blurRadius: 4,
               offset: const Offset(0, 2))
         ],
@@ -528,7 +528,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               controller.repeat(reverse: true))
                       .shimmer(
                           duration: 1500.ms,
-                          color: AppColors.rubyRed.withOpacity(0.2))
+                          color: AppColors.rubyRed.withValues(alpha: 0.2))
                       .scale(
                           begin: const Offset(1, 1),
                           end: const Offset(1.02, 1.02),
@@ -538,7 +538,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 return DataRow(
                   color: isHighlighted
                       ? WidgetStateProperty.resolveWith(
-                          (states) => AppColors.rubyRed.withOpacity(0.08))
+                          (states) => AppColors.rubyRed.withValues(alpha: 0.08))
                       : null,
                   cells: [
                     DataCell(anim(Column(
@@ -705,11 +705,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
           decoration: BoxDecoration(
             color: bg,
             borderRadius: BorderRadius.circular(100),
-            border: Border.all(color: text.withOpacity(0.3)),
+            border: Border.all(color: text.withValues(alpha: 0.3)),
             boxShadow: (onTap != null && !isLoading)
                 ? [
                     BoxShadow(
-                        color: text.withOpacity(0.1),
+                        color: text.withValues(alpha: 0.1),
                         blurRadius: 4,
                         offset: const Offset(0, 2))
                   ]
@@ -753,7 +753,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(100),
-          border: Border.all(color: text.withOpacity(0.3))),
+          border: Border.all(color: text.withValues(alpha: 0.3))),
       child: Text(status.toUpperCase() == 'PENDING' ? 'Pending' : status,
           style: GoogleFonts.inter(
               color: text, fontSize: 11, fontWeight: FontWeight.bold)),
@@ -1016,7 +1016,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
                 width: 2),
             borderRadius: BorderRadius.circular(20),
             color: isSelected
-                ? AppColors.rubyDark.withOpacity(0.02)
+                ? AppColors.rubyDark.withValues(alpha: 0.02)
                 : Colors.white,
           ),
           child: Column(
@@ -1148,7 +1148,7 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                             color: const Color(0xFFE2E8F0), width: 1.5),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
+                            color: Colors.black.withValues(alpha: 0.05),
                             blurRadius: 20,
                             offset: const Offset(0, 4),
                           ),
@@ -1195,7 +1195,8 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                            color: Colors.grey.withOpacity(0.3), width: 1.5),
+                            color: Colors.grey.withValues(alpha: 0.3),
+                            width: 1.5),
                         color: Colors.white,
                       ),
                       child: Column(
@@ -1348,7 +1349,7 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                             color: const Color(0xFFE2E8F0), width: 1.5),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
+                            color: Colors.black.withValues(alpha: 0.05),
                             blurRadius: 20,
                             offset: const Offset(0, 4),
                           ),
@@ -1389,7 +1390,7 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.02),
+                            color: Colors.black.withValues(alpha: 0.02),
                             blurRadius: 10,
                             offset: const Offset(0, 2),
                           ),
@@ -1480,7 +1481,7 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                             color: const Color(0xFFE2E8F0), width: 1.5),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.02),
+                            color: Colors.black.withValues(alpha: 0.02),
                             blurRadius: 10,
                             offset: const Offset(0, 2),
                           ),
@@ -1943,7 +1944,7 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: accent.withOpacity(0.1)),
+        border: Border.all(color: accent.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1965,7 +1966,7 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                 child: Text(l,
                     style: GoogleFonts.inter(
                         fontSize: 13,
-                        color: accent.withOpacity(0.8),
+                        color: accent.withValues(alpha: 0.8),
                         fontWeight: FontWeight.w600)),
               )),
         ],

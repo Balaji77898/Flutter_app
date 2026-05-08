@@ -520,14 +520,14 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                              color: Colors.black.withOpacity(0.03),
+                              color: Colors.black.withValues(alpha: 0.03),
                               blurRadius: 8,
                               offset: const Offset(0, 2))
                         ],
                         border: Border.all(
                             color: qty > 0
-                                ? AppColors.rubyRed.withOpacity(0.4)
-                                : AppColors.rubyDark.withOpacity(0.12),
+                                ? AppColors.rubyRed.withValues(alpha: 0.4)
+                                : AppColors.rubyDark.withValues(alpha: 0.12),
                             width: 1.5),
                       ),
                       child: Row(
@@ -644,7 +644,7 @@ class _CategoryCardState extends State<_CategoryCard> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(_isHovered ? 0.08 : 0.04),
+                color: Colors.black.withValues(alpha: _isHovered ? 0.08 : 0.04),
                 blurRadius: _isHovered ? 15 : 10,
                 offset: Offset(0, _isHovered ? 6 : 4),
               )
@@ -652,7 +652,7 @@ class _CategoryCardState extends State<_CategoryCard> {
             border: Border.all(
               color: _isHovered
                   ? AppColors.rubyDark
-                  : AppColors.rubyDark.withOpacity(0.2),
+                  : AppColors.rubyDark.withValues(alpha: 0.2),
               width: _isHovered ? 2 : 1.5,
             ),
           ),
@@ -663,7 +663,7 @@ class _CategoryCardState extends State<_CategoryCard> {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: (_isHovered ? AppColors.rubyRed : AppColors.rubyRed)
-                      .withOpacity(_isHovered ? 0.15 : 0.08),
+                      .withValues(alpha: _isHovered ? 0.15 : 0.08),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(

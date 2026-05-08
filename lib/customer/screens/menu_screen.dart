@@ -219,10 +219,11 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
                     icon: const Icon(Icons.remove_circle_outline,
                         color: AppColors.rubyRed),
                     onPressed: () => setState(() {
-                      if (qty == 1)
+                      if (qty == 1) {
                         _cart.remove(item.id);
-                      else
+                      } else {
                         _cart[item.id] = qty - 1;
+                      }
                     }),
                   ),
                   Text('$qty',
@@ -249,7 +250,7 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, -4))
         ],

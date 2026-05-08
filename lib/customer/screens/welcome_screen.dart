@@ -69,7 +69,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   width: 120,
                   height: 120,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.12),
+                    color: Colors.white.withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                     border: Border.all(color: AppColors.gold, width: 2.5),
                   ),
@@ -113,7 +113,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 28, vertical: 14),
                     decoration: BoxDecoration(
-                      color: AppColors.gold.withOpacity(0.15),
+                      color: AppColors.gold.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(40),
                       border: Border.all(color: AppColors.gold, width: 1.5),
                     ),

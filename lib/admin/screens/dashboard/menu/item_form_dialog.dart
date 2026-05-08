@@ -204,7 +204,7 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                     helperText:
                         '💡 Tip: Right-click any image online and select "Copy Image Address"',
                     helperStyle: TextStyle(
-                        color: AppColors.rubyRed.withOpacity(0.8),
+                        color: AppColors.rubyRed.withValues(alpha: 0.8),
                         fontWeight: FontWeight.w500,
                         fontSize: 11),
                     suffixIcon: _imageController.text.isNotEmpty

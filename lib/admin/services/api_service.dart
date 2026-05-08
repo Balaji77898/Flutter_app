@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
@@ -27,7 +28,7 @@ class ApiService {
   /// GET request
   static Future<dynamic> get(String path, {bool requiresAuth = true}) async {
     final headers = await _buildHeaders(requiresAuth: requiresAuth);
-    print('API GET: $path');
+    debugPrint('API GET: $path');
     final response = await http.get(_uri(path), headers: headers).timeout(
           const Duration(seconds: 40),
         );
@@ -38,7 +39,7 @@ class ApiService {
   static Future<dynamic> post(String path, Map<String, dynamic> body,
       {bool requiresAuth = true}) async {
     final headers = await _buildHeaders(requiresAuth: requiresAuth);
-    print('API POST: $path | Body: ${jsonEncode(body)}');
+    debugPrint('API POST: $path | Body: ${jsonEncode(body)}');
     final response = await http
         .post(_uri(path), headers: headers, body: jsonEncode(body))
         .timeout(const Duration(seconds: 40));
@@ -49,7 +50,7 @@ class ApiService {
   static Future<dynamic> put(String path, Map<String, dynamic> body,
       {bool requiresAuth = true}) async {
     final headers = await _buildHeaders(requiresAuth: requiresAuth);
-    print('API PUT: $path | Body: ${jsonEncode(body)}');
+    debugPrint('API PUT: $path | Body: ${jsonEncode(body)}');
     final response = await http
         .put(_uri(path), headers: headers, body: jsonEncode(body))
         .timeout(const Duration(seconds: 40));
@@ -60,7 +61,7 @@ class ApiService {
   static Future<dynamic> patch(String path,
       {Map<String, dynamic>? body, bool requiresAuth = true}) async {
     final headers = await _buildHeaders(requiresAuth: requiresAuth);
-    print(
+    debugPrint(
         'API PATCH: $path | Body: ${body != null ? jsonEncode(body) : "EMPTY"}');
     final response = await http
         .patch(_uri(path),
@@ -72,7 +73,7 @@ class ApiService {
   /// DELETE request
   static Future<dynamic> delete(String path, {bool requiresAuth = true}) async {
     final headers = await _buildHeaders(requiresAuth: requiresAuth);
-    print('API DELETE: $path');
+    debugPrint('API DELETE: $path');
     final response = await http
         .delete(_uri(path), headers: headers)
         .timeout(const Duration(seconds: 40));
@@ -81,7 +82,7 @@ class ApiService {
 
   static dynamic _handleResponse(http.Response response, String path) {
     final body = response.body;
-    print('API RESPONSE [$path] (${response.statusCode}): $body');
+    debugPrint('API RESPONSE [$path] (${response.statusCode}): $body');
     if (response.statusCode >= 200 && response.statusCode < 300) {
       if (body.isEmpty) return {};
       final decoded = jsonDecode(body);

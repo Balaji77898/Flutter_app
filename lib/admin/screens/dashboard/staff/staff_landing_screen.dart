@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:restaurant_unified_app/core/constants.dart';
+import 'package:restaurant_unified_app/core/theme.dart';
 import 'package:restaurant_unified_app/staff/widgets/common_widgets.dart';
 
 class StaffLandingScreen extends StatelessWidget {
@@ -78,7 +80,8 @@ class StaffLandingScreen extends StatelessWidget {
                               'Select a role to manage credentials and access.',
                               textAlign: TextAlign.center,
                               style: GoogleFonts.inter(
-                                color: AppColors.rubyDark.withOpacity(0.7),
+                                color:
+                                    AppColors.rubyDark.withValues(alpha: 0.7),
                                 fontSize: 16,
                                 fontStyle: FontStyle.italic,
                                 fontWeight: FontWeight.w500,
@@ -173,7 +176,7 @@ class _StaffTypeCardState extends State<_StaffTypeCard> {
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.rubyDark.withOpacity(0.12),
+                color: AppColors.rubyDark.withValues(alpha: 0.12),
                 blurRadius: _isHovered ? 30 : 20,
                 offset: Offset(0, _isHovered ? 15 : 10),
               )
@@ -190,7 +193,7 @@ class _StaffTypeCardState extends State<_StaffTypeCard> {
                 decoration: BoxDecoration(
                   color: _isHovered
                       ? AppColors.rubyRed
-                      : AppColors.rubyDark.withOpacity(0.05),
+                      : AppColors.rubyDark.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(

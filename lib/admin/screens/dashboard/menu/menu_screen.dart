@@ -1,9 +1,10 @@
+import 'package:restaurant_unified_app/core/constants.dart';
+import 'package:restaurant_unified_app/core/theme.dart';
 import 'package:restaurant_unified_app/staff/widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
 import 'package:restaurant_unified_app/admin/services/menu_service.dart';
 import 'category_form_dialog.dart';
@@ -316,7 +317,7 @@ class _MenuScreenState extends State<MenuScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -694,23 +695,23 @@ class _SidebarItemState extends State<_SidebarItem> {
             color: isAllItems
                 ? AppColors.rubyDark
                 : (widget.isSelected
-                    ? AppColors.rubyDark.withOpacity(0.05)
+                    ? AppColors.rubyDark.withValues(alpha: 0.05)
                     : (_isHovered ? Colors.grey.shade50 : Colors.white)),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isAllItems
                   ? Colors.transparent
                   : (widget.isSelected
-                      ? AppColors.rubyDark.withOpacity(0.5)
+                      ? AppColors.rubyDark.withValues(alpha: 0.5)
                       : (_isHovered
-                          ? AppColors.rubyDark.withOpacity(0.3)
-                          : AppColors.rubyDark.withOpacity(0.1))),
+                          ? AppColors.rubyDark.withValues(alpha: 0.3)
+                          : AppColors.rubyDark.withValues(alpha: 0.1))),
               width: 1.2,
             ),
             boxShadow: _isHovered && !isAllItems
                 ? [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     )
@@ -740,7 +741,7 @@ class _SidebarItemState extends State<_SidebarItem> {
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
                             color: isAllItems
-                                ? Colors.white.withOpacity(0.7)
+                                ? Colors.white.withValues(alpha: 0.7)
                                 : Colors.grey.shade500,
                             letterSpacing: 0.5,
                           ),
@@ -755,7 +756,8 @@ class _SidebarItemState extends State<_SidebarItem> {
                   widget.onEdit != null) ...[
                 IconButton(
                   icon: Icon(Icons.edit,
-                      size: 16, color: AppColors.rubyDark.withOpacity(0.6)),
+                      size: 16,
+                      color: AppColors.rubyDark.withValues(alpha: 0.6)),
                   onPressed: widget.onEdit,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
