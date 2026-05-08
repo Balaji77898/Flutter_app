@@ -32,7 +32,7 @@ class MenuProvider extends ChangeNotifier {
       final Map<String, String> headers = {
         'Content-Type': 'application/json',
       };
-      
+
       if (token != null && token.isNotEmpty) {
         headers['Authorization'] = 'Bearer $token';
       }

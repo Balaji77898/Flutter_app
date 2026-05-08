@@ -37,11 +37,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         widget.token,
         _passwordController.text,
       );
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Password reset successfully! Please login with your new password.'),
+            content: Text(
+                'Password reset successfully! Please login with your new password.'),
             backgroundColor: AppColors.success,
           ),
         );
@@ -86,9 +87,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     color: AppColors.gold,
                   ),
                 ).animate().scale(duration: 400.ms, curve: Curves.easeOutBack),
-                
+
                 const SizedBox(height: 32),
-                
+
                 Text(
                   'Set New Password',
                   style: GoogleFonts.outfit(
@@ -97,9 +98,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     color: AppColors.primary,
                   ),
                 ).animate().fadeIn(delay: 200.ms),
-                
+
                 const SizedBox(height: 12),
-                
+
                 Text(
                   'Please enter your new password below.',
                   textAlign: TextAlign.center,
@@ -108,9 +109,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     color: AppColors.textMuted,
                   ),
                 ).animate().fadeIn(delay: 300.ms),
-                
+
                 const SizedBox(height: 40),
-                
+
                 Form(
                   key: _formKey,
                   child: Column(
@@ -126,24 +127,30 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           prefixIcon: const Icon(Icons.lock_outline),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                              _obscurePassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
                               color: AppColors.textMuted,
                             ),
-                            onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                            onPressed: () => setState(
+                                () => _obscurePassword = !_obscurePassword),
                           ),
                           filled: true,
                           fillColor: Colors.white,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.borderLight),
+                            borderSide:
+                                const BorderSide(color: AppColors.borderLight),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.borderLight),
+                            borderSide:
+                                const BorderSide(color: AppColors.borderLight),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                            borderSide: const BorderSide(
+                                color: AppColors.primary, width: 2),
                           ),
                         ),
                         validator: (value) {
@@ -156,9 +163,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           return null;
                         },
                       ),
-                      
+
                       const SizedBox(height: 20),
-                      
+
                       // Confirm Password Field
                       TextFormField(
                         controller: _confirmPasswordController,
@@ -170,24 +177,31 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           prefixIcon: const Icon(Icons.lock_reset_outlined),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscureConfirmPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                              _obscureConfirmPassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
                               color: AppColors.textMuted,
                             ),
-                            onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+                            onPressed: () => setState(() =>
+                                _obscureConfirmPassword =
+                                    !_obscureConfirmPassword),
                           ),
                           filled: true,
                           fillColor: Colors.white,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.borderLight),
+                            borderSide:
+                                const BorderSide(color: AppColors.borderLight),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.borderLight),
+                            borderSide:
+                                const BorderSide(color: AppColors.borderLight),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                            borderSide: const BorderSide(
+                                color: AppColors.primary, width: 2),
                           ),
                         ),
                         validator: (value) {
@@ -197,14 +211,15 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           return null;
                         },
                       ),
-                      
+
                       const SizedBox(height: 32),
-                      
+
                       SizedBox(
                         width: double.infinity,
                         height: 56,
                         child: ElevatedButton(
-                          onPressed: authProvider.isLoading ? null : _handleSubmit,
+                          onPressed:
+                              authProvider.isLoading ? null : _handleSubmit,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
                             foregroundColor: Colors.white,
@@ -219,7 +234,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                   width: 24,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
                                   ),
                                 )
                               : Text(
@@ -230,7 +246,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                   ),
                                 ),
                         ),
-                      ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2, end: 0),
+                      )
+                          .animate()
+                          .fadeIn(delay: 400.ms)
+                          .slideY(begin: 0.2, end: 0),
                     ],
                   ),
                 ),

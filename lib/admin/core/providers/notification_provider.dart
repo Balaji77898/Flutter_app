@@ -55,12 +55,12 @@ class NotificationProvider with ChangeNotifier {
           if (order.id == _lastCheckedOrderId) break;
           newOrders.add(order);
         }
-        
+
         // Add them in chronological order
         for (var order in newOrders.reversed) {
           _addOrderNotification(order);
         }
-        
+
         _lastCheckedOrderId = newestOrder.id;
         notifyListeners();
       }
@@ -72,12 +72,13 @@ class NotificationProvider with ChangeNotifier {
   void _addOrderNotification(OrderModel order, {bool isRead = false}) {
     // Robust parsing of the order's creation time
     DateTime orderTime = _parseDateTime(order.createdAt);
-    
+
     final notification = NotificationModel(
       id: '${order.id}_${DateTime.now().millisecondsSinceEpoch}',
       orderId: order.id,
       customerName: order.customerName,
-      message: 'Order no ${order.id.length > 8 ? order.id.substring(0, 8) : order.id} is placed by ${order.customerName}',
+      message:
+          'Order no ${order.id.length > 8 ? order.id.substring(0, 8) : order.id} is placed by ${order.customerName}',
       createdAt: orderTime,
     );
     notification.isRead = isRead;
@@ -86,10 +87,10 @@ class NotificationProvider with ChangeNotifier {
 
   DateTime _parseDateTime(String dateStr) {
     if (dateStr.isEmpty) return DateTime.now();
-    
+
     // Try standard ISO
     DateTime? dt = DateTime.tryParse(dateStr);
-    
+
     // Fallback: If it has a space instead of T, replace it (common in some backends)
     if (dt == null && dateStr.contains(' ')) {
       dt = DateTime.tryParse(dateStr.replaceFirst(' ', 'T'));
@@ -98,7 +99,7 @@ class NotificationProvider with ChangeNotifier {
     if (dt == null) return DateTime.now();
 
     // Ensure we are comparing like-with-like (Local vs Local or UTC vs UTC)
-    // Most APIs return UTC. If it doesn't specify, we'll assume it might be UTC 
+    // Most APIs return UTC. If it doesn't specify, we'll assume it might be UTC
     // and convert it to Local for the "time ago" calculation.
     return dt.isUtc ? dt.toLocal() : dt;
   }

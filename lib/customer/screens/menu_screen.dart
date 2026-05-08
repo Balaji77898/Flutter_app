@@ -57,7 +57,7 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
     try {
       final menuItems = context.read<MenuProvider>().items;
       final List<Map<String, dynamic>> itemsData = [];
-      
+
       _cart.forEach((id, qty) {
         final item = menuItems.firstWhere((m) => m.id == id);
         itemsData.add({
@@ -83,7 +83,8 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
           barrierDismissible: false,
           builder: (ctx) => AlertDialog(
             title: const Text('Order Placed!'),
-            content: Text('Your order for Table #$_tableNumber has been sent to the kitchen.'),
+            content: Text(
+                'Your order for Table #$_tableNumber has been sent to the kitchen.'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -99,7 +100,9 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to place order: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Failed to place order: $e'),
+              backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -119,7 +122,8 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.go('/customer/scan-qr'),
         ),
-        title: Text('Restaurant Menu', style: GoogleFonts.playfairDisplay(color: Colors.white)),
+        title: Text('Restaurant Menu',
+            style: GoogleFonts.playfairDisplay(color: Colors.white)),
         centerTitle: true,
         actions: [
           if (_tableNumber != null)
@@ -127,14 +131,18 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
               padding: const EdgeInsets.only(right: 16),
               child: Center(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: AppColors.gold,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     'Table #$_tableNumber',
-                    style: GoogleFonts.inter(color: AppColors.rubyDark, fontWeight: FontWeight.bold, fontSize: 12),
+                    style: GoogleFonts.inter(
+                        color: AppColors.rubyDark,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12),
                   ),
                 ),
               ),
@@ -142,13 +150,15 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
         ],
       ),
       body: menu.isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppColors.rubyRed))
+          ? const Center(
+              child: CircularProgressIndicator(color: AppColors.rubyRed))
           : menu.error != null
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(menu.error!, style: const TextStyle(color: Colors.red)),
+                      Text(menu.error!,
+                          style: const TextStyle(color: Colors.red)),
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () => menu.fetchMenuItems(),
@@ -188,11 +198,17 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(item.name, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text(item.category, style: GoogleFonts.inter(color: Colors.grey, fontSize: 12)),
+                  Text(item.name,
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text(item.category,
+                      style:
+                          GoogleFonts.inter(color: Colors.grey, fontSize: 12)),
                   const SizedBox(height: 4),
-                  Text('₹${item.price.toStringAsFixed(2)}', 
-                    style: GoogleFonts.inter(color: AppColors.rubyRed, fontWeight: FontWeight.bold)),
+                  Text('₹${item.price.toStringAsFixed(2)}',
+                      style: GoogleFonts.inter(
+                          color: AppColors.rubyRed,
+                          fontWeight: FontWeight.bold)),
                 ],
               ),
             ),
@@ -200,16 +216,22 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
               children: [
                 if (qty > 0) ...[
                   IconButton(
-                    icon: const Icon(Icons.remove_circle_outline, color: AppColors.rubyRed),
+                    icon: const Icon(Icons.remove_circle_outline,
+                        color: AppColors.rubyRed),
                     onPressed: () => setState(() {
-                      if (qty == 1) _cart.remove(item.id);
-                      else _cart[item.id] = qty - 1;
+                      if (qty == 1)
+                        _cart.remove(item.id);
+                      else
+                        _cart[item.id] = qty - 1;
                     }),
                   ),
-                  Text('$qty', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+                  Text('$qty',
+                      style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
                 ],
                 IconButton(
-                  icon: Icon(qty > 0 ? Icons.add_circle : Icons.add_circle_outline, color: Colors.green),
+                  icon: Icon(
+                      qty > 0 ? Icons.add_circle : Icons.add_circle_outline,
+                      color: Colors.green),
                   onPressed: () => setState(() => _cart[item.id] = qty + 1),
                 ),
               ],
@@ -225,7 +247,12 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -4))],
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -4))
+        ],
       ),
       child: SafeArea(
         child: Row(
@@ -235,21 +262,33 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Total Amount', style: GoogleFonts.inter(color: Colors.grey, fontSize: 12)),
-                Text('₹${_totalAmount.toStringAsFixed(2)}', 
-                  style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.rubyRed)),
+                Text('Total Amount',
+                    style: GoogleFonts.inter(color: Colors.grey, fontSize: 12)),
+                Text('₹${_totalAmount.toStringAsFixed(2)}',
+                    style: GoogleFonts.inter(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.rubyRed)),
               ],
             ),
             ElevatedButton(
               onPressed: _isPlacingOrder ? null : _placeOrder,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.rubyDark,
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
               ),
-              child: _isPlacingOrder 
-                ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                : const Text('Confirm Order', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              child: _isPlacingOrder
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                          color: Colors.white, strokeWidth: 2))
+                  : const Text('Confirm Order',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ],
         ),

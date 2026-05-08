@@ -17,11 +17,12 @@ class RestaurantService {
   }
 
   static Future<List<RestaurantContact>> getContacts() async {
-    final data =
-        await ApiService.get(ApiEndpoints.restaurantContacts, requiresAuth: true);
+    final data = await ApiService.get(ApiEndpoints.restaurantContacts,
+        requiresAuth: true);
     if (data is List) {
       return data
-          .map((item) => RestaurantContact.fromJson(item as Map<String, dynamic>))
+          .map((item) =>
+              RestaurantContact.fromJson(item as Map<String, dynamic>))
           .toList();
     }
     return [];

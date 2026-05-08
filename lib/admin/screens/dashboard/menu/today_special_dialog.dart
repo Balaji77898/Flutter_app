@@ -34,7 +34,9 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
     super.initState();
     // Find the category
     final specialCat = widget.categories.firstWhere(
-      (c) => c.name.toLowerCase().contains('today') || c.name.toLowerCase().contains('special'),
+      (c) =>
+          c.name.toLowerCase().contains('today') ||
+          c.name.toLowerCase().contains('special'),
       orElse: () => MenuCategory(id: '', name: ''),
     );
     _specialCategoryId = specialCat.id.isEmpty ? null : specialCat.id;
@@ -87,9 +89,10 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
         } else if (!shouldBeSpecial && isCurrentlySpecial) {
           // Remove from Today's Special — move to first non-special category
           final fallback = widget.categories
-              .where((c) => c.id != _specialCategoryId && c.id.isNotEmpty)
-              .map((c) => c.id)
-              .firstOrNull ?? '';
+                  .where((c) => c.id != _specialCategoryId && c.id.isNotEmpty)
+                  .map((c) => c.id)
+                  .firstOrNull ??
+              '';
           if (fallback.isNotEmpty) {
             futures.add(MenuService.updateItem(item.id, {
               'name': item.name,
@@ -119,7 +122,8 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed: ${e.toString().replaceAll('Exception: ', '')}'),
+            content:
+                Text('Failed: ${e.toString().replaceAll('Exception: ', '')}'),
             backgroundColor: AppColors.danger,
           ),
         );
@@ -161,7 +165,9 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                   const SizedBox(width: 10),
                   Text("Today's Special",
                       style: GoogleFonts.playfairDisplay(
-                          color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold)),
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.white),
@@ -177,12 +183,14 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
               color: AppColors.gold.withValues(alpha: 0.1),
               child: Row(
                 children: [
-                  const Icon(Icons.info_outline, size: 14, color: AppColors.gold),
+                  const Icon(Icons.info_outline,
+                      size: 14, color: AppColors.gold),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
                       'Select items to feature as Today\'s Special. Unselected items are removed.',
-                      style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted),
+                      style: GoogleFonts.inter(
+                          fontSize: 12, color: AppColors.textMuted),
                     ),
                   ),
                 ],
@@ -197,8 +205,10 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                 decoration: InputDecoration(
                   hintText: 'Search items...',
                   prefixIcon: const Icon(Icons.search, size: 18),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
                   isDense: true,
                 ),
               ),
@@ -211,7 +221,8 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                       child: Text('No items found',
                           style: GoogleFonts.inter(color: AppColors.textMuted)))
                   : ListView.separated(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
                       itemCount: filtered.length,
                       separatorBuilder: (_, __) => const Divider(height: 1),
                       itemBuilder: (ctx, i) {
@@ -232,26 +243,36 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                           title: Text(item.name,
                               style: GoogleFonts.inter(
                                   fontWeight: FontWeight.w600,
-                                  color: isSelected ? AppColors.rubyDark : AppColors.textDark)),
+                                  color: isSelected
+                                      ? AppColors.rubyDark
+                                      : AppColors.textDark)),
                           subtitle: Text('₹${item.price.toStringAsFixed(2)}',
-                              style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted)),
-                          secondary: item.imageUrl != null && item.imageUrl!.isNotEmpty
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(6),
-                                  child: Image.network(item.imageUrl!,
-                                      width: 44, height: 44, fit: BoxFit.cover),
-                                )
-                              : Container(
-                                  width: 44,
-                                  height: 44,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.ivoryDark,
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  child: const Icon(Icons.fastfood, size: 20, color: AppColors.textMuted),
-                                ),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          tileColor: isSelected ? AppColors.rubyDark.withValues(alpha: 0.05) : null,
+                              style: GoogleFonts.inter(
+                                  fontSize: 12, color: AppColors.textMuted)),
+                          secondary:
+                              item.imageUrl != null && item.imageUrl!.isNotEmpty
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(6),
+                                      child: Image.network(item.imageUrl!,
+                                          width: 44,
+                                          height: 44,
+                                          fit: BoxFit.cover),
+                                    )
+                                  : Container(
+                                      width: 44,
+                                      height: 44,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.ivoryDark,
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: const Icon(Icons.fastfood,
+                                          size: 20, color: AppColors.textMuted),
+                                    ),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          tileColor: isSelected
+                              ? AppColors.rubyDark.withValues(alpha: 0.05)
+                              : null,
                           controlAffinity: ListTileControlAffinity.trailing,
                         );
                       },
@@ -280,7 +301,8 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                   Row(
                     children: [
                       TextButton(
-                        onPressed: _isSubmitting ? null : () => Navigator.pop(context),
+                        onPressed:
+                            _isSubmitting ? null : () => Navigator.pop(context),
                         child: const Text('Cancel'),
                       ),
                       const SizedBox(width: 12),
@@ -295,11 +317,14 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                             : const Text('⭐', style: TextStyle(fontSize: 14)),
                         label: Text('Save Specials',
                             style: GoogleFonts.inter(
-                                color: Colors.white, fontWeight: FontWeight.bold)),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.rubyDark,
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
                         ),
                       ),
                     ],

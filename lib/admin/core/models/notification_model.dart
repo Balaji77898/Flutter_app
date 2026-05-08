@@ -41,5 +41,6 @@ class NotificationModel {
 
   String toJson() => json.encode(toMap());
 
-  factory NotificationModel.fromJson(String source) => NotificationModel.fromMap(json.decode(source));
+  factory NotificationModel.fromJson(String source) =>
+      NotificationModel.fromMap(json.decode(source));
 }

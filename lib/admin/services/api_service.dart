@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
@@ -61,7 +60,8 @@ class ApiService {
   static Future<dynamic> patch(String path,
       {Map<String, dynamic>? body, bool requiresAuth = true}) async {
     final headers = await _buildHeaders(requiresAuth: requiresAuth);
-    print('API PATCH: $path | Body: ${body != null ? jsonEncode(body) : "EMPTY"}');
+    print(
+        'API PATCH: $path | Body: ${body != null ? jsonEncode(body) : "EMPTY"}');
     final response = await http
         .patch(_uri(path),
             headers: headers, body: body != null ? jsonEncode(body) : null)
@@ -90,7 +90,8 @@ class ApiService {
       // Otherwise fall back to returning the raw decoded value (list or map).
       if (decoded is Map<String, dynamic>) {
         if (decoded.containsKey('success') && decoded['success'] == false) {
-          throw Exception(decoded['message'] ?? decoded['error'] ?? 'Request failed');
+          throw Exception(
+              decoded['message'] ?? decoded['error'] ?? 'Request failed');
         }
         if (decoded.containsKey('data')) {
           return decoded['data'];
@@ -107,7 +108,8 @@ class ApiService {
         throw Exception('Invalid email or password. Please try again.');
       }
       if (response.statusCode == 403) {
-        throw Exception('Access denied. Your account may not have admin privileges.');
+        throw Exception(
+            'Access denied. Your account may not have admin privileges.');
       }
       throw Exception(message);
     }

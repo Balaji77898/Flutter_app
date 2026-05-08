@@ -86,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       };
 
       await context.read<RestaurantProvider>().updateRestaurantDetails(details);
-      
+
       if (mounted) {
         final error = context.read<RestaurantProvider>().error;
         if (error == null) {
@@ -125,97 +125,106 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 : RefreshIndicator(
                     onRefresh: () => restaurantProv.fetchRestaurant(),
                     child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // ── Profile header card ────────────────────────────────────
-                      _buildHeaderCard(r),
-                      const SizedBox(height: 32),
+                      padding: const EdgeInsets.all(24),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // ── Profile header card ────────────────────────────────────
+                            _buildHeaderCard(r),
+                            const SizedBox(height: 32),
 
-                       // ── Restaurant Details ─────────────────────────────────────
-                       Text('Restaurant Details', style: AppTextStyles.title()),
-                       const SizedBox(height: 16),
-                      _buildDetailsGrid(r),
-                      
-                      const SizedBox(height: 32),
+                            // ── Restaurant Details ─────────────────────────────────────
+                            Text('Restaurant Details',
+                                style: AppTextStyles.title()),
+                            const SizedBox(height: 16),
+                            _buildDetailsGrid(r),
 
-                      // ── Contacts Section ───────────────────────────────────────
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Additional Contacts', style: AppTextStyles.title()),
-                          if (_isEditing)
-                            TextButton.icon(
-                              onPressed: () => setState(() {
-                                _isEditing = false;
-                                _populateFields();
-                              }),
-                              icon: const Icon(Icons.close, size: 18),
-                              label: const Text('Done'),
-                              style: TextButton.styleFrom(foregroundColor: AppColors.rubyRed),
-                            )
-                          else
-                            TextButton.icon(
-                              onPressed: () => setState(() => _isEditing = true),
-                              icon: const Icon(Icons.edit, size: 18),
-                              label: const Text('Edit'),
-                              style: TextButton.styleFrom(foregroundColor: AppColors.rubyRed),
+                            const SizedBox(height: 32),
+
+                            // ── Contacts Section ───────────────────────────────────────
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Additional Contacts',
+                                    style: AppTextStyles.title()),
+                                if (_isEditing)
+                                  TextButton.icon(
+                                    onPressed: () => setState(() {
+                                      _isEditing = false;
+                                      _populateFields();
+                                    }),
+                                    icon: const Icon(Icons.close, size: 18),
+                                    label: const Text('Done'),
+                                    style: TextButton.styleFrom(
+                                        foregroundColor: AppColors.rubyRed),
+                                  )
+                                else
+                                  TextButton.icon(
+                                    onPressed: () =>
+                                        setState(() => _isEditing = true),
+                                    icon: const Icon(Icons.edit, size: 18),
+                                    label: const Text('Edit'),
+                                    style: TextButton.styleFrom(
+                                        foregroundColor: AppColors.rubyRed),
+                                  ),
+                              ],
                             ),
-                        ],
+                            const SizedBox(height: 16),
+                            _buildContactsSection(restaurantProv),
+
+                            const SizedBox(height: 32),
+
+                            // ── Admin info ─────────────────────────────────────────────
+                            Text('Admin Account', style: AppTextStyles.title()),
+                            const SizedBox(height: 16),
+                            _infoCard([
+                              _InfoRow(
+                                icon: Icons.email_outlined,
+                                label: 'Account Email',
+                                value: auth.userEmail ?? 'admin@restaurant.com',
+                              ),
+                              const _InfoRow(
+                                icon: Icons.badge_outlined,
+                                label: 'Role',
+                                value: 'Administrator',
+                              ),
+                            ]),
+
+                            const SizedBox(height: 40),
+
+                            // ── Logout ─────────────────────────────────────────────────
+                            SizedBox(
+                              width: double.infinity,
+                              child: OutlinedButton.icon(
+                                onPressed: () async {
+                                  await context.read<AuthProvider>().logout();
+                                  if (context.mounted)
+                                    context.go('/admin/login');
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: AppColors.danger,
+                                  side:
+                                      const BorderSide(color: AppColors.danger),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16)),
+                                ),
+                                icon: const Icon(Icons.logout, size: 18),
+                                label: Text('Logout from Dashboard',
+                                    style: GoogleFonts.inter(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700)),
+                              ),
+                            ),
+                            const SizedBox(height: 40),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 16),
-                      _buildContactsSection(restaurantProv),
-
-                      const SizedBox(height: 32),
-
-                      // ── Admin info ─────────────────────────────────────────────
-                      Text('Admin Account', style: AppTextStyles.title()),
-                      const SizedBox(height: 16),
-                      _infoCard([
-                        _InfoRow(
-                          icon: Icons.email_outlined,
-                          label: 'Account Email',
-                          value: auth.userEmail ?? 'admin@restaurant.com',
-                        ),
-                        const _InfoRow(
-                          icon: Icons.badge_outlined,
-                          label: 'Role',
-                          value: 'Administrator',
-                        ),
-                      ]),
-
-                      const SizedBox(height: 40),
-
-                      // ── Logout ─────────────────────────────────────────────────
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton.icon(
-                          onPressed: () async {
-                            await context.read<AuthProvider>().logout();
-                            if (context.mounted) context.go('/admin/login');
-                          },
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.danger,
-                            side: const BorderSide(color: AppColors.danger),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16)),
-                          ),
-                          icon: const Icon(Icons.logout, size: 18),
-                          label: Text('Logout from Dashboard',
-                              style: GoogleFonts.inter(
-                                  fontSize: 15, fontWeight: FontWeight.w700)),
-                        ),
-                      ),
-                      const SizedBox(height: 40),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
           ),
         ],
       ),
@@ -399,7 +408,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     int maxLines = 1,
   }) {
     return Row(
-      crossAxisAlignment: maxLines > 1 ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+      crossAxisAlignment:
+          maxLines > 1 ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       children: [
         Container(
           padding: const EdgeInsets.all(10),
@@ -414,14 +424,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               Text(label, style: AppTextStyles.overline()),
-               const SizedBox(height: 4),
-               Text(
-                 controller.text.isEmpty ? 'Not set' : controller.text,
-                 style: AppTextStyles.body(
-                   color: controller.text.isEmpty ? AppColors.slate400 : AppColors.slate900,
-                 ),
-               ),
+              Text(label, style: AppTextStyles.overline()),
+              const SizedBox(height: 4),
+              Text(
+                controller.text.isEmpty ? 'Not set' : controller.text,
+                style: AppTextStyles.body(
+                  color: controller.text.isEmpty
+                      ? AppColors.slate400
+                      : AppColors.slate900,
+                ),
+              ),
             ],
           ),
         ),
@@ -443,14 +455,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (prov.contacts.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Text('No additional contacts added.', style: AppTextStyles.body(color: AppColors.slate400)),
+              child: Text('No additional contacts added.',
+                  style: AppTextStyles.body(color: AppColors.slate400)),
             )
           else
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: prov.contacts.length,
-              separatorBuilder: (_, __) => const Divider(height: 24, color: AppColors.slate100),
+              separatorBuilder: (_, __) =>
+                  const Divider(height: 24, color: AppColors.slate100),
               itemBuilder: (context, index) {
                 final contact = prov.contacts[index];
                 return Row(
@@ -462,12 +476,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(contact.value, style: AppTextStyles.body(color: AppColors.slate900)),
+                      child: Text(contact.value,
+                          style: AppTextStyles.body(color: AppColors.slate900)),
                     ),
                     if (_isEditing)
                       IconButton(
-                        icon: const Icon(Icons.delete_outline, color: AppColors.danger, size: 20),
-                        onPressed: () => prov.deleteRestaurantContact(contact.id),
+                        icon: const Icon(Icons.delete_outline,
+                            color: AppColors.danger, size: 20),
+                        onPressed: () =>
+                            prov.deleteRestaurantContact(contact.id),
                       ),
                   ],
                 );
@@ -482,7 +499,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.rubyRed,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
               ),
             ),
           ],
@@ -523,7 +541,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel')),
             ElevatedButton(
               onPressed: () {
                 if (controller.text.isNotEmpty) {
@@ -554,7 +574,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
                 child: Row(children: [
                   Icon(row.icon, color: AppColors.slate400, size: 20),
                   const SizedBox(width: 16),
@@ -563,7 +584,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Text(row.label, style: AppTextStyles.overline()),
                         const SizedBox(height: 4),
-                        Text(row.value, style: AppTextStyles.body(color: AppColors.slate900)),
+                        Text(row.value,
+                            style:
+                                AppTextStyles.body(color: AppColors.slate900)),
                       ]),
                 ]),
               ),
@@ -580,7 +603,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 class _InfoRow {
   final IconData icon;
   final String label, value;
-  const _InfoRow({required this.icon, required this.label, required this.value});
+  const _InfoRow(
+      {required this.icon, required this.label, required this.value});
 }
-
-

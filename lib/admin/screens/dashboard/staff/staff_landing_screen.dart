@@ -14,25 +14,25 @@ class StaffLandingScreen extends StatelessWidget {
       body: Stack(
         children: [
           // Light Elegant "Foggy" Background
-                  // Clean Elegant Background
-                  Positioned.fill(
-                    child: Container(
-                      color: AppColors.ivory,
-                      child: Stack(
-                        children: [
-                          Opacity(
-                            opacity: 0.05,
-                            child: Image.network(
-                              'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop',
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                            ),
-                          ),
-                        ],
-                      ),
+          // Clean Elegant Background
+          Positioned.fill(
+            child: Container(
+              color: AppColors.ivory,
+              child: Stack(
+                children: [
+                  Opacity(
+                    opacity: 0.05,
+                    child: Image.network(
+                      'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
                     ),
                   ),
+                ],
+              ),
+            ),
+          ),
 
           SafeArea(
             child: SingleChildScrollView(
@@ -57,7 +57,7 @@ class StaffLandingScreen extends StatelessWidget {
                       ),
 
                       const SizedBox(height: 20),
-                      
+
                       // ── Title Section ───────────────────────────────────
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -100,14 +100,16 @@ class StaffLandingScreen extends StatelessWidget {
                           children: [
                             _StaffTypeCard(
                               title: 'Billing Staff',
-                              description: 'Manage cashier terminals and transaction logs.',
+                              description:
+                                  'Manage cashier terminals and transaction logs.',
                               icon: Icons.receipt_long_rounded,
                               role: 'cashier',
                               index: 0,
                             ),
                             _StaffTypeCard(
                               title: 'Serving Staff',
-                              description: 'Manage floor staff and service assignments.',
+                              description:
+                                  'Manage floor staff and service assignments.',
                               icon: Icons.restaurant_rounded,
                               role: 'server',
                               index: 1,
@@ -186,7 +188,9 @@ class _StaffTypeCardState extends State<_StaffTypeCard> {
                 width: 72,
                 height: 72,
                 decoration: BoxDecoration(
-                  color: _isHovered ? AppColors.rubyRed : AppColors.rubyDark.withOpacity(0.05),
+                  color: _isHovered
+                      ? AppColors.rubyRed
+                      : AppColors.rubyDark.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
@@ -226,5 +230,3 @@ class _StaffTypeCardState extends State<_StaffTypeCard> {
     );
   }
 }
-
-

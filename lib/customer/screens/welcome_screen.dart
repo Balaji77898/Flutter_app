@@ -27,15 +27,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Future<void> _saveTableInfo() async {
     final prefs = await SharedPreferences.getInstance();
     debugPrint('WelcomeScreen: Received tableNumber: ${widget.tableNumber}');
-    
+
     if (widget.tableNumber != null && widget.tableNumber!.isNotEmpty) {
       await prefs.setString('tableNumber', widget.tableNumber!);
       _savedTable = widget.tableNumber;
-      debugPrint('WelcomeScreen: Saved tableNumber to SharedPreferences: $_savedTable');
+      debugPrint(
+          'WelcomeScreen: Saved tableNumber to SharedPreferences: $_savedTable');
     } else {
       // Try to read previously saved table
       _savedTable = prefs.getString('tableNumber');
-      debugPrint('WelcomeScreen: Loaded tableNumber from SharedPreferences: $_savedTable');
+      debugPrint(
+          'WelcomeScreen: Loaded tableNumber from SharedPreferences: $_savedTable');
     }
     if (mounted) {
       setState(() => _isSaving = false);
@@ -76,7 +78,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     color: AppColors.gold,
                     size: 64,
                   ),
-                ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack).fadeIn(),
+                )
+                    .animate()
+                    .scale(duration: 600.ms, curve: Curves.easeOutBack)
+                    .fadeIn(),
 
                 const SizedBox(height: 32),
 
@@ -105,7 +110,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 // Table badge
                 if (_savedTable != null && !_isSaving)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 28, vertical: 14),
                     decoration: BoxDecoration(
                       color: AppColors.gold.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(40),
@@ -114,7 +120,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.table_restaurant, color: AppColors.gold, size: 20),
+                        const Icon(Icons.table_restaurant,
+                            color: AppColors.gold, size: 20),
                         const SizedBox(width: 10),
                         Text(
                           'Table #$_savedTable',
@@ -130,7 +137,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 else if (!_isSaving)
                   Text(
                     'Please scan a table QR code\nto start ordering',
-                    style: GoogleFonts.inter(color: Colors.white54, fontSize: 15),
+                    style:
+                        GoogleFonts.inter(color: Colors.white54, fontSize: 15),
                     textAlign: TextAlign.center,
                   ).animate().fadeIn(delay: 400.ms),
 
@@ -146,7 +154,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           : null,
                       icon: const Icon(Icons.restaurant_menu, size: 22),
                       label: Text(
-                        _savedTable != null ? 'VIEW MENU & ORDER' : 'NO TABLE SELECTED',
+                        _savedTable != null
+                            ? 'VIEW MENU & ORDER'
+                            : 'NO TABLE SELECTED',
                         style: GoogleFonts.inter(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
@@ -154,7 +164,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: _savedTable != null ? AppColors.gold : Colors.white24,
+                        backgroundColor: _savedTable != null
+                            ? AppColors.gold
+                            : Colors.white24,
                         foregroundColor: AppColors.rubyDark,
                         disabledForegroundColor: Colors.white38,
                         disabledBackgroundColor: Colors.white12,
