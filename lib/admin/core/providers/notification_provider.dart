@@ -67,12 +67,20 @@ class NotificationProvider with ChangeNotifier {
   }
 
   void _addOrderNotification(OrderModel order) {
+    // Parse the order's creation time, fallback to now if parsing fails
+    DateTime orderTime = DateTime.tryParse(order.createdAt) ?? DateTime.now();
+    
+    // If the parsed time is in UTC, convert it to local for correct difference calculation
+    if (orderTime.isUtc) {
+      orderTime = orderTime.toLocal();
+    }
+
     final notification = NotificationModel(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: '${order.id}_${DateTime.now().millisecondsSinceEpoch}',
       orderId: order.id,
       customerName: order.customerName,
       message: 'Order no ${order.id.substring(0, 8)} is placed by ${order.customerName}',
-      createdAt: DateTime.now(),
+      createdAt: orderTime,
     );
     _notifications.insert(0, notification);
   }
