@@ -73,8 +73,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();

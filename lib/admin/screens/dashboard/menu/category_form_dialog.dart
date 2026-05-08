@@ -47,8 +47,8 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content:
-                  Text('Failed: ${e.toString().replaceAll('Exception: ', '')}')),
+              content: Text(
+                  'Failed: ${e.toString().replaceAll('Exception: ', '')}')),
         );
       }
     } finally {
