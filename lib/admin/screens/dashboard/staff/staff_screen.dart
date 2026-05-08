@@ -6,6 +6,7 @@ import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/core/theme.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
 import 'package:restaurant_unified_app/admin/services/staff_service.dart';
+import 'package:restaurant_unified_app/staff/widgets/common_widgets.dart';
 
 class StaffScreen extends StatefulWidget {
   /// 'server' for Serving Staff, 'cashier' for Billing Staff
@@ -238,17 +239,9 @@ class _StaffScreenState extends State<StaffScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    OutlinedButton.icon(
-                      onPressed: () => context.go('/admin/staff'),
-                      icon: const Icon(Icons.arrow_back, color: AppColors.gold, size: 18),
-                      label: Text('Back to Staff Management', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.05),
-                        foregroundColor: AppColors.gold,
-                        side: BorderSide(color: AppColors.gold.withOpacity(0.5)),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
+                    PremiumBackButton(
+                      label: 'Back to Staff Management',
+                      onTap: () => context.go('/admin/staff'),
                     ),
                     const SizedBox(height: 24),
                     Text(_roleLabel,

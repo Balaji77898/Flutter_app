@@ -11,6 +11,8 @@ import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
 import 'package:restaurant_unified_app/admin/services/tables_service.dart';
 
+import 'package:restaurant_unified_app/staff/widgets/common_widgets.dart';
+
 const String _kCustomerPortalBase = 'https://pos-frontend-two.vercel.app/order';
 
 class TablesScreen extends StatefulWidget {
@@ -319,16 +321,8 @@ class _TablesScreenState extends State<TablesScreen> {
         bottom: false,
         child: Row(
           children: [
-            OutlinedButton.icon(
-              onPressed: () => context.go('/admin/dashboard'),
-              icon: const Icon(Icons.arrow_back, color: AppColors.gold, size: 18),
-              label: Text('Back to Dashboard', style: GoogleFonts.inter(color: AppColors.gold, fontSize: 14, fontWeight: FontWeight.bold)),
-              style: OutlinedButton.styleFrom(
-                backgroundColor: Colors.white.withOpacity(0.05),
-                side: BorderSide(color: AppColors.gold.withOpacity(0.5)),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
+            PremiumBackButton(
+              onTap: () => context.go('/admin/dashboard'),
             ),
             Expanded(
               child: Column(

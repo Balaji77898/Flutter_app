@@ -9,6 +9,8 @@ import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/core/auth_provider.dart';
 import 'package:restaurant_unified_app/admin/services/auth_service.dart';
 
+import 'package:restaurant_unified_app/staff/widgets/common_widgets.dart';
+
 class AdminLoginScreen extends StatefulWidget {
   const AdminLoginScreen({super.key});
 
@@ -400,20 +402,9 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
             // Back link
             Center(
-              child: OutlinedButton.icon(
-                onPressed: () => context.go('/admin'),
-                icon: const Icon(Icons.arrow_back, size: 14, color: AppColors.rubyDark),
-                label: Text('Back to Landing',
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.rubyDark,
-                    )),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: AppColors.rubyDark.withOpacity(0.2)),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                ),
+              child: PremiumBackButton(
+                label: 'Back to Landing',
+                onTap: () => context.go('/admin'),
               ),
             ),
           ],

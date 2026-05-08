@@ -54,11 +54,8 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
           PageHeader(
             title: 'New Orders',
             subtitle: 'Incoming Kitchen Orders',
+            onBack: () => Navigator.pop(context),
             actions: [
-              HeaderIconButton(
-                icon: Icons.arrow_back,
-                onTap: () => Navigator.pop(context),
-              ),
               const SizedBox(width: 8),
               HeaderIconButton(
                 icon: Icons.refresh,

@@ -11,6 +11,7 @@ import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
 import 'package:restaurant_unified_app/admin/core/providers/restaurant_provider.dart';
 import 'package:restaurant_unified_app/admin/services/orders_service.dart';
+import 'package:restaurant_unified_app/staff/widgets/common_widgets.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
@@ -178,16 +179,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          OutlinedButton.icon(
-            onPressed: () => context.go('/admin/dashboard'),
-            icon: const Icon(Icons.arrow_back, color: AppColors.gold, size: 18),
-            label: Text('Back to Dashboard', style: GoogleFonts.inter(color: AppColors.gold, fontWeight: FontWeight.bold)),
-            style: OutlinedButton.styleFrom(
-              backgroundColor: Colors.white.withOpacity(0.05),
-              side: BorderSide(color: AppColors.gold.withOpacity(0.5)),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
+          PremiumBackButton(
+            label: 'Back to Dashboard',
+            onTap: () => context.go('/admin/dashboard'),
           ),
           Expanded(
             child: Center(

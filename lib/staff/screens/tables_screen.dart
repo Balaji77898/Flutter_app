@@ -86,9 +86,10 @@ class _TablesScreenState extends State<TablesScreen> {
       backgroundColor: AppColors.ivory,
       body: Column(
         children: [
-          const PageHeader(
+          PageHeader(
             title: 'Floor Plan',
             subtitle: 'Real-time Table Status',
+            onBack: () => context.go('/staff/dashboard'),
           ),
           Expanded(
             child: LayoutBuilder(

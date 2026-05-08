@@ -136,12 +136,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
           PageHeader(
             title: 'Create Order',
             subtitle: 'Manual order entry',
-            actions: [
-              HeaderIconButton(
-                icon: Icons.arrow_back,
-                onTap: () => Navigator.pop(context),
-              ),
-            ],
+            onBack: () => Navigator.pop(context),
           ),
 
           // ── Body ─────────────────────────────────────────────────

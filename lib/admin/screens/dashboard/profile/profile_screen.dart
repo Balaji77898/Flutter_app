@@ -9,6 +9,8 @@ import 'package:restaurant_unified_app/core/theme.dart';
 import 'package:restaurant_unified_app/admin/core/providers/restaurant_provider.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
 
+import 'package:restaurant_unified_app/staff/widgets/common_widgets.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -109,25 +111,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.ivory,
-      appBar: AppBar(
-        title: Text('Restaurant Profile', style: AppTextStyles.title(color: Colors.white)),
-        backgroundColor: AppColors.rubyRed,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => context.go('/admin/dashboard'),
-        ),
-        actions: const [],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(4),
-          child: Container(height: 4, color: AppColors.gold),
-        ),
-      ),
-      body: restaurantProv.isLoading && r == null
-          ? const Center(
-              child: CircularProgressIndicator(color: AppColors.rubyRed))
-          : RefreshIndicator(
-              onRefresh: () => restaurantProv.fetchRestaurant(),
-              child: SingleChildScrollView(
+      body: Column(
+        children: [
+          PageHeader(
+            title: 'Restaurant Profile',
+            subtitle: 'Manage your business identity',
+            onBack: () => context.go('/admin/dashboard'),
+          ),
+          Expanded(
+            child: restaurantProv.isLoading && r == null
+                ? const Center(
+                    child: CircularProgressIndicator(color: AppColors.rubyRed))
+                : RefreshIndicator(
+                    onRefresh: () => restaurantProv.fetchRestaurant(),
+                    child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24),
                 child: Form(
                   key: _formKey,
@@ -219,6 +216,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
+          ),
+        ],
+      ),
     );
   }
 

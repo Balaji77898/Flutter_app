@@ -132,6 +132,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           PageHeader(
             title: 'Active Orders',
             subtitle: 'Manage Real-time Dining Service',
+            onBack: () => context.go('/staff/dashboard'),
             actions: [
               PrimaryButton(
                 label: 'Create Order',

@@ -1,6 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
+
+// ─── Premium Back Button ───────────────────────────────────────────────────
+/// Standardized premium back button with Gold on Maroon aesthetic
+class PremiumBackButton extends StatefulWidget {
+  final String label;
+  final VoidCallback onTap;
+
+  const PremiumBackButton({
+    super.key,
+    this.label = 'Back to Dashboard',
+    required this.onTap,
+  });
+
+  @override
+  State<PremiumBackButton> createState() => _PremiumBackButtonState();
+}
+
+class _PremiumBackButtonState extends State<PremiumBackButton> {
+  bool _isPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) => setState(() => _isPressed = false),
+      onTapCancel: () => setState(() => _isPressed = false),
+      onTap: widget.onTap,
+      child: AnimatedScale(
+        scale: _isPressed ? 0.95 : 1.0,
+        duration: 100.ms,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.gold.withOpacity(0.5)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.arrow_back, color: AppColors.gold, size: 18),
+              const SizedBox(width: 10),
+              Text(
+                widget.label,
+                style: GoogleFonts.inter(
+                  color: AppColors.gold,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 // ─── Header Component ────────────────────────────────────────────────────────
 class PageHeader extends StatelessWidget {
@@ -8,6 +66,8 @@ class PageHeader extends StatelessWidget {
   final String subtitle;
   final List<Widget>? actions;
   final bool isCentered;
+  final VoidCallback? onBack;
+  final String? backLabel;
 
   const PageHeader({
     super.key,
@@ -15,6 +75,8 @@ class PageHeader extends StatelessWidget {
     required this.subtitle,
     this.actions,
     this.isCentered = false,
+    this.onBack,
+    this.backLabel,
   });
 
   @override
@@ -103,6 +165,13 @@ class PageHeader extends StatelessWidget {
                             Column(
                               crossAxisAlignment: align,
                               children: [
+                                if (onBack != null) ...[
+                                  PremiumBackButton(
+                                    label: backLabel ?? 'Back',
+                                    onTap: onBack!,
+                                  ),
+                                  const SizedBox(height: 24),
+                                ],
                                 _Title(
                                   title: title,
                                   textAlign: textAlign,
@@ -130,6 +199,13 @@ class PageHeader extends StatelessWidget {
                       : Column(
                           crossAxisAlignment: align,
                           children: [
+                            if (onBack != null) ...[
+                              PremiumBackButton(
+                                label: backLabel ?? 'Back',
+                                onTap: onBack!,
+                              ),
+                              const SizedBox(height: 24),
+                            ],
                             _Title(
                               title: title,
                               textAlign: textAlign,

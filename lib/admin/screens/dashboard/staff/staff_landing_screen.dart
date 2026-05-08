@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:restaurant_unified_app/core/constants.dart';
+import 'package:restaurant_unified_app/staff/widgets/common_widgets.dart';
 
 class StaffLandingScreen extends StatelessWidget {
   const StaffLandingScreen({super.key});
@@ -49,14 +49,9 @@ class StaffLandingScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 40),
                         child: Align(
                           alignment: Alignment.centerLeft,
-                          child: IconButton(
-                            onPressed: () => context.go('/admin/dashboard'),
-                            icon: const Icon(Icons.arrow_back_rounded, color: AppColors.rubyDark),
-                            style: IconButton.styleFrom(
-                              backgroundColor: AppColors.rubyDark.withOpacity(0.05),
-                              padding: const EdgeInsets.all(12),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
+                          child: PremiumBackButton(
+                            label: 'Back to Dashboard',
+                            onTap: () => context.go('/admin/dashboard'),
                           ),
                         ),
                       ),

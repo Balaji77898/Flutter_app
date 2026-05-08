@@ -51,9 +51,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
                 child: Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => Navigator.pop(context),
+                    PremiumBackButton(
+                      label: 'Back',
+                      onTap: () => Navigator.pop(context),
                     ),
                     const SizedBox(width: 8),
                     Column(
@@ -303,9 +303,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                   const SizedBox(height: 10),
 
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
+                  PremiumBackButton(
+                    label: 'Cancel Payment',
+                    onTap: () => Navigator.pop(context),
                   ),
                 ],
               ),
