@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/core/theme.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
@@ -21,7 +20,6 @@ class _StaffScreenState extends State<StaffScreen> {
   List<StaffMember> _allStaff = [];
   List<StaffMember> _filteredStaff = [];
   bool _isLoading = true;
-  String? _error;
 
   final _searchController = TextEditingController();
   String _statusFilter = 'All Status';
@@ -58,7 +56,6 @@ class _StaffScreenState extends State<StaffScreen> {
     try {
       setState(() {
         _isLoading = true;
-        _error = null;
       });
       final list = await StaffService.getStaff();
 
@@ -80,7 +77,7 @@ class _StaffScreenState extends State<StaffScreen> {
         _applyFilters();
       });
     } catch (e) {
-      setState(() => _error = e.toString().replaceAll('Exception: ', ''));
+      // Error ignored
     } finally {
       setState(() => _isLoading = false);
     }

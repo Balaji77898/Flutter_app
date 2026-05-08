@@ -73,35 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
-  Future<void> _saveChanges() async {
-    if (_formKey.currentState!.validate()) {
-      final details = {
-        'restaurant_type': _typeController.text,
-        'description': _descController.text,
-        'address': _addrController.text,
-        'state': _stateController.text,
-        'pincode': _pincodeController.text,
-        'phone': _phoneController.text,
-        'email': _emailController.text,
-      };
 
-      await context.read<RestaurantProvider>().updateRestaurantDetails(details);
-
-      if (mounted) {
-        final error = context.read<RestaurantProvider>().error;
-        if (error == null) {
-          setState(() => _isEditing = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Profile updated successfully')),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: $error')),
-          );
-        }
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -200,8 +172,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: OutlinedButton.icon(
                                 onPressed: () async {
                                   await context.read<AuthProvider>().logout();
-                                  if (context.mounted)
+                                  if (context.mounted) {
                                     context.go('/admin/login');
+                                  }
                                 },
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: AppColors.danger,
@@ -522,7 +495,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               DropdownButtonFormField<String>(
-                value: type,
+                initialValue: type,
                 items: const [
                   DropdownMenuItem(value: 'PHONE', child: Text('Phone')),
                   DropdownMenuItem(value: 'EMAIL', child: Text('Email')),

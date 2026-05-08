@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
-import 'package:restaurant_unified_app/core/theme.dart';
 import 'package:restaurant_unified_app/staff/widgets/common_widgets.dart';
 
 class StaffLandingScreen extends StatelessWidget {
@@ -94,8 +93,8 @@ class StaffLandingScreen extends StatelessWidget {
                       const SizedBox(height: 60),
 
                       // ── Cards Section ───────────────────────────────────────
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 40),
                         child: Wrap(
                           spacing: 40,
                           runSpacing: 30,

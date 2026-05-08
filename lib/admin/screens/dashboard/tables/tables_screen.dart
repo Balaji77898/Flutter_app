@@ -1,5 +1,5 @@
 import 'dart:ui' as ui;
-// ignore: avoid_web_libraries_in_flutter
+// ignore: avoid_web_libraries_in_flutter, deprecated_member_use
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,7 +23,6 @@ class _TablesScreenState extends State<TablesScreen> {
   List<TableModel> _tables = [];
   List<TableModel> _filteredTables = [];
   bool _isLoading = true;
-  String? _error;
 
   final _searchController = TextEditingController();
   String _statusFilter = 'All Status';
@@ -51,7 +50,6 @@ class _TablesScreenState extends State<TablesScreen> {
     try {
       setState(() {
         _isLoading = true;
-        _error = null;
       });
       final list = await TablesService.getTables();
       setState(() {
@@ -59,7 +57,7 @@ class _TablesScreenState extends State<TablesScreen> {
         _applyFilters();
       });
     } catch (e) {
-      setState(() => _error = e.toString().replaceAll('Exception: ', ''));
+      // Error ignored
     } finally {
       setState(() => _isLoading = false);
     }
@@ -137,7 +135,7 @@ class _TablesScreenState extends State<TablesScreen> {
       final bytes = byteData.buffer.asUint8List();
       final blob = html.Blob([bytes], 'image/png');
       final url = html.Url.createObjectUrlFromBlob(blob);
-      final anchor = html.AnchorElement(href: url)
+      html.AnchorElement(href: url)
         ..setAttribute('download', 'table_${t.tableNumber}_qr.png')
         ..click();
       html.Url.revokeObjectUrl(url);
@@ -147,7 +145,7 @@ class _TablesScreenState extends State<TablesScreen> {
   }
 
   void _showQRDialog(TableModel t) {
-    final baseUrl = 'https://customerfinal1.vercel.app/customer/scan-qr';
+    const baseUrl = 'https://customerfinal1.vercel.app/customer/scan-qr';
     final qrData = (t.qrCode != null && t.qrCode!.isNotEmpty)
         ? '$baseUrl?token=${t.qrCode}'
         : '$baseUrl?table=${t.id}';
@@ -609,7 +607,7 @@ class _TablesScreenState extends State<TablesScreen> {
   }
 
   Widget _buildTableRow(TableModel t, int index) {
-    final baseUrl = 'https://customerfinal1.vercel.app/customer/scan-qr';
+    const baseUrl = 'https://customerfinal1.vercel.app/customer/scan-qr';
     final qrData = (t.qrCode != null && t.qrCode!.isNotEmpty)
         ? '$baseUrl?token=${t.qrCode}'
         : '$baseUrl?table=${t.id}';

@@ -44,11 +44,13 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
       }
       if (mounted) Navigator.of(context).pop(true);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content:
-                Text('Failed: ${e.toString().replaceAll('Exception: ', '')}')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+                  Text('Failed: ${e.toString().replaceAll('Exception: ', '')}')),
+        );
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

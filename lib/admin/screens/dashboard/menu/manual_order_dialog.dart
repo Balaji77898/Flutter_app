@@ -350,7 +350,7 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
             _isLoadingTables
                 ? const LinearProgressIndicator()
                 : DropdownButtonFormField<String>(
-                    value: _selectedTableId,
+                    initialValue: _selectedTableId,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         contentPadding:
@@ -371,7 +371,7 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
           // Payment Mode
           _fieldLabel('Payment Mode'),
           DropdownButtonFormField<String>(
-            value: _paymentMode,
+            initialValue: _paymentMode,
             decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 contentPadding:
@@ -637,7 +637,7 @@ class _CategoryCardState extends State<_CategoryCard> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           transform: _isHovered
-              ? (Matrix4.identity()..scale(1.02))
+              ? (Matrix4.identity()..scaleByDouble(1.02, 1.02, 1.0, 1.0))
               : Matrix4.identity(),
           decoration: BoxDecoration(
             color: Colors.white,

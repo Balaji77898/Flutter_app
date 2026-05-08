@@ -84,9 +84,11 @@ class _MenuScreenState extends State<MenuScreen> {
         }
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed: ${e.toString()}')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed: ${e.toString()}')),
+        );
+      }
     }
   }
 
@@ -94,18 +96,21 @@ class _MenuScreenState extends State<MenuScreen> {
     final item = _items.firstWhere((i) => i.id == id);
     try {
       await MenuService.updateSpecialStatus(id, !item.isSpecial);
-      _loadData();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(!item.isSpecial
-              ? 'Added to Today\'s Special'
-              : 'Removed from Specials'),
-          backgroundColor: AppColors.rubyDark,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(!item.isSpecial
+                ? 'Added to Today\'s Special'
+                : 'Removed from Specials'),
+            backgroundColor: AppColors.rubyDark,
+          ),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Failed: $e')));
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Failed: $e')));
+      }
     }
   }
 
@@ -137,8 +142,10 @@ class _MenuScreenState extends State<MenuScreen> {
       }
       _loadData();
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Failed: ${e.toString()}')));
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Failed: ${e.toString()}')));
+      }
     }
   }
 
@@ -582,7 +589,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       Switch(
                         value: item.isAvailable,
                         onChanged: (_) => _toggleItem(item.id),
-                        activeColor: AppColors.success,
+                        activeThumbColor: AppColors.success,
                       ),
                     ],
                   ),
@@ -690,7 +697,8 @@ class _SidebarItemState extends State<_SidebarItem> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOutCubic,
-          transform: Matrix4.identity()..scale(_isHovered ? 1.02 : 1.0),
+          transform: Matrix4.identity()..scaleByDouble(
+              _isHovered ? 1.02 : 1.0, _isHovered ? 1.02 : 1.0, 1.0, 1.0),
           decoration: BoxDecoration(
             color: isAllItems
                 ? AppColors.rubyDark
@@ -782,7 +790,7 @@ class _SidebarItemState extends State<_SidebarItem> {
 
 class HoverableCard extends StatefulWidget {
   final Widget child;
-  const HoverableCard({Key? key, required this.child}) : super(key: key);
+  const HoverableCard({super.key, required this.child});
 
   @override
   State<HoverableCard> createState() => _HoverableCardState();

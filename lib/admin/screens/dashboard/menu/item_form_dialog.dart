@@ -26,7 +26,6 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
   late String _name;
   late String _description;
   late String _price;
-  late String _prepTime;
   late String _imageUrl;
   final _imageController = TextEditingController();
   String _cleanedPreview = '';
@@ -41,7 +40,6 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
     _name = widget.item?.name ?? '';
     _description = widget.item?.description ?? '';
     _price = widget.item != null ? widget.item!.price.toStringAsFixed(2) : '';
-    _prepTime = widget.item?.preparationTime ?? '';
     _imageUrl = widget.item?.imageUrl ?? '';
     _imageController.text = _imageUrl;
     _cleanedPreview = _cleanImageUrl(_imageUrl);
@@ -122,11 +120,13 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
 
       if (mounted) Navigator.of(context).pop(true);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content:
-                Text('Failed: ${e.toString().replaceAll('Exception: ', '')}')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+                  Text('Failed: ${e.toString().replaceAll('Exception: ', '')}')),
+        );
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -166,7 +166,7 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 DropdownButtonFormField<String>(
-                  value: _selectedCategoryId,
+                  initialValue: _selectedCategoryId,
                   decoration: const InputDecoration(labelText: 'Category'),
                   items: widget.categories.map((c) {
                     return DropdownMenuItem(value: c.id, child: Text(c.name));
@@ -251,12 +251,12 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                           child: Image.network(
                             _cleanedPreview,
                             fit: BoxFit.cover,
-                            errorBuilder: (ctx, err, stack) => Column(
+                            errorBuilder: (ctx, err, stack) => const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.broken_image,
+                                Icon(Icons.broken_image,
                                     color: AppColors.danger, size: 32),
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
                                 Text('Invalid Image URL',
                                     style: TextStyle(
                                         color: AppColors.danger, fontSize: 11)),
@@ -267,11 +267,11 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                 ),
                 if (_cleanedPreview.isNotEmpty &&
                     _cleanedPreview != _imageController.text)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8),
                     child: Text(
                       'Direct Link Extracted Successfully!',
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 10,
                           color: AppColors.success,
                           fontWeight: FontWeight.bold),
@@ -292,7 +292,7 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                         contentPadding: EdgeInsets.zero,
                         title: const Text('Available',
                             style: TextStyle(fontSize: 14)),
-                        activeColor: AppColors.success,
+                        activeThumbColor: AppColors.success,
                         value: _isAvailable,
                         onChanged: (val) => setState(() => _isAvailable = val),
                       ),

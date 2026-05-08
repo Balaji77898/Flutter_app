@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
@@ -267,6 +268,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         await auth.logout();
                         if (context.mounted) {
                           await context.read<StaffAuthProvider>().logout();
+                        }
+                        if (context.mounted) {
                           context.read<NotificationProvider>().stopPolling();
                           context.go('/login');
                         }
@@ -525,8 +528,9 @@ class _NavigationPulse extends StatelessWidget {
                   ...List.generate(5, (i) {
                     final particleProgress =
                         (value - (i * 0.1)).clamp(0.0, 1.0);
-                    if (particleProgress <= 0 || particleProgress >= 0.8)
+                    if (particleProgress <= 0 || particleProgress >= 0.8) {
                       return const SizedBox();
+                    }
 
                     return Positioned(
                       left: x + (particleProgress * 150),
@@ -620,7 +624,7 @@ class _NotificationButtonState extends State<_NotificationButton> {
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                Icon(Icons.notifications_outlined,
+                const Icon(Icons.notifications_outlined,
                     color: Colors.white, size: 24),
                 if (unread > 0)
                   Positioned(
@@ -670,7 +674,7 @@ class _NotificationButtonState extends State<_NotificationButton> {
                 padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
                 child: Row(
                   children: [
-                    Icon(Icons.notifications_outlined,
+                    const Icon(Icons.notifications_outlined,
                         color: AppColors.rubyRed, size: 20),
                     const SizedBox(width: 12),
                     Text(
@@ -703,7 +707,7 @@ class _NotificationButtonState extends State<_NotificationButton> {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: AppColors.ivory,
                           shape: BoxShape.circle,
                         ),

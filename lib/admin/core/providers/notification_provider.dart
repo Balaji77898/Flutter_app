@@ -5,7 +5,7 @@ import 'package:restaurant_unified_app/admin/services/orders_service.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
 
 class NotificationProvider with ChangeNotifier {
-  List<NotificationModel> _notifications = [];
+  final List<NotificationModel> _notifications = [];
   bool _isPolling = false;
   Timer? _timer;
   String? _lastCheckedOrderId;

@@ -99,8 +99,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
       await Future.wait(futures);
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         setState(() => _error = e.toString().replaceAll('Exception: ', ''));
+      }
     } finally {
       if (mounted && !silent) setState(() => _isLoading = false);
     }
@@ -1269,8 +1270,9 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                                           ? null
                                           : () {
                                               final next = _getNextStatus();
-                                              if (next != null)
+                                              if (next != null) {
                                                 _handleStatusUpdate(next);
+                                              }
                                             },
                                       icon: _isUpdating
                                           ? const SizedBox(
