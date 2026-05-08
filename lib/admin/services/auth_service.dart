@@ -39,13 +39,11 @@ class AuthService {
     try {
       if (data.containsKey('user') && data['user'] is Map) {
         user = Map<String, dynamic>.from(data['user'] as Map);
-      } else if (data.containsKey('data') &&
-          data['data'] is Map &&
-          (data['data'] as Map).containsKey('user')) {
+      } else if (data.containsKey('data') && data['data'] is Map && (data['data'] as Map).containsKey('user')) {
         user = Map<String, dynamic>.from((data['data'] as Map)['user'] as Map);
       }
     } catch (_) {}
-
+    
     await prefs.setString(kUserKey, email);
 
     return {'token': token, 'user': user};

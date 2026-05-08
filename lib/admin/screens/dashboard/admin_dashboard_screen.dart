@@ -7,6 +7,8 @@ import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/core/auth_provider.dart';
 import 'package:restaurant_unified_app/staff/contexts/auth_provider.dart';
 import 'package:restaurant_unified_app/admin/core/providers/restaurant_provider.dart';
+import 'package:restaurant_unified_app/admin/core/providers/notification_provider.dart';
+import 'package:restaurant_unified_app/admin/core/models/notification_model.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -24,7 +26,43 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<RestaurantProvider>().fetchRestaurant();
+      final notifProv = context.read<NotificationProvider>();
+      notifProv.startPolling();
+      
+      // Listen for new notifications to show custom top toast
+      notifProv.addListener(() {
+        if (notifProv.notifications.isNotEmpty && !notifProv.notifications.first.isRead) {
+          final latest = notifProv.notifications.first;
+          if (mounted) {
+            _showTopToast(latest);
+          }
+        }
+      });
     });
+  }
+
+  void _showTopToast(NotificationModel notification) {
+    late OverlayEntry overlayEntry;
+    overlayEntry = OverlayEntry(
+      builder: (context) => _TopToastWidget(
+        notification: notification,
+        onDismiss: () => overlayEntry.remove(),
+        onView: () {
+          overlayEntry.remove();
+          context.go('/admin/orders?highlightOrderId=${notification.orderId}');
+        },
+      ),
+    );
+
+    Overlay.of(context).insert(overlayEntry);
+  }
+
+  @override
+  void dispose() {
+    // Note: We might want to keep polling if the admin stays in the app
+    // but for now we stop when dashboard is disposed
+    // context.read<NotificationProvider>().stopPolling(); 
+    super.dispose();
   }
 
   void _triggerNavAnimation(Offset startPos, String route) async {
@@ -32,10 +70,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       _navStartPos = startPos;
       _isNavigating = true;
     });
-
+    
     // Wait for the animation to complete (approx 600ms)
     await Future.delayed(const Duration(milliseconds: 650));
-
+    
     if (mounted) {
       setState(() => _isNavigating = false);
       context.go(route);
@@ -107,7 +145,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     ),
                   ),
                 ),
-
+                
                 // Dashboard Cards
                 SingleChildScrollView(
                   padding: EdgeInsets.symmetric(
@@ -118,14 +156,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 1200),
                       child: LayoutBuilder(builder: (ctx, constraints) {
-                        final cols = constraints.maxWidth > 900
-                            ? 4
-                            : (constraints.maxWidth > 600 ? 2 : 1);
+                        final cols = constraints.maxWidth > 900 ? 4 : (constraints.maxWidth > 600 ? 2 : 1);
                         return GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: cols,
                             crossAxisSpacing: 24,
                             mainAxisSpacing: 24,
@@ -135,9 +170,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           itemBuilder: (ctx, i) => _HoverableDashCard(
                             option: _dashboardOptions[i],
                             index: i,
-                            onTap: (details) => _triggerNavAnimation(
-                                details.globalPosition,
-                                _dashboardOptions[i].route),
+                            onTap: (details) => _triggerNavAnimation(details.globalPosition, _dashboardOptions[i].route),
                           ),
                         );
                       }),
@@ -149,7 +182,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   const LinearProgressIndicator(color: AppColors.rubyRed),
 
                 // Royal Navigation Pulse
-                if (_isNavigating) _NavigationPulse(startPos: _navStartPos),
+                if (_isNavigating)
+                  _NavigationPulse(startPos: _navStartPos),
               ],
             ),
           ),
@@ -158,8 +192,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     ).animate().fadeIn();
   }
 
-  Widget _buildHeader(
-      BuildContext context, AuthProvider auth, dynamic restaurant) {
+
+
+  Widget _buildHeader(BuildContext context, AuthProvider auth, dynamic restaurant) {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -204,36 +239,39 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 ),
               ],
             ),
-
+            
             // Right Side Profile & Logout (Stacked)
             Positioned(
               right: 0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  _ProfileChip(email: auth.userEmail ?? 'admin@restaurant.com'),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _NotificationButton(),
+                      const SizedBox(width: 16),
+                      _ProfileChip(email: auth.userEmail ?? 'admin@restaurant.com'),
+                    ],
+                  ),
                   const SizedBox(height: 12),
                   SizedBox(
                     height: 40,
                     child: ElevatedButton.icon(
                       onPressed: () async {
-                        final navigator = GoRouter.of(context);
-                        final staffAuth = context.read<StaffAuthProvider>();
                         await auth.logout();
-                        await staffAuth.logout();
-                        navigator.go('/login');
+                        if (context.mounted) {
+                          await context.read<StaffAuthProvider>().logout();
+                          context.read<NotificationProvider>().stopPolling();
+                          context.go('/login');
+                        }
                       },
-                      icon: const Icon(Icons.logout_rounded,
-                          size: 16, color: Colors.white),
-                      label: Text('Logout',
-                          style: GoogleFonts.inter(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)),
+                      icon: const Icon(Icons.logout_rounded, size: 16, color: Colors.white),
+                      label: Text('Logout', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withValues(alpha: 0.1),
+                        backgroundColor: Colors.white.withOpacity(0.1),
                         elevation: 0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
                     ),
                   ),
@@ -286,8 +324,7 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.rubyDark
-                    .withValues(alpha: 0.12), // Persistent maroon shadow
+                color: AppColors.rubyDark.withOpacity(0.12), // Persistent maroon shadow
                 blurRadius: _isHovered ? 30 : 20,
                 offset: Offset(0, _isHovered ? 15 : 10),
               )
@@ -301,17 +338,18 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
                 width: 72,
                 height: 72,
                 decoration: BoxDecoration(
-                  color: _isHovered
-                      ? AppColors.rubyRed
-                      : AppColors.rubyDark.withValues(alpha: 0.05),
+                  color: _isHovered 
+                      ? AppColors.rubyRed 
+                      : AppColors.rubyDark.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
-                  widget.option.icon,
-                  color: _isHovered ? Colors.white : AppColors.rubyDark,
+                  widget.option.icon, 
+                  color: _isHovered ? Colors.white : AppColors.rubyDark, 
                   size: 32,
                 ),
               ),
+
               const SizedBox(height: 24),
               Text(
                 widget.option.title,
@@ -335,23 +373,18 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
               ),
             ],
           ),
-        )
-            .animate()
-            .fadeIn(delay: (widget.index * 100).ms)
-            .slideY(begin: 0.1, curve: Curves.easeOutCirc),
+        ).animate().fadeIn(delay: (widget.index * 100).ms).slideY(begin: 0.1, curve: Curves.easeOutCirc),
       ),
     );
   }
 }
 
+
 class _DashOption {
+
   final String title, description, route;
   final IconData icon;
-  const _DashOption(
-      {required this.title,
-      required this.description,
-      required this.icon,
-      required this.route});
+  const _DashOption({required this.title, required this.description, required this.icon, required this.route});
 }
 
 class _StatusBadge extends StatelessWidget {
@@ -372,8 +405,7 @@ class _StatusBadge extends StatelessWidget {
           Container(
             width: 8,
             height: 8,
-            decoration: const BoxDecoration(
-                color: Colors.green, shape: BoxShape.circle),
+            decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle),
           ),
           const SizedBox(width: 8),
           Text(
@@ -414,36 +446,27 @@ class _ProfileChipState extends State<_ProfileChip> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: _isHovered
-                ? Colors.white.withValues(alpha: 0.15)
-                : Colors.white.withValues(alpha: 0.08),
+            color: _isHovered ? Colors.white.withOpacity(0.15) : Colors.white.withOpacity(0.08),
             borderRadius: BorderRadius.circular(100),
-            border: Border.all(
-                color: _isHovered
-                    ? AppColors.gold.withValues(alpha: 0.5)
-                    : Colors.white.withValues(alpha: 0.1)),
-            boxShadow: _isHovered
-                ? [
-                    BoxShadow(
-                        color: AppColors.gold.withValues(alpha: 0.2),
-                        blurRadius: 12,
-                        spreadRadius: 2)
-                  ]
-                : null,
+            border: Border.all(color: _isHovered ? AppColors.gold.withOpacity(0.5) : Colors.white.withOpacity(0.1)),
+            boxShadow: _isHovered ? [
+              BoxShadow(color: AppColors.gold.withOpacity(0.2), blurRadius: 12, spreadRadius: 2)
+            ] : null,
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.person_pin_rounded,
-                  color: _isHovered ? Colors.white : AppColors.gold, size: 20),
+              Icon(Icons.person_pin_rounded, color: _isHovered ? Colors.white : AppColors.gold, size: 20),
               const SizedBox(width: 8),
               Text(
                 widget.email,
                 style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontSize: 13,
-                    fontWeight: _isHovered ? FontWeight.bold : FontWeight.w600),
+                  color: Colors.white, 
+                  fontSize: 13, 
+                  fontWeight: _isHovered ? FontWeight.bold : FontWeight.w600
+                ),
               ),
+
             ],
           ),
         ),
@@ -470,17 +493,14 @@ class _NavigationPulse extends StatelessWidget {
               // Convert global to local (approximate since we're in a fill Stack)
               final x = startPos.dx;
               final y = startPos.dy - 100; // Account for header height approx
-
+              
               return Stack(
                 children: [
                   // Trail Particles
                   ...List.generate(5, (i) {
-                    final particleProgress =
-                        (value - (i * 0.1)).clamp(0.0, 1.0);
-                    if (particleProgress <= 0 || particleProgress >= 0.8) {
-                      return const SizedBox();
-                    }
-
+                    final particleProgress = (value - (i * 0.1)).clamp(0.0, 1.0);
+                    if (particleProgress <= 0 || particleProgress >= 0.8) return const SizedBox();
+                    
                     return Positioned(
                       left: x + (particleProgress * 150),
                       top: y - (particleProgress * 50),
@@ -490,8 +510,7 @@ class _NavigationPulse extends StatelessWidget {
                           scale: 0.5 + (particleProgress * 0.5),
                           child: Transform.rotate(
                             angle: -0.5,
-                            child: const Icon(Icons.navigation_rounded,
-                                color: AppColors.gold, size: 20),
+                            child: const Icon(Icons.navigation_rounded, color: AppColors.gold, size: 20),
                           ),
                         ),
                       ),
@@ -511,8 +530,7 @@ class _NavigationPulse extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.gold
-                                    .withValues(alpha: 0.3 * (1 - value)),
+                                color: AppColors.gold.withOpacity(0.3 * (1 - value)),
                                 blurRadius: 20,
                                 spreadRadius: 5,
                               )
@@ -520,8 +538,7 @@ class _NavigationPulse extends StatelessWidget {
                           ),
                           child: Transform.rotate(
                             angle: -0.5,
-                            child: const Icon(Icons.navigation_rounded,
-                                color: AppColors.gold, size: 40),
+                            child: const Icon(Icons.navigation_rounded, color: AppColors.gold, size: 40),
                           ),
                         ),
                       ),
@@ -533,6 +550,307 @@ class _NavigationPulse extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+class _NotificationButton extends StatefulWidget {
+  @override
+  State<_NotificationButton> createState() => _NotificationButtonState();
+}
+
+class _NotificationButtonState extends State<_NotificationButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final prov = context.watch<NotificationProvider>();
+    final unread = prov.unreadCount;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: () => _showNotificationOverlay(context),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: _isHovered ? Colors.white.withOpacity(0.15) : Colors.white.withOpacity(0.08),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: _isHovered ? AppColors.gold.withOpacity(0.5) : Colors.white.withOpacity(0.1)),
+          ),
+          child: Center(
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(Icons.notifications_outlined, color: Colors.white, size: 24),
+                if (unread > 0)
+                  Positioned(
+                    right: -2,
+                    top: -2,
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: const BoxDecoration(color: AppColors.success, shape: BoxShape.circle),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showNotificationOverlay(BuildContext context) {
+    final prov = context.read<NotificationProvider>();
+    
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        alignment: Alignment.topRight,
+        insetPadding: const EdgeInsets.only(top: 80, right: 100),
+        backgroundColor: Colors.transparent,
+        child: Container(
+          width: 400,
+          constraints: const BoxConstraints(maxHeight: 500),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 40, offset: const Offset(0, 10))
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+                child: Row(
+                  children: [
+                    Icon(Icons.notifications_outlined, color: AppColors.rubyRed, size: 20),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Notifications',
+                      style: GoogleFonts.playfairDisplay(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.rubyDark,
+                      ),
+                    ),
+                    const Spacer(),
+                    if (prov.notifications.isNotEmpty)
+                      TextButton(
+                        onPressed: () {
+                          prov.markAllAsRead();
+                          Navigator.pop(context);
+                        },
+                        child: Text('Mark all as read', style: GoogleFonts.inter(fontSize: 12)),
+                      ),
+                  ],
+                ),
+              ),
+              const Divider(height: 1, color: AppColors.ivoryDark),
+              if (prov.notifications.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 60),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: AppColors.ivory,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.notifications_none_rounded, color: Colors.grey.shade300, size: 48),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No new notifications',
+                        style: GoogleFonts.inter(
+                          color: Colors.grey.shade500,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                Flexible(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    itemCount: prov.notifications.length,
+                    itemBuilder: (context, i) {
+                      final n = prov.notifications[i];
+                      return ListTile(
+                        onTap: () {
+                          prov.markAsRead(n.id);
+                          Navigator.pop(context);
+                          context.go('/admin/orders?highlightOrderId=${n.orderId}');
+                        },
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: n.isRead ? AppColors.ivory : AppColors.rubyRed.withOpacity(0.05),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.receipt_long_rounded,
+                            color: n.isRead ? Colors.grey : AppColors.rubyRed,
+                            size: 20,
+                          ),
+                        ),
+                        title: Text(
+                          n.message,
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            fontWeight: n.isRead ? FontWeight.w500 : FontWeight.bold,
+                            color: AppColors.slate900,
+                          ),
+                        ),
+                        subtitle: Text(
+                          _formatTime(n.createdAt),
+                          style: GoogleFonts.inter(fontSize: 11, color: AppColors.slate400),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                      );
+                    },
+                  ),
+                ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatTime(DateTime dt) {
+    final diff = DateTime.now().difference(dt);
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
+    if (diff.inHours < 24) return '${diff.inHours}h ago';
+    return '${diff.inDays}d ago';
+  }
+}
+
+class _TopToastWidget extends StatefulWidget {
+  final NotificationModel notification;
+  final VoidCallback onDismiss;
+  final VoidCallback onView;
+
+  const _TopToastWidget({
+    required this.notification,
+    required this.onDismiss,
+    required this.onView,
+  });
+
+  @override
+  State<_TopToastWidget> createState() => _TopToastWidgetState();
+}
+
+class _TopToastWidgetState extends State<_TopToastWidget> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+
+    _offsetAnimation = Tween<Offset>(
+      begin: const Offset(0, -1.5),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
+
+    _controller.forward();
+
+    // Auto dismiss after 5 seconds
+    Future.delayed(const Duration(seconds: 5), () {
+      if (mounted) {
+        _controller.reverse().then((_) => widget.onDismiss());
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 40,
+      left: 20,
+      right: 20,
+      child: SlideTransition(
+        position: _offsetAnimation,
+        child: Material(
+          color: Colors.transparent,
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 600),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.95), // Transparent white
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white.withOpacity(0.5)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  )
+                ],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.rubyRed.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.receipt_long_rounded, color: AppColors.rubyRed, size: 20),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      widget.notification.message,
+                      style: GoogleFonts.inter(
+                        color: AppColors.rubyDark,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  TextButton(
+                    onPressed: widget.onView,
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.rubyRed,
+                      textStyle: GoogleFonts.inter(fontWeight: FontWeight.w900, letterSpacing: 1),
+                    ),
+                    child: const Text('VIEW'),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 18, color: Colors.grey),
+                    onPressed: () => _controller.reverse().then((_) => widget.onDismiss()),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

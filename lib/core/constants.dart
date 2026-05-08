@@ -8,10 +8,16 @@ class ApiEndpoints {
   static const String login = '/api/auth/login';
   static const String adminLogin = '/api/admin/login';
   static const String staffLogin = '/api/staff/login';
-  static const String me = '/api/admin/me';
+  static const String me = '/api/auth/me';
+  static const String forgotPassword = '/api/auth/forgot-password';
+  static const String resetPassword = '/api/auth/reset-password';
 
   // Admin Endpoints
   static const String restaurant = '/api/admin/restaurant';
+  static const String restaurantDetails = '/api/admin/restaurant/details';
+  static const String restaurantContacts = '/api/admin/restaurant/contacts';
+  static String restaurantContactById(String id) =>
+      '/api/admin/restaurant/contacts/$id';
   static const String staffList = '/api/admin/staff';
   static String staffById(String id) => '/api/admin/staff/$id';
   static String toggleStaff(String id) => '/api/admin/staff/$id/toggle';
@@ -30,10 +36,11 @@ class ApiEndpoints {
 
   static const String ordersList = '/api/admin/orders';
   static String orderById(String id) => '/api/admin/orders/$id';
+  static String updateOrderStatus(String id) => '/api/admin/orders/$id/status';
 
   // Staff Endpoints
-  static const String staffOrders = '/api/admin/orders';
-  static const String staffTables = '/api/admin/tables';
+  static const String staffOrders = '/api/staff/orders';
+  static const String staffTables = '/api/staff/tables';
 }
 
 // ─── Token / Storage Keys ────────────────────────────────────────────────────

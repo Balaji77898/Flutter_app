@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
-import 'package:restaurant_unified_app/core/theme.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
+import 'package:restaurant_unified_app/core/theme.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
 import 'package:restaurant_unified_app/admin/services/staff_service.dart';
 
@@ -19,6 +20,8 @@ class _StaffScreenState extends State<StaffScreen> {
   List<StaffMember> _allStaff = [];
   List<StaffMember> _filteredStaff = [];
   bool _isLoading = true;
+  String? _error;
+
   final _searchController = TextEditingController();
   String _statusFilter = 'All Status';
 
@@ -27,10 +30,9 @@ class _StaffScreenState extends State<StaffScreen> {
   final _passCtrl = TextEditingController();
   final _phoneCtrl = TextEditingController();
 
-  String get _roleLabel =>
-      widget.role == 'server' ? 'Serving Staff' : 'Billing Staff';
-  String get _roleSubtitle => widget.role == 'server'
-      ? 'Manage floor staff and service assignments'
+  String get _roleLabel => widget.role == 'server' ? 'Serving Staff' : 'Billing Staff';
+  String get _roleSubtitle => widget.role == 'server' 
+      ? 'Manage floor staff and service assignments' 
       : 'Manage cashier terminals and transaction logs';
 
   @override
@@ -54,28 +56,23 @@ class _StaffScreenState extends State<StaffScreen> {
     try {
       setState(() {
         _isLoading = true;
+        _error = null;
       });
       final list = await StaffService.getStaff();
-
+      
       setState(() {
         _allStaff = list.where((s) {
           final r = s.role.toLowerCase().trim();
           if (widget.role == 'server') {
-            return r == 'serving_staff' ||
-                r == 'server' ||
-                r.contains('serv') ||
-                r == 'waiter';
+            return r == 'serving_staff' || r == 'server' || r.contains('serv') || r == 'waiter';
           } else {
-            return r == 'billing_staff' ||
-                r == 'cashier' ||
-                r.contains('bill') ||
-                r.contains('cash');
+            return r == 'billing_staff' || r == 'cashier' || r.contains('bill') || r.contains('cash');
           }
         }).toList();
         _applyFilters();
       });
     } catch (e) {
-      setState(() => _isLoading = false);
+      setState(() => _error = e.toString().replaceAll('Exception: ', ''));
     } finally {
       setState(() => _isLoading = false);
     }
@@ -85,8 +82,8 @@ class _StaffScreenState extends State<StaffScreen> {
     final query = _searchController.text.toLowerCase();
     setState(() {
       _filteredStaff = _allStaff.where((s) {
-        final matchesSearch = s.name.toLowerCase().contains(query) ||
-            s.email.toLowerCase().contains(query);
+        final matchesSearch = s.name.toLowerCase().contains(query) || 
+                             s.email.toLowerCase().contains(query);
         final matchesStatus = _statusFilter == 'All Status' ||
             (_statusFilter == 'Active' && s.isActive) ||
             (_statusFilter == 'Inactive' && !s.isActive);
@@ -101,8 +98,7 @@ class _StaffScreenState extends State<StaffScreen> {
       _loadStaff();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Failed: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $e')));
       }
     }
   }
@@ -112,12 +108,9 @@ class _StaffScreenState extends State<StaffScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Staff Member'),
-        content:
-            const Text('Are you sure you want to delete this staff member?'),
+        content: const Text('Are you sure you want to delete this staff member?'),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             child: const Text('Delete', style: TextStyle(color: Colors.red)),
@@ -131,8 +124,7 @@ class _StaffScreenState extends State<StaffScreen> {
         _loadStaff();
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Failed: $e')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $e')));
         }
       }
     }
@@ -146,34 +138,23 @@ class _StaffScreenState extends State<StaffScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Add $_roleLabel',
-            style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
+        title: Text('Add $_roleLabel', style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(
-                  controller: _nameCtrl,
-                  decoration: const InputDecoration(labelText: 'Full Name')),
+              TextField(controller: _nameCtrl, decoration: const InputDecoration(labelText: 'Full Name')),
               const SizedBox(height: 12),
-              TextField(
-                  controller: _emailCtrl,
-                  decoration: const InputDecoration(labelText: 'Email')),
+              TextField(controller: _emailCtrl, decoration: const InputDecoration(labelText: 'Email')),
               const SizedBox(height: 12),
-              TextField(
-                  controller: _phoneCtrl,
-                  decoration: const InputDecoration(labelText: 'Phone Number')),
+              TextField(controller: _phoneCtrl, decoration: const InputDecoration(labelText: 'Phone Number')),
               const SizedBox(height: 12),
-              TextField(
-                  controller: _passCtrl,
-                  obscureText: true,
-                  decoration: const InputDecoration(labelText: 'Password')),
+              TextField(controller: _passCtrl, obscureText: true, decoration: const InputDecoration(labelText: 'Password')),
             ],
           ),
         ),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.rubyRed),
             onPressed: () async {
@@ -184,16 +165,11 @@ class _StaffScreenState extends State<StaffScreen> {
                   'email': _emailCtrl.text,
                   'password': _passCtrl.text,
                   'phone': _phoneCtrl.text,
-                  'role': widget.role == 'server'
-                      ? 'SERVING_STAFF'
-                      : 'BILLING_STAFF',
+                  'role': widget.role == 'server' ? 'SERVING_STAFF' : 'BILLING_STAFF',
                 });
                 _loadStaff();
               } catch (e) {
-                if (mounted) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('Failed: $e')));
-                }
+                if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $e')));
               }
             },
             child: const Text('Add', style: TextStyle(color: Colors.white)),
@@ -208,8 +184,7 @@ class _StaffScreenState extends State<StaffScreen> {
     return Scaffold(
       backgroundColor: AppColors.ivory,
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: AppColors.rubyRed))
+          ? const Center(child: CircularProgressIndicator(color: AppColors.rubyRed))
           : CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(child: _buildHeader()),
@@ -263,29 +238,29 @@ class _StaffScreenState extends State<StaffScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ElevatedButton.icon(
+                    OutlinedButton.icon(
                       onPressed: () => context.go('/admin/staff'),
-                      icon: const Icon(Icons.arrow_back, size: 16),
-                      label: const Text('Back to Staff Management'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withValues(alpha: 0.1),
+                      icon: const Icon(Icons.arrow_back, color: AppColors.gold, size: 18),
+                      label: Text('Back to Staff Management', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.white.withOpacity(0.05),
                         foregroundColor: AppColors.gold,
-                        elevation: 0,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
+                        side: BorderSide(color: AppColors.gold.withOpacity(0.5)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                     ),
                     const SizedBox(height: 24),
                     Text(_roleLabel,
                         style: GoogleFonts.playfairDisplay(
-                          color: Colors.white,
-                          fontSize: 48,
+                          color: Colors.white, 
+                          fontSize: 48, 
                           fontWeight: FontWeight.bold,
                         )),
                     const SizedBox(height: 4),
                     Text(_roleSubtitle,
                         style: GoogleFonts.inter(
-                          color: AppColors.gold.withValues(alpha: 0.8),
+                          color: AppColors.gold.withOpacity(0.8), 
                           fontSize: 16,
                         )),
                   ],
@@ -297,8 +272,7 @@ class _StaffScreenState extends State<StaffScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.gold,
                     foregroundColor: AppColors.rubyDark,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                     textStyle: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -317,8 +291,7 @@ class _StaffScreenState extends State<StaffScreen> {
 
     return Row(
       children: [
-        _buildStatCard(
-            'Total $_roleLabel', total.toString(), AppColors.rubyRed),
+        _buildStatCard('Total $_roleLabel', total.toString(), AppColors.rubyRed),
         const SizedBox(width: 24),
         _buildStatCard('Active', active.toString(), Colors.green),
         const SizedBox(width: 24),
@@ -334,22 +307,15 @@ class _StaffScreenState extends State<StaffScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-              color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
+          border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
           boxShadow: AppShadows.card,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label,
-                style: GoogleFonts.inter(
-                    color: AppColors.textMuted,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500)),
+            Text(label, style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: 14, fontWeight: FontWeight.w500)),
             const SizedBox(height: 8),
-            Text(value,
-                style: GoogleFonts.inter(
-                    color: color, fontSize: 32, fontWeight: FontWeight.bold)),
+            Text(value, style: GoogleFonts.inter(color: color, fontSize: 32, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -362,8 +328,7 @@ class _StaffScreenState extends State<StaffScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-            color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
+        border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
         boxShadow: AppShadows.card,
       ),
       child: Row(
@@ -385,16 +350,13 @@ class _StaffScreenState extends State<StaffScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              border:
-                  Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2)),
+              border: Border.all(color: AppColors.rubyDark.withOpacity(0.2)),
               borderRadius: BorderRadius.circular(8),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: _statusFilter,
-                items: ['All Status', 'Active', 'Inactive']
-                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                    .toList(),
+                items: ['All Status', 'Active', 'Inactive'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
                 onChanged: (v) {
                   setState(() {
                     _statusFilter = v!;
@@ -418,15 +380,13 @@ class _StaffScreenState extends State<StaffScreen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-                color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
+            border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
             boxShadow: AppShadows.card,
           ),
           child: Column(
             children: [
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Row(
                   children: [
                     _headerCell('NAME', 2),
@@ -461,14 +421,16 @@ class _StaffScreenState extends State<StaffScreen> {
 
   Widget _headerCell(String label, int flex) {
     return Expanded(
-        flex: flex,
-        child: Text(label,
-            style: GoogleFonts.inter(
-              fontSize: 11,
-              fontWeight: FontWeight.w900,
-              color: AppColors.rubyDark.withValues(alpha: 0.4),
-              letterSpacing: 1.5,
-            )));
+      flex: flex, 
+      child: Text(label, 
+        style: GoogleFonts.inter(
+          fontSize: 11, 
+          fontWeight: FontWeight.w900, 
+          color: AppColors.rubyDark.withOpacity(0.4),
+          letterSpacing: 1.5,
+        )
+      )
+    );
   }
 
   Widget _buildStaffRow(StaffMember s, int index) {
@@ -487,17 +449,13 @@ class _StaffScreenState extends State<StaffScreen> {
                     color: Colors.grey.shade100,
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  child: const Icon(Icons.person_outline,
-                      size: 18, color: AppColors.textMuted),
+                  child: const Icon(Icons.person_outline, size: 18, color: AppColors.textMuted),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Text(s.name,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textDark,
-                          fontSize: 14)),
+                  child: Text(s.name, 
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textDark, fontSize: 14)),
                 ),
               ],
             ),
@@ -508,14 +466,12 @@ class _StaffScreenState extends State<StaffScreen> {
             flex: 3,
             child: Row(
               children: [
-                const Icon(Icons.email_outlined,
-                    size: 16, color: AppColors.textMuted),
+                const Icon(Icons.email_outlined, size: 16, color: AppColors.textMuted),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(s.email,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
-                          color: AppColors.textMuted, fontSize: 13)),
+                  child: Text(s.email, 
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: 13)),
                 ),
               ],
             ),
@@ -526,19 +482,15 @@ class _StaffScreenState extends State<StaffScreen> {
             flex: 2,
             child: Center(
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.green.shade50,
                   borderRadius: BorderRadius.circular(100),
                   border: Border.all(color: Colors.green.shade100),
                 ),
-                child: Text(_roleLabel,
+                child: Text(_roleLabel, 
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.inter(
-                        fontSize: 11,
-                        color: Colors.green.shade700,
-                        fontWeight: FontWeight.w600)),
+                    style: GoogleFonts.inter(fontSize: 11, color: Colors.green.shade700, fontWeight: FontWeight.w600)),
               ),
             ),
           ),
@@ -548,10 +500,9 @@ class _StaffScreenState extends State<StaffScreen> {
             flex: 2,
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: Text(s.phone ?? '—',
+              child: Text(s.phone ?? '—', 
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.inter(
-                      color: AppColors.textMuted, fontSize: 13)),
+                  style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: 13)),
             ),
           ),
           const SizedBox(width: 8),
@@ -564,7 +515,7 @@ class _StaffScreenState extends State<StaffScreen> {
                 child: Switch(
                   value: s.isActive,
                   onChanged: (v) => _toggleStaff(s.id),
-                  activeThumbColor: AppColors.success,
+                  activeColor: AppColors.success,
                 ),
               ),
             ),
@@ -578,16 +529,14 @@ class _StaffScreenState extends State<StaffScreen> {
                 IconButton(
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
-                  icon: const Icon(Icons.edit_outlined,
-                      color: AppColors.info, size: 18),
+                  icon: const Icon(Icons.edit_outlined, color: AppColors.info, size: 18),
                   onPressed: () {},
                 ),
                 const SizedBox(width: 12),
                 IconButton(
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
-                  icon: const Icon(Icons.delete_outline,
-                      color: AppColors.danger, size: 18),
+                  icon: const Icon(Icons.delete_outline, color: AppColors.danger, size: 18),
                   onPressed: () => _deleteStaff(s.id),
                 ),
               ],
@@ -597,4 +546,48 @@ class _StaffScreenState extends State<StaffScreen> {
       ),
     );
   }
+
+  Widget _actionIcon(IconData icon, Color color, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, size: 22, color: color),
+        ),
+      ),
+    );
+  }
 }
+
+class _StatusBadge extends StatelessWidget {
+  final bool isActive;
+  const _StatusBadge({required this.isActive});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.green.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(color: Colors.green.withOpacity(0.3)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(width: 6, height: 6, decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle)),
+          const SizedBox(width: 8),
+          Text('LIVE SYSTEM', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w900, color: Colors.green, letterSpacing: 1)),
+        ],
+      ),
+    );
+  }
+}
+
+

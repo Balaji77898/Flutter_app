@@ -6,7 +6,7 @@ import 'package:restaurant_unified_app/admin/services/menu_service.dart';
 
 class CategoryFormDialog extends StatefulWidget {
   final MenuCategory? category;
-
+  
   const CategoryFormDialog({super.key, this.category});
 
   @override
@@ -29,7 +29,7 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
-
+    
     setState(() => _isLoading = true);
     try {
       final body = {
@@ -44,11 +44,8 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
       }
       if (mounted) Navigator.of(context).pop(true);
     } catch (e) {
-      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content:
-                Text('Failed: ${e.toString().replaceAll('Exception: ', '')}')),
+        SnackBar(content: Text('Failed: ${e.toString().replaceAll('Exception: ', '')}')),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -78,15 +75,13 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
               TextFormField(
                 initialValue: _name,
                 decoration: const InputDecoration(labelText: 'Category Name'),
-                validator: (val) =>
-                    val == null || val.trim().isEmpty ? 'Required' : null,
+                validator: (val) => val == null || val.trim().isEmpty ? 'Required' : null,
                 onSaved: (val) => _name = val!.trim(),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 initialValue: _description,
-                decoration:
-                    const InputDecoration(labelText: 'Description (Optional)'),
+                decoration: const InputDecoration(labelText: 'Description (Optional)'),
                 maxLines: 3,
                 onSaved: (val) => _description = val?.trim() ?? '',
               ),
@@ -97,18 +92,13 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text('Cancel',
-              style: GoogleFonts.inter(color: AppColors.textMuted)),
+          child: Text('Cancel', style: GoogleFonts.inter(color: AppColors.textMuted)),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _submit,
-          child: _isLoading
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                      strokeWidth: 2, color: Colors.white))
-              : Text(widget.category == null ? 'Create' : 'Save'),
+          child: _isLoading 
+            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+            : Text(widget.category == null ? 'Create' : 'Save'),
         ),
       ],
     );

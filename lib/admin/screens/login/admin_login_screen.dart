@@ -49,8 +49,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       final auth = context.read<AuthProvider>();
       await auth.setAuth(
         result['token'] as String,
-        UserProfile.fromJson(
-            result['user'] as Map<String, dynamic>, UserRole.admin),
+        UserProfile.fromJson(result['user'] as Map<String, dynamic>, UserRole.admin),
       );
       // GoRouter's refreshListenable picks up the auth change and
       // redirects to /admin/dashboard automatically — no manual push needed.
@@ -297,7 +296,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                           icon: const Icon(Icons.refresh_rounded, size: 16),
                           label: Text('Retry',
                               style: GoogleFonts.inter(
-                                  fontSize: 13, fontWeight: FontWeight.w600)),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600)),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: const Color(0xFFD97706),
                             side: const BorderSide(color: Color(0xFFFBBF24)),
@@ -400,14 +400,20 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
             // Back link
             Center(
-              child: GestureDetector(
-                onTap: () => context.go('/admin'),
-                child: Text('← Back to Landing',
+              child: OutlinedButton.icon(
+                onPressed: () => context.go('/admin'),
+                icon: const Icon(Icons.arrow_back, size: 14, color: AppColors.rubyDark),
+                label: Text('Back to Landing',
                     style: GoogleFonts.inter(
                       fontSize: 13,
-                      color: AppColors.textMuted,
-                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.rubyDark,
                     )),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: AppColors.rubyDark.withOpacity(0.2)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                ),
               ),
             ),
           ],
@@ -416,3 +422,5 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.05);
   }
 }
+
+
