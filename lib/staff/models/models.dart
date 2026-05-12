@@ -96,9 +96,20 @@ class Order {
     final rawTable = json['table'];
     String tableNumberStr = 'N/A';
     if (rawTable is Map) {
-      tableNumberStr = (rawTable['table_number'] ?? rawTable['tableNumber'] ?? rawTable['name'] ?? rawTable['_id'] ?? 'N/A').toString();
+      tableNumberStr = (rawTable['table_number'] ??
+              rawTable['tableNumber'] ??
+              rawTable['name'] ??
+              rawTable['_id'] ??
+              'N/A')
+          .toString();
     } else {
-      tableNumberStr = (json['table_number'] ?? json['tableNumber'] ?? json['table_id'] ?? json['tableId'] ?? json['table'] ?? 'N/A').toString();
+      tableNumberStr = (json['table_number'] ??
+              json['tableNumber'] ??
+              json['table_id'] ??
+              json['tableId'] ??
+              json['table'] ??
+              'N/A')
+          .toString();
     }
 
     // ✅ FIX STATUS + PAYMENT STATUS
@@ -116,12 +127,16 @@ class Order {
       );
     }
 
-    final createdAtRaw = json['created_at'] ?? json['createdAt'] ?? DateTime.now().toIso8601String();
+    final createdAtRaw = json['created_at'] ??
+        json['createdAt'] ??
+        DateTime.now().toIso8601String();
     final dtStr = createdAtRaw.toString();
     final dt = DateTime.tryParse(dtStr) ?? DateTime.now();
 
     final orderIdStr = (json['id'] ?? json['_id'] ?? '').toString();
-    final orderNumberStr = orderIdStr.length >= 6 ? orderIdStr.substring(0, 6).toUpperCase() : orderIdStr.toUpperCase();
+    final orderNumberStr = orderIdStr.length >= 6
+        ? orderIdStr.substring(0, 6).toUpperCase()
+        : orderIdStr.toUpperCase();
 
     final order = Order(
       id: orderIdStr,
@@ -129,9 +144,15 @@ class Order {
       table: "Table $tableNumberStr",
       customerName: json['customer_name'] ?? json['customerName'],
       items: itemsList.length,
-      total: double.tryParse(json['total_amount']?.toString() ?? json['totalAmount']?.toString() ?? "0") ?? 0,
+      total: double.tryParse(json['total_amount']?.toString() ??
+              json['totalAmount']?.toString() ??
+              "0") ??
+          0,
       subtotal: double.tryParse(json['subtotal']?.toString() ?? "0") ?? 0,
-      tax: double.tryParse(json['tax_amount']?.toString() ?? json['taxAmount']?.toString() ?? "0") ?? 0,
+      tax: double.tryParse(json['tax_amount']?.toString() ??
+              json['taxAmount']?.toString() ??
+              "0") ??
+          0,
       status: parsedStatus, // ✅ IMPORTANT FIX
       time: _formatTime(dt.toIso8601String()),
       createdAt: dt,

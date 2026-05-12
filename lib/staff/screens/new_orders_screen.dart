@@ -372,21 +372,24 @@ class _OrderCard extends StatelessWidget {
                             order.time,
                             style: AppTheme.sans(
                               size: 12,
-                              color: const Color(0xFF065F46).withValues(alpha: 0.7),
+                              color: const Color(0xFF065F46)
+                                  .withValues(alpha: 0.7),
                             ),
                           ),
                           Text(
                             ' • ',
                             style: AppTheme.sans(
                               size: 12,
-                              color: const Color(0xFF065F46).withValues(alpha: 0.7),
+                              color: const Color(0xFF065F46)
+                                  .withValues(alpha: 0.7),
                             ),
                           ),
                           Text(
                             order.orderNumber,
                             style: AppTheme.sans(
                               size: 12,
-                              color: const Color(0xFF065F46).withValues(alpha: 0.7),
+                              color: const Color(0xFF065F46)
+                                  .withValues(alpha: 0.7),
                             ),
                           ),
                         ],

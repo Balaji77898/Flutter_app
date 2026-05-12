@@ -14,7 +14,7 @@ Future<void> downloadFile(Uint8List bytes, String fileName) async {
         return;
       }
     }
-    
+
     // For mobile (Android/iOS) or as a fallback
     await Printing.sharePdf(bytes: bytes, filename: fileName);
   } catch (e) {

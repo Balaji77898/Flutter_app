@@ -380,7 +380,8 @@ class _OrderCard extends StatelessWidget {
                             style: AppTheme.sans(
                               size: 11,
                               weight: FontWeight.w600,
-                              color: (config['color'] as Color).withValues(alpha: 0.7),
+                              color: (config['color'] as Color)
+                                  .withValues(alpha: 0.7),
                             ),
                           ),
                           Text(
@@ -388,7 +389,8 @@ class _OrderCard extends StatelessWidget {
                             style: AppTheme.sans(
                               size: 11,
                               weight: FontWeight.w600,
-                              color: (config['color'] as Color).withValues(alpha: 0.7),
+                              color: (config['color'] as Color)
+                                  .withValues(alpha: 0.7),
                             ),
                           ),
                           LiveTimeAgo(
@@ -396,8 +398,8 @@ class _OrderCard extends StatelessWidget {
                             style: AppTheme.sans(
                               size: 11,
                               weight: FontWeight.w600,
-                              color:
-                                  (config['color'] as Color).withValues(alpha: 0.7),
+                              color: (config['color'] as Color)
+                                  .withValues(alpha: 0.7),
                             ),
                           ),
                         ],
