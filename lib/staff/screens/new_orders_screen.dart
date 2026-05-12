@@ -294,12 +294,30 @@ class _OrderCard extends StatelessWidget {
                             color: AppColors.white,
                           ),
                         ),
-                        LiveTimeAgo(
-                          dt: order.createdAt,
-                          style: AppTheme.sans(
-                            size: 12,
-                            color: Colors.white.withValues(alpha: 0.7),
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              order.time,
+                              style: AppTheme.sans(
+                                size: 12,
+                                color: Colors.white.withValues(alpha: 0.7),
+                              ),
+                            ),
+                            Text(
+                              ' • ',
+                              style: AppTheme.sans(
+                                size: 12,
+                                color: Colors.white.withValues(alpha: 0.7),
+                              ),
+                            ),
+                            LiveTimeAgo(
+                              dt: order.createdAt,
+                              style: AppTheme.sans(
+                                size: 12,
+                                color: Colors.white.withValues(alpha: 0.7),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -348,12 +366,30 @@ class _OrderCard extends StatelessWidget {
                           color: const Color(0xFF065F46),
                         ),
                       ),
-                      Text(
-                        order.orderNumber,
-                        style: AppTheme.sans(
-                          size: 12,
-                          color: const Color(0xFF065F46).withValues(alpha: 0.7),
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            order.time,
+                            style: AppTheme.sans(
+                              size: 12,
+                              color: const Color(0xFF065F46).withValues(alpha: 0.7),
+                            ),
+                          ),
+                          Text(
+                            ' • ',
+                            style: AppTheme.sans(
+                              size: 12,
+                              color: const Color(0xFF065F46).withValues(alpha: 0.7),
+                            ),
+                          ),
+                          Text(
+                            order.orderNumber,
+                            style: AppTheme.sans(
+                              size: 12,
+                              color: const Color(0xFF065F46).withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

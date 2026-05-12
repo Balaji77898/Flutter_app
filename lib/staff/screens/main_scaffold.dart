@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../contexts/auth_provider.dart';
-import '../models/models.dart';
+import '../../core/auth_provider.dart';
+import '../../core/constants.dart' hide AppColors;
 import '../theme/app_theme.dart';
 import 'dashboard_screen.dart';
 import 'orders_screen.dart';
@@ -28,10 +29,15 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.watch<StaffAuthProvider>();
-    final role = auth.role;
-    final user = auth.user;
-    final isBilling = role == StaffRole.billingStaff;
+    final staffAuth = context.watch<StaffAuthProvider>();
+    final coreAuth = context.watch<AuthProvider>();
+
+    final role = staffAuth.role;
+    final user = staffAuth.user;
+
+    // Fix flicker: Use coreAuth role if staffAuth role is not yet loaded
+    final isBilling = role == StaffRole.billingStaff ||
+        coreAuth.role == UserRole.billingStaff;
 
     // Role-based accent color
     final accentColor =

@@ -886,6 +886,21 @@ class _MiniOrderCard extends StatelessWidget {
                                 weight: FontWeight.w500,
                               ),
                             ),
+                            const SizedBox(height: 2),
+                            Row(
+                              children: [
+                                const Icon(Icons.access_time, size: 12, color: AppColors.slate400),
+                                const SizedBox(width: 4),
+                                Text(
+                                  order.time,
+                                  style: AppTheme.sans(
+                                    size: 11,
+                                    color: AppColors.slate400,
+                                    weight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),

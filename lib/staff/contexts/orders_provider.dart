@@ -35,7 +35,7 @@ class OrdersProvider extends ChangeNotifier {
 
     try {
       final response = await http.get(
-        Uri.parse("$kBackendBase${ApiEndpoints.staffOrders}"),
+        Uri.parse("$kBackendBase${ApiEndpoints.ordersList}"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",

@@ -17,7 +17,7 @@ class TablesProvider extends ChangeNotifier {
 
     try {
       final response = await http.get(
-        Uri.parse("$kBackendBase${ApiEndpoints.staffTables}"),
+        Uri.parse("$kBackendBase${ApiEndpoints.tablesList}"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",

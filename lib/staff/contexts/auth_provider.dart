@@ -41,10 +41,9 @@ class StaffAuthProvider extends ChangeNotifier {
     if (_token == null) return;
 
     final endpoints = [
-      ApiEndpoints.me, // /api/admin/me
       '/api/staff/me',
+      ApiEndpoints.me, // /api/auth/me
       '/api/staff/profile',
-      '/api/auth/me',
     ];
 
     for (final endpoint in endpoints) {

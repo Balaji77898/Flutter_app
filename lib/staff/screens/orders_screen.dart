@@ -373,14 +373,34 @@ class _OrderCard extends StatelessWidget {
                           letterSpacing: 1.0,
                         ),
                       ),
-                      LiveTimeAgo(
-                        dt: order.createdAt,
-                        style: AppTheme.sans(
-                          size: 12,
-                          weight: FontWeight.w600,
-                          color:
-                              (config['color'] as Color).withValues(alpha: 0.7),
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            order.time,
+                            style: AppTheme.sans(
+                              size: 11,
+                              weight: FontWeight.w600,
+                              color: (config['color'] as Color).withValues(alpha: 0.7),
+                            ),
+                          ),
+                          Text(
+                            ' • ',
+                            style: AppTheme.sans(
+                              size: 11,
+                              weight: FontWeight.w600,
+                              color: (config['color'] as Color).withValues(alpha: 0.7),
+                            ),
+                          ),
+                          LiveTimeAgo(
+                            dt: order.createdAt,
+                            style: AppTheme.sans(
+                              size: 11,
+                              weight: FontWeight.w600,
+                              color:
+                                  (config['color'] as Color).withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

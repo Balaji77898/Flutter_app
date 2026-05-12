@@ -1,6 +1,4 @@
 import 'dart:ui' as ui;
-// ignore: avoid_web_libraries_in_flutter, deprecated_member_use
-import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,6 +9,7 @@ import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
 import 'package:restaurant_unified_app/admin/services/tables_service.dart';
 
 import 'package:restaurant_unified_app/staff/widgets/common_widgets.dart';
+import 'package:restaurant_unified_app/utils/file_download_helper.dart';
 
 class TablesScreen extends StatefulWidget {
   const TablesScreen({super.key});
@@ -133,12 +132,7 @@ class _TablesScreenState extends State<TablesScreen> {
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       if (byteData == null) return;
       final bytes = byteData.buffer.asUint8List();
-      final blob = html.Blob([bytes], 'image/png');
-      final url = html.Url.createObjectUrlFromBlob(blob);
-      html.AnchorElement(href: url)
-        ..setAttribute('download', 'table_${t.tableNumber}_qr.png')
-        ..click();
-      html.Url.revokeObjectUrl(url);
+      await downloadFile(bytes, 'table_${t.tableNumber}_qr.png');
     } catch (e) {
       debugPrint('Download failed: $e');
     }

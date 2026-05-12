@@ -38,9 +38,7 @@ class ApiEndpoints {
   static String orderById(String id) => '/api/admin/orders/$id';
   static String updateOrderStatus(String id) => '/api/admin/orders/$id/status';
 
-  // Staff Endpoints
-  static const String staffOrders = '/api/staff/orders';
-  static const String staffTables = '/api/staff/tables';
+  // Staff Endpoints (Using Admin endpoints for data access)
 }
 
 // ─── Token / Storage Keys ────────────────────────────────────────────────────

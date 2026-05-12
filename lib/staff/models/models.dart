@@ -93,11 +93,17 @@ class Order {
   factory Order.fromJson(Map<String, dynamic> json) {
     final itemsList = json['items'] as List? ?? [];
 
-    final tableNumber = json['table_number'] ?? json['table_id'] ?? 'N/A';
+    final rawTable = json['table'];
+    String tableNumberStr = 'N/A';
+    if (rawTable is Map) {
+      tableNumberStr = (rawTable['table_number'] ?? rawTable['tableNumber'] ?? rawTable['name'] ?? rawTable['_id'] ?? 'N/A').toString();
+    } else {
+      tableNumberStr = (json['table_number'] ?? json['tableNumber'] ?? json['table_id'] ?? json['tableId'] ?? json['table'] ?? 'N/A').toString();
+    }
 
     // ✅ FIX STATUS + PAYMENT STATUS
     final statusString = json['status'] ?? '';
-    final paymentStatus = json['payment_status'] ?? '';
+    final paymentStatus = json['payment_status'] ?? json['paymentStatus'] ?? '';
 
     OrderStatus parsedStatus;
 
@@ -110,27 +116,25 @@ class Order {
       );
     }
 
+    final createdAtRaw = json['created_at'] ?? json['createdAt'] ?? DateTime.now().toIso8601String();
+    final dtStr = createdAtRaw.toString();
+    final dt = DateTime.tryParse(dtStr) ?? DateTime.now();
+
+    final orderIdStr = (json['id'] ?? json['_id'] ?? '').toString();
+    final orderNumberStr = orderIdStr.length >= 6 ? orderIdStr.substring(0, 6).toUpperCase() : orderIdStr.toUpperCase();
+
     final order = Order(
-      id: json['id'] ?? '',
-
-      orderNumber: (json['id'] ?? '').toString().substring(0, 6).toUpperCase(),
-
-      table: "Table $tableNumber",
-
-      customerName: json['customer_name'],
-
+      id: orderIdStr,
+      orderNumber: orderNumberStr,
+      table: "Table $tableNumberStr",
+      customerName: json['customer_name'] ?? json['customerName'],
       items: itemsList.length,
-
-      total: double.tryParse(json['total_amount']?.toString() ?? "0") ?? 0,
+      total: double.tryParse(json['total_amount']?.toString() ?? json['totalAmount']?.toString() ?? "0") ?? 0,
       subtotal: double.tryParse(json['subtotal']?.toString() ?? "0") ?? 0,
-      tax: double.tryParse(json['tax_amount']?.toString() ?? "0") ?? 0,
-
+      tax: double.tryParse(json['tax_amount']?.toString() ?? json['taxAmount']?.toString() ?? "0") ?? 0,
       status: parsedStatus, // ✅ IMPORTANT FIX
-
-      time: _formatTime(json['created_at']),
-
-      createdAt: DateTime.parse(json['created_at']),
-
+      time: _formatTime(dt.toIso8601String()),
+      createdAt: dt,
       itemsPreview: itemsList
           .map((i) => (i['item_name'] ?? i['name']).toString())
           .toList(),
@@ -304,7 +308,7 @@ class StaffUser {
       id: (json['id'] ?? json['_id'] ?? '').toString(),
       name: (json['name'] ?? json['full_name'] ?? 'Staff Member').toString(),
       email: (json['email'] ?? '').toString(),
-      role: (json['role']?.toString().toUpperCase() == 'SERVING_STAFF')
+      role: (json['role']?.toString().toUpperCase().contains('SERVING') == true)
           ? StaffRole.servingStaff
           : StaffRole.billingStaff,
       phone: json['phone']?.toString(),
