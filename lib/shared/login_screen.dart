@@ -6,6 +6,7 @@ import 'package:restaurant_unified_app/core/auth_provider.dart';
 import 'package:restaurant_unified_app/staff/contexts/auth_provider.dart';
 import 'package:restaurant_unified_app/staff/models/models.dart'
     as staff_models;
+import 'package:go_router/go_router.dart';
 import '../core/theme.dart';
 
 class UnifiedLoginScreen extends StatefulWidget {
@@ -180,7 +181,21 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => context.push('/forgot-password'),
+                    child: Text(
+                      'Forgot Password?',
+                      style: AppTheme.sans(
+                        color: AppColors.primary,
+                        weight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
 
                 SizedBox(
                   width: double.infinity,
