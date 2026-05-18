@@ -557,6 +557,17 @@ class _ProfileChipState extends State<_ProfileChip> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+    
+    // On mobile, show a truncated version of the email (before the @ and up to 8 chars)
+    final displayEmail = isMobile
+        ? (widget.email.contains('@') 
+            ? (widget.email.split('@').first.length > 8 
+                ? '${widget.email.split('@').first.substring(0, 8)}...' 
+                : widget.email.split('@').first)
+            : (widget.email.length > 10 ? '${widget.email.substring(0, 8)}...' : widget.email))
+        : widget.email;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
@@ -565,7 +576,8 @@ class _ProfileChipState extends State<_ProfileChip> {
         onTap: () => context.go('/admin/profile'),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 10 : 16, vertical: isMobile ? 6 : 8),
           decoration: BoxDecoration(
             color: _isHovered
                 ? Colors.white.withValues(alpha: 0.15)
@@ -591,7 +603,7 @@ class _ProfileChipState extends State<_ProfileChip> {
                   color: _isHovered ? Colors.white : AppColors.gold, size: 20),
               const SizedBox(width: 8),
               Text(
-                widget.email,
+                displayEmail,
                 style: GoogleFonts.inter(
                     color: Colors.white,
                     fontSize: 13,
@@ -751,13 +763,19 @@ class _NotificationButtonState extends State<_NotificationButton> {
 
     showDialog(
       context: context,
-      builder: (context) => Dialog(
-        alignment: Alignment.topRight,
-        insetPadding: const EdgeInsets.only(top: 80, right: 100),
-        backgroundColor: Colors.transparent,
-        child: Container(
-          width: 400,
-          constraints: const BoxConstraints(maxHeight: 500),
+      builder: (context) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        final isMobile = screenWidth < 600;
+
+        return Dialog(
+          alignment: isMobile ? Alignment.center : Alignment.topRight,
+          insetPadding: isMobile
+              ? const EdgeInsets.symmetric(horizontal: 16, vertical: 24)
+              : const EdgeInsets.only(top: 80, right: 100),
+          backgroundColor: Colors.transparent,
+          child: Container(
+            width: isMobile ? screenWidth - 32 : 400,
+            constraints: const BoxConstraints(maxHeight: 500, maxWidth: 400),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(24),
@@ -876,8 +894,9 @@ class _NotificationButtonState extends State<_NotificationButton> {
             ],
           ),
         ),
-      ),
-    );
+      );
+    },
+  );
   }
 }
 

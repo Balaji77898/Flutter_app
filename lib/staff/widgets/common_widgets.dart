@@ -201,9 +201,12 @@ class PageHeader extends StatelessWidget {
                           crossAxisAlignment: align,
                           children: [
                             if (onBack != null) ...[
-                              PremiumBackButton(
-                                label: backLabel ?? 'Back',
-                                onTap: onBack!,
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: PremiumBackButton(
+                                  label: backLabel ?? 'Back',
+                                  onTap: onBack!,
+                                ),
                               ),
                               const SizedBox(height: 24),
                             ],

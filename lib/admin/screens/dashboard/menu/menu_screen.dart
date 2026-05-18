@@ -577,7 +577,7 @@ class _MenuScreenState extends State<MenuScreen> {
           crossAxisCount: cols,
           mainAxisSpacing: c.maxWidth > 600 ? 32 : 16,
           crossAxisSpacing: c.maxWidth > 600 ? 32 : 16,
-          childAspectRatio: c.maxWidth > 600 ? 0.75 : 0.85,
+          childAspectRatio: c.maxWidth > 600 ? 0.75 : 0.70,
         ),
         itemCount: items.length,
         itemBuilder: (ctx, i) => _buildItemCard(items[i], i)
