@@ -8,7 +8,6 @@ import 'package:restaurant_unified_app/core/auth_provider.dart';
 import 'package:restaurant_unified_app/core/theme.dart';
 import 'package:restaurant_unified_app/admin/core/providers/restaurant_provider.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
-import 'package:restaurant_unified_app/staff/widgets/common_widgets.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

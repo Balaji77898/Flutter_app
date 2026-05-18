@@ -7,7 +7,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
 import 'package:restaurant_unified_app/admin/services/tables_service.dart';
-import 'package:restaurant_unified_app/staff/widgets/common_widgets.dart';
 import 'package:restaurant_unified_app/utils/file_download_helper.dart';
 
 class TablesScreen extends StatefulWidget {
