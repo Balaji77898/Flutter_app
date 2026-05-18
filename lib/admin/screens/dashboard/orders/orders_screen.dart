@@ -146,7 +146,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     final filtered = _filtered;
     final size = MediaQuery.of(context).size;
     final bool isMobile = size.width < 900;
-    
+
     return Scaffold(
       backgroundColor: AppColors.ivory,
       body: _isLoading
@@ -175,7 +175,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600)),
                           const SizedBox(height: 12),
-                          _buildOrdersList(filtered.take(50).toList(), isMobile),
+                          _buildOrdersList(
+                              filtered.take(50).toList(), isMobile),
                         ]),
                       ),
                     ),
@@ -187,55 +188,69 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget _buildHeader(bool isMobile) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.fromLTRB(isMobile ? 20 : 40, isMobile ? 32 : 48, isMobile ? 20 : 40, 32),
+      padding: EdgeInsets.fromLTRB(
+          isMobile ? 20 : 40, isMobile ? 32 : 48, isMobile ? 20 : 40, 32),
       decoration: const BoxDecoration(
         color: AppColors.rubyDark,
         border: Border(bottom: BorderSide(color: AppColors.gold, width: 4)),
       ),
-      child: isMobile 
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconButton(
-                onPressed: () => context.go('/admin/dashboard'),
-                icon: const Icon(Icons.arrow_back, color: AppColors.gold),
-                style: IconButton.styleFrom(
-                  backgroundColor: Colors.white.withValues(alpha: 0.1),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text('Orders', 
-                style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 4),
-              Text('Track customer orders', 
-                style: GoogleFonts.inter(color: AppColors.gold, fontSize: 14, fontWeight: FontWeight.w500)),
-            ],
-          )
-        : Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              PremiumBackButton(
-                label: 'Back to Dashboard',
-                onTap: () => context.go('/admin/dashboard'),
-              ),
-              Expanded(
-                child: Center(
-                  child: Column(
-                    children: [
-                      Text('Orders Management', 
-                        style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 4),
-                      Text('View and track customer orders', 
-                        style: GoogleFonts.inter(color: AppColors.gold, fontSize: 14, fontWeight: FontWeight.w500)),
-                    ],
+      child: isMobile
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IconButton(
+                  onPressed: () => context.go('/admin/dashboard'),
+                  icon: const Icon(Icons.arrow_back, color: AppColors.gold),
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.white.withValues(alpha: 0.1),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
                   ),
                 ),
-              ),
-              const SizedBox(width: 48),
-            ],
-          ),
+                const SizedBox(height: 20),
+                Text('Orders',
+                    style: GoogleFonts.playfairDisplay(
+                        color: Colors.white,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text('Track customer orders',
+                    style: GoogleFonts.inter(
+                        color: AppColors.gold,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500)),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PremiumBackButton(
+                  label: 'Back to Dashboard',
+                  onTap: () => context.go('/admin/dashboard'),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Text('Orders Management',
+                            style: GoogleFonts.playfairDisplay(
+                                color: Colors.white,
+                                fontSize: 36,
+                                fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 4),
+                        Text('View and track customer orders',
+                            style: GoogleFonts.inter(
+                                color: AppColors.gold,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500)),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 48),
+              ],
+            ),
     );
   }
 
@@ -245,13 +260,23 @@ class _OrdersScreenState extends State<OrdersScreen> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            _statCard('Total Orders', _orders.length.toString(), AppColors.rubyDark, isMobile),
+            _statCard('Total Orders', _orders.length.toString(),
+                AppColors.rubyDark, isMobile),
             const SizedBox(width: 12),
-            _statCard('Placed', _orders.where((o) => o.status == 'PLACED').length.toString(), const Color(0xFF0284C7), isMobile),
+            _statCard(
+                'Placed',
+                _orders.where((o) => o.status == 'PLACED').length.toString(),
+                const Color(0xFF0284C7),
+                isMobile),
             const SizedBox(width: 12),
-            _statCard('Served', _orders.where((o) => o.status == 'SERVED').length.toString(), const Color(0xFF16A34A), isMobile),
+            _statCard(
+                'Served',
+                _orders.where((o) => o.status == 'SERVED').length.toString(),
+                const Color(0xFF16A34A),
+                isMobile),
             const SizedBox(width: 12),
-            _statCard('Revenue', '₹${_totalRevenue.toStringAsFixed(0)}', AppColors.rubyDark, isMobile),
+            _statCard('Revenue', '₹${_totalRevenue.toStringAsFixed(0)}',
+                AppColors.rubyDark, isMobile),
           ],
         ),
       );
@@ -259,13 +284,30 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
     return Row(
       children: [
-        Expanded(child: _statCard('Total Orders', _orders.length.toString(), AppColors.rubyDark, false)),
+        Expanded(
+            child: _statCard('Total Orders', _orders.length.toString(),
+                AppColors.rubyDark, false)),
         const SizedBox(width: 24),
-        Expanded(child: _statCard('Placed', _orders.where((o) => o.status == 'PLACED').length.toString(), const Color(0xFF0284C7), false)),
+        Expanded(
+            child: _statCard(
+                'Placed',
+                _orders.where((o) => o.status == 'PLACED').length.toString(),
+                const Color(0xFF0284C7),
+                false)),
         const SizedBox(width: 24),
-        Expanded(child: _statCard('Served', _orders.where((o) => o.status == 'SERVED').length.toString(), const Color(0xFF16A34A), false)),
+        Expanded(
+            child: _statCard(
+                'Served',
+                _orders.where((o) => o.status == 'SERVED').length.toString(),
+                const Color(0xFF16A34A),
+                false)),
         const SizedBox(width: 24),
-        Expanded(child: _statCard('Total Revenue', '₹${_totalRevenue.toStringAsFixed(0)}', AppColors.rubyDark, false)),
+        Expanded(
+            child: _statCard(
+                'Total Revenue',
+                '₹${_totalRevenue.toStringAsFixed(0)}',
+                AppColors.rubyDark,
+                false)),
       ],
     );
   }
@@ -277,15 +319,29 @@ class _OrdersScreenState extends State<OrdersScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.01), blurRadius: 4, offset: const Offset(0, 2))],
+        border: Border.all(
+            color: AppColors.rubyDark.withValues(alpha: 0.2), width: 1),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.01),
+              blurRadius: 4,
+              offset: const Offset(0, 2))
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: isMobile ? 12 : 14, fontWeight: FontWeight.w500)),
+          Text(title,
+              style: GoogleFonts.inter(
+                  color: AppColors.textMuted,
+                  fontSize: isMobile ? 12 : 14,
+                  fontWeight: FontWeight.w500)),
           const SizedBox(height: 8),
-          Text(value, style: GoogleFonts.inter(color: color, fontSize: isMobile ? 22 : 28, fontWeight: FontWeight.bold)),
+          Text(value,
+              style: GoogleFonts.inter(
+                  color: color,
+                  fontSize: isMobile ? 22 : 28,
+                  fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -330,7 +386,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   decoration: InputDecoration(
                     hintText: 'Search by Order ID...',
                     prefixIcon: const Icon(Icons.search, size: 20),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -357,9 +414,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     ['All Types', 'DINE_IN', 'TAKEAWAY'],
                     (v) => setState(() => _typeFilter = v!)),
                 const SizedBox(height: 12),
-                _buildDropdown(
-                    _sortOrder,
-                    ['Newest First', 'Oldest First'],
+                _buildDropdown(_sortOrder, ['Newest First', 'Oldest First'],
                     (v) => setState(() => _sortOrder = v!)),
               ],
             )
@@ -381,15 +436,18 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(
-                                  color: AppColors.rubyDark.withValues(alpha: 0.2))),
+                                  color: AppColors.rubyDark
+                                      .withValues(alpha: 0.2))),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(
-                                  color: AppColors.rubyDark.withValues(alpha: 0.1))),
+                                  color: AppColors.rubyDark
+                                      .withValues(alpha: 0.1))),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(
-                                  color: AppColors.rubyDark.withValues(alpha: 0.5))),
+                                  color: AppColors.rubyDark
+                                      .withValues(alpha: 0.5))),
                         ),
                       ),
                     ),
@@ -475,7 +533,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 4, offset: const Offset(0, 2))],
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.01),
+                blurRadius: 4,
+                offset: const Offset(0, 2))
+          ],
         ),
         child: const Center(child: Text('No orders found')),
       );
@@ -490,13 +553,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
         itemBuilder: (ctx, i) {
           final o = orders[i];
           final isHighlighted = o.id == _highlightedOrderId;
-          
+
           Widget card = _buildOrderMobileCard(o);
           if (isHighlighted) {
             card = card
-                .animate(onPlay: (controller) => controller.repeat(reverse: true))
-                .shimmer(duration: 1500.ms, color: AppColors.rubyRed.withValues(alpha: 0.2))
-                .scale(begin: const Offset(1, 1), end: const Offset(1.02, 1.02), duration: 1000.ms);
+                .animate(
+                    onPlay: (controller) => controller.repeat(reverse: true))
+                .shimmer(
+                    duration: 1500.ms,
+                    color: AppColors.rubyRed.withValues(alpha: 0.2))
+                .scale(
+                    begin: const Offset(1, 1),
+                    end: const Offset(1.02, 1.02),
+                    duration: 1000.ms);
           }
           return card;
         },
@@ -510,18 +579,28 @@ class _OrdersScreenState extends State<OrdersScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: o.id == _highlightedOrderId ? AppColors.rubyRed.withValues(alpha: 0.08) : Colors.white,
+        color: o.id == _highlightedOrderId
+            ? AppColors.rubyRed.withValues(alpha: 0.08)
+            : Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 6)],
-        border: Border.all(color: o.id == _highlightedOrderId ? AppColors.gold : AppColors.rubyDark.withOpacity(0.05)),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 6)
+        ],
+        border: Border.all(
+            color: o.id == _highlightedOrderId
+                ? AppColors.gold
+                : AppColors.rubyDark.withOpacity(0.05)),
       ),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('#${o.id.substring(0, 8)}', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: AppColors.rubyDark)),
-              _statusBadge(o.status, isLoading: _updatingOrderIds.contains(o.id), onTap: () {
+              Text('#${o.id.substring(0, 8)}',
+                  style: GoogleFonts.inter(
+                      fontWeight: FontWeight.bold, color: AppColors.rubyDark)),
+              _statusBadge(o.status,
+                  isLoading: _updatingOrderIds.contains(o.id), onTap: () {
                 final next = _getNextStatusFor(o.status);
                 if (next != null) {
                   _updateOrderStatus(o.id, next);
@@ -536,16 +615,30 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('CUSTOMER', style: GoogleFonts.inter(fontSize: 10, color: AppColors.textMuted, fontWeight: FontWeight.w800)),
-                    Text(o.customerName, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600)),
+                    Text('CUSTOMER',
+                        style: GoogleFonts.inter(
+                            fontSize: 10,
+                            color: AppColors.textMuted,
+                            fontWeight: FontWeight.w800)),
+                    Text(o.customerName,
+                        style: GoogleFonts.inter(
+                            fontSize: 14, fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text('TOTAL', style: GoogleFonts.inter(fontSize: 10, color: AppColors.textMuted, fontWeight: FontWeight.w800)),
-                  Text('₹${o.totalAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.rubyDark)),
+                  Text('TOTAL',
+                      style: GoogleFonts.inter(
+                          fontSize: 10,
+                          color: AppColors.textMuted,
+                          fontWeight: FontWeight.w800)),
+                  Text('₹${o.totalAmount.toStringAsFixed(0)}',
+                      style: GoogleFonts.inter(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.rubyDark)),
                 ],
               ),
             ],
@@ -561,7 +654,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   backgroundColor: AppColors.rubyDark.withOpacity(0.05),
                   foregroundColor: AppColors.rubyDark,
                   elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                 ),
                 child: const Text('Details'),
               ),
@@ -1295,41 +1389,45 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                           ),
                         ],
                       ),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          final useVertical = constraints.maxWidth < 600;
-                          final children = [
-                            _summaryItem('Order ID',
-                                '#${_currentOrder.id.length > 8 ? _currentOrder.id.substring(0, 8) : _currentOrder.id}',
-                                isBold: true),
-                            _summaryItem(
-                                'Order Type',
-                                _currentOrder.orderType
-                                    .replaceAll('_', ' ')
-                                    .toUpperCase(),
-                                isBold: true),
-                            _summaryItem(
-                                'Status', _currentOrder.status.toUpperCase(),
-                                isBadge: true),
-                            _summaryItem('Payment',
-                                _currentOrder.paymentStatus.toUpperCase(),
-                                isBadge: true),
-                          ];
-                          
-                          if (useVertical) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Row(children: [Expanded(child: children[0]), Expanded(child: children[1])]),
-                                const SizedBox(height: 16),
-                                Row(children: [Expanded(child: children[2]), Expanded(child: children[3])]),
-                              ],
-                            );
-                          }
-                          
-                          return Row(children: children);
+                      child: LayoutBuilder(builder: (context, constraints) {
+                        final useVertical = constraints.maxWidth < 600;
+                        final children = [
+                          _summaryItem('Order ID',
+                              '#${_currentOrder.id.length > 8 ? _currentOrder.id.substring(0, 8) : _currentOrder.id}',
+                              isBold: true),
+                          _summaryItem(
+                              'Order Type',
+                              _currentOrder.orderType
+                                  .replaceAll('_', ' ')
+                                  .toUpperCase(),
+                              isBold: true),
+                          _summaryItem(
+                              'Status', _currentOrder.status.toUpperCase(),
+                              isBadge: true),
+                          _summaryItem('Payment',
+                              _currentOrder.paymentStatus.toUpperCase(),
+                              isBadge: true),
+                        ];
+
+                        if (useVertical) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Row(children: [
+                                Expanded(child: children[0]),
+                                Expanded(child: children[1])
+                              ]),
+                              const SizedBox(height: 16),
+                              Row(children: [
+                                Expanded(child: children[2]),
+                                Expanded(child: children[3])
+                              ]),
+                            ],
+                          );
                         }
-                      ),
+
+                        return Row(children: children);
+                      }),
                     ),
 
                     const SizedBox(height: 32),
@@ -1360,10 +1458,62 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (_currentOrder.status.toUpperCase() == 'PAID') ...[
-                            LayoutBuilder(
-                              builder: (context, constraints) {
-                                final useVertical = constraints.maxWidth < 450;
+                            LayoutBuilder(builder: (context, constraints) {
+                              final useVertical = constraints.maxWidth < 450;
+                              final buttons = [
+                                _actionButton(context, 'Print Receipt',
+                                    Icons.print, const Color(0xFF1E293B), () {
+                                  final restaurantName = context
+                                          .read<RestaurantProvider>()
+                                          .restaurant
+                                          ?.name ??
+                                      'RESTAURANT';
+                                  _handlePrint(context, restaurantName);
+                                }),
+                                _actionButton(
+                                    context,
+                                    'Download Receipt',
+                                    Icons.file_download,
+                                    const Color(0xFF0284C7), () {
+                                  final restaurantName = context
+                                          .read<RestaurantProvider>()
+                                          .restaurant
+                                          ?.name ??
+                                      'RESTAURANT';
+                                  _handleDownload(context, restaurantName);
+                                }),
+                              ];
+
+                              if (useVertical) {
+                                return Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    buttons[0],
+                                    const SizedBox(height: 12),
+                                    buttons[1],
+                                  ],
+                                );
+                              }
+                              return Row(
+                                children: [
+                                  Expanded(child: buttons[0]),
+                                  const SizedBox(width: 16),
+                                  Expanded(child: buttons[1]),
+                                ],
+                              );
+                            }),
+                          ] else if (_getButtonLabel() != '') ...[
+                            LayoutBuilder(builder: (context, constraints) {
+                              final useVertical = constraints.maxWidth < 550;
+
+                              if (_currentOrder.status.toUpperCase() ==
+                                  'BILLED') {
                                 final buttons = [
+                                  _actionButton(context, 'Proceed to Payment',
+                                      Icons.payment, AppColors.rubyDark, () {
+                                    _showPaymentDialog(context);
+                                  }),
                                   _actionButton(context, 'Print Receipt',
                                       Icons.print, const Color(0xFF1E293B), () {
                                     final restaurantName = context
@@ -1386,123 +1536,70 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                                     _handleDownload(context, restaurantName);
                                   }),
                                 ];
-                                
+
                                 if (useVertical) {
                                   return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       buttons[0],
                                       const SizedBox(height: 12),
                                       buttons[1],
+                                      const SizedBox(height: 12),
+                                      buttons[2],
                                     ],
                                   );
                                 }
                                 return Row(
                                   children: [
                                     Expanded(child: buttons[0]),
-                                    const SizedBox(width: 16),
+                                    const SizedBox(width: 12),
                                     Expanded(child: buttons[1]),
+                                    const SizedBox(width: 12),
+                                    Expanded(child: buttons[2]),
                                   ],
                                 );
-                              }
-                            ),
-                          ] else if (_getButtonLabel() != '') ...[
-                            LayoutBuilder(
-                              builder: (context, constraints) {
-                                final useVertical = constraints.maxWidth < 550;
-                                
-                                if (_currentOrder.status.toUpperCase() == 'BILLED') {
-                                  final buttons = [
-                                    _actionButton(context, 'Proceed to Payment',
-                                        Icons.payment, AppColors.rubyDark, () {
-                                      _showPaymentDialog(context);
-                                    }),
-                                    _actionButton(context, 'Print Receipt',
-                                        Icons.print, const Color(0xFF1E293B), () {
-                                      final restaurantName = context
-                                              .read<RestaurantProvider>()
-                                              .restaurant
-                                              ?.name ??
-                                          'RESTAURANT';
-                                      _handlePrint(context, restaurantName);
-                                    }),
-                                    _actionButton(
-                                        context,
-                                        'Download Receipt',
-                                        Icons.file_download,
-                                        const Color(0xFF0284C7), () {
-                                      final restaurantName = context
-                                              .read<RestaurantProvider>()
-                                              .restaurant
-                                              ?.name ??
-                                          'RESTAURANT';
-                                      _handleDownload(context, restaurantName);
-                                    }),
-                                  ];
-                                  
-                                  if (useVertical) {
-                                    return Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        buttons[0],
-                                        const SizedBox(height: 12),
-                                        buttons[1],
-                                        const SizedBox(height: 12),
-                                        buttons[2],
-                                      ],
-                                    );
-                                  }
-                                  return Row(
-                                    children: [
-                                      Expanded(child: buttons[0]),
-                                      const SizedBox(width: 12),
-                                      Expanded(child: buttons[1]),
-                                      const SizedBox(width: 12),
-                                      Expanded(child: buttons[2]),
-                                    ],
-                                  );
-                                } else {
-                                  return SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton.icon(
-                                      onPressed: _isUpdating
-                                          ? null
-                                          : () {
-                                              final next = _getNextStatus();
-                                              if (next != null) {
-                                                _handleStatusUpdate(next);
-                                              }
-                                            },
-                                      icon: _isUpdating
-                                          ? const SizedBox(
-                                              width: 16,
-                                              height: 16,
-                                              child: CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  color: Colors.white))
-                                          : Icon(_getButtonIcon(), size: 20),
-                                      label: Text(
-                                          _isUpdating
-                                              ? 'Updating...'
-                                              : _getButtonLabel(),
-                                          style: GoogleFonts.inter(
-                                              fontWeight: FontWeight.bold,
-                                              letterSpacing: 0.5)),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: _getButtonColor(),
-                                        foregroundColor: Colors.white,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 20),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12)),
-                                        elevation: 0,
-                                      ),
+                              } else {
+                                return SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton.icon(
+                                    onPressed: _isUpdating
+                                        ? null
+                                        : () {
+                                            final next = _getNextStatus();
+                                            if (next != null) {
+                                              _handleStatusUpdate(next);
+                                            }
+                                          },
+                                    icon: _isUpdating
+                                        ? const SizedBox(
+                                            width: 16,
+                                            height: 16,
+                                            child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                color: Colors.white))
+                                        : Icon(_getButtonIcon(), size: 20),
+                                    label: Text(
+                                        _isUpdating
+                                            ? 'Updating...'
+                                            : _getButtonLabel(),
+                                        style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 0.5)),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: _getButtonColor(),
+                                      foregroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 20),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      elevation: 0,
                                     ),
-                                  );
-                                }
+                                  ),
+                                );
                               }
-                            ),
+                            }),
                           ],
                         ],
                       ),
@@ -1715,49 +1812,47 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                     const SizedBox(height: 48),
 
                     // Bottom Info
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        final useVertical = constraints.maxWidth < 500;
-                        final card = _infoBox(
-                          Icons.credit_card,
-                          'Payment Information',
-                          [
-                            'Method: ${_currentOrder.paymentMethod ?? "N/A"}',
-                            'Status: ${_currentOrder.paymentStatus.toUpperCase()}',
-                          ],
-                          const Color(0xFFEFF6FF),
-                          const Color(0xFF1E40AF),
-                        );
-                        final time = _infoBox(
-                          Icons.schedule,
-                          'Timestamps',
-                          [
-                            'Created: ${dateFormat.format(DateTime.tryParse(_currentOrder.createdAt) ?? DateTime.now())}',
-                            'Updated: ${_currentOrder.updatedAt != null ? dateFormat.format(DateTime.tryParse(_currentOrder.updatedAt!) ?? DateTime.now()) : "N/A"}',
-                          ],
-                          const Color(0xFFFAF5FF),
-                          const Color(0xFF6B21A8),
-                        );
-                        
-                        if (useVertical) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              card,
-                              const SizedBox(height: 16),
-                              time,
-                            ],
-                          );
-                        }
-                        return Row(
+                    LayoutBuilder(builder: (context, constraints) {
+                      final useVertical = constraints.maxWidth < 500;
+                      final card = _infoBox(
+                        Icons.credit_card,
+                        'Payment Information',
+                        [
+                          'Method: ${_currentOrder.paymentMethod ?? "N/A"}',
+                          'Status: ${_currentOrder.paymentStatus.toUpperCase()}',
+                        ],
+                        const Color(0xFFEFF6FF),
+                        const Color(0xFF1E40AF),
+                      );
+                      final time = _infoBox(
+                        Icons.schedule,
+                        'Timestamps',
+                        [
+                          'Created: ${dateFormat.format(DateTime.tryParse(_currentOrder.createdAt) ?? DateTime.now())}',
+                          'Updated: ${_currentOrder.updatedAt != null ? dateFormat.format(DateTime.tryParse(_currentOrder.updatedAt!) ?? DateTime.now()) : "N/A"}',
+                        ],
+                        const Color(0xFFFAF5FF),
+                        const Color(0xFF6B21A8),
+                      );
+
+                      if (useVertical) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Expanded(child: card),
-                            const SizedBox(width: 24),
-                            Expanded(child: time),
+                            card,
+                            const SizedBox(height: 16),
+                            time,
                           ],
                         );
                       }
-                    ),
+                      return Row(
+                        children: [
+                          Expanded(child: card),
+                          const SizedBox(width: 24),
+                          Expanded(child: time),
+                        ],
+                      );
+                    }),
                   ],
                 ),
               ),
@@ -1836,14 +1931,12 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
     return ElevatedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon, size: 20),
-      label:
-          Text(label, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+      label: Text(label, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 20),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 0,
       ),
     );
@@ -1988,7 +2081,7 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                       _pdfPriceRow(
                           'Tax (5%)',
                           (_currentOrder.calculatedSubtotal * 0.05)
-                                  .toStringAsFixed(0)),
+                              .toStringAsFixed(0)),
                       pw.Divider(color: PdfColors.grey400),
                       _pdfPriceRow(
                           'TOTAL',
@@ -2114,9 +2207,7 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                 color: badgeCol, borderRadius: BorderRadius.circular(100)),
             child: Text(value,
                 style: GoogleFonts.inter(
-                    color: textCol,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold)),
+                    color: textCol, fontSize: 11, fontWeight: FontWeight.bold)),
           )
         else
           Text(value,

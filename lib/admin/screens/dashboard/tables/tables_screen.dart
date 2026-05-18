@@ -325,7 +325,8 @@ class _TablesScreenState extends State<TablesScreen> {
                 _buildHeader(isMobile),
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 40, vertical: 24),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: isMobile ? 16 : 40, vertical: 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -350,79 +351,107 @@ class _TablesScreenState extends State<TablesScreen> {
   Widget _buildHeader(bool isMobile) {
     return Container(
       color: AppColors.rubyDark,
-      padding: EdgeInsets.fromLTRB(isMobile ? 20 : 40, isMobile ? 24 : 40, isMobile ? 20 : 40, 32),
+      padding: EdgeInsets.fromLTRB(
+          isMobile ? 20 : 40, isMobile ? 24 : 40, isMobile ? 20 : 40, 32),
       child: SafeArea(
         bottom: false,
-        child: isMobile 
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                OutlinedButton.icon(
-                  onPressed: () => context.go('/admin/dashboard'),
-                  icon: const Icon(Icons.arrow_back, color: Colors.white, size: 16),
-                  label: Text('Back', style: GoogleFonts.inter(color: Colors.white, fontSize: 14)),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white30),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text('Tables Management',
-                    style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                Text('Manage restaurant tables and QR codes',
-                    style: GoogleFonts.inter(color: AppColors.gold, fontSize: 13, fontWeight: FontWeight.w500)),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: _showAddDialog,
-                    icon: const Icon(Icons.add, size: 18),
-                    label: const Text('Add New Table'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.gold,
-                      foregroundColor: AppColors.rubyDark,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: isMobile
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: () => context.go('/admin/dashboard'),
+                    icon: const Icon(Icons.arrow_back,
+                        color: Colors.white, size: 16),
+                    label: Text('Back',
+                        style: GoogleFonts.inter(
+                            color: Colors.white, fontSize: 14)),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.white30),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                     ),
                   ),
-                ),
-              ],
-            )
-          : Row(
-              children: [
-                OutlinedButton.icon(
-                  onPressed: () => context.go('/admin/dashboard'),
-                  icon: const Icon(Icons.arrow_back, color: Colors.white, size: 16),
-                  label: Text('Back to Dashboard', style: GoogleFonts.inter(color: Colors.white, fontSize: 14)),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white30),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  const SizedBox(height: 20),
+                  Text('Tables Management',
+                      style: GoogleFonts.playfairDisplay(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 4),
+                  Text('Manage restaurant tables and QR codes',
+                      style: GoogleFonts.inter(
+                          color: AppColors.gold,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500)),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: _showAddDialog,
+                      icon: const Icon(Icons.add, size: 18),
+                      label: const Text('Add New Table'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.gold,
+                        foregroundColor: AppColors.rubyDark,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text('Tables Management',
-                          style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 4),
-                      Text('Manage restaurant tables and QR codes',
-                          style: GoogleFonts.inter(color: AppColors.gold, fontSize: 14, fontWeight: FontWeight.w500)),
-                    ],
+                ],
+              )
+            : Row(
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: () => context.go('/admin/dashboard'),
+                    icon: const Icon(Icons.arrow_back,
+                        color: Colors.white, size: 16),
+                    label: Text('Back to Dashboard',
+                        style: GoogleFonts.inter(
+                            color: Colors.white, fontSize: 14)),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.white30),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                    ),
                   ),
-                ),
-                ElevatedButton.icon(
-                  onPressed: _showAddDialog,
-                  icon: const Icon(Icons.add, color: AppColors.rubyDark, size: 18),
-                  label: Text('Add Table', style: GoogleFonts.inter(color: AppColors.rubyDark, fontWeight: FontWeight.bold)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.gold,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text('Tables Management',
+                            style: GoogleFonts.playfairDisplay(
+                                color: Colors.white,
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 4),
+                        Text('Manage restaurant tables and QR codes',
+                            style: GoogleFonts.inter(
+                                color: AppColors.gold,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500)),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
+                  ElevatedButton.icon(
+                    onPressed: _showAddDialog,
+                    icon: const Icon(Icons.add,
+                        color: AppColors.rubyDark, size: 18),
+                    label: Text('Add Table',
+                        style: GoogleFonts.inter(
+                            color: AppColors.rubyDark,
+                            fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.gold,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 16),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }
@@ -444,7 +473,8 @@ class _TablesScreenState extends State<TablesScreen> {
             const SizedBox(width: 12),
             _buildStatCard('Empty', empty.toString(), Colors.green, isMobile),
             const SizedBox(width: 12),
-            _buildStatCard('Occupied', occupied.toString(), Colors.red, isMobile),
+            _buildStatCard(
+                'Occupied', occupied.toString(), Colors.red, isMobile),
           ],
         ),
       );
@@ -463,21 +493,34 @@ class _TablesScreenState extends State<TablesScreen> {
     );
   }
 
-  Widget _buildStatCard(String label, String value, Color color, bool isMobile) {
+  Widget _buildStatCard(
+      String label, String value, Color color, bool isMobile) {
     Widget cardContent = Container(
       padding: EdgeInsets.all(isMobile ? 16 : 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+        border:
+            Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: isMobile ? 11 : 13)),
+          Text(label,
+              style: GoogleFonts.inter(
+                  color: AppColors.textMuted, fontSize: isMobile ? 11 : 13)),
           const SizedBox(height: 8),
-          Text(value, style: GoogleFonts.inter(color: color, fontSize: isMobile ? 20 : 24, fontWeight: FontWeight.bold)),
+          Text(value,
+              style: GoogleFonts.inter(
+                  color: color,
+                  fontSize: isMobile ? 20 : 24,
+                  fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -500,8 +543,14 @@ class _TablesScreenState extends State<TablesScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+        border:
+            Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -517,68 +566,86 @@ class _TablesScreenState extends State<TablesScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          isMobile 
-            ? Column(
-                children: [
-                  TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search...',
-                      prefixIcon: const Icon(Icons.search, size: 20),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.1))),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildDropdown(_statusFilter, ['All Status', 'Occupied', 'Empty'], (v) {
-                          setState(() {
-                            _statusFilter = v!;
-                            _applyFilters();
-                          });
-                        }),
-                      ),
-                    ],
-                  ),
-                ],
-              )
-            : Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: TextField(
+          isMobile
+              ? Column(
+                  children: [
+                    TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        hintText: 'Search by table number...',
+                        hintText: 'Search...',
                         prefixIcon: const Icon(Icons.search, size: 20),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.2))),
-                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.2))),
-                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.5))),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(
+                                color: AppColors.rubyDark.withOpacity(0.1))),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    flex: 2,
-                    child: _buildDropdown(_statusFilter, ['All Status', 'Occupied', 'Empty'], (v) {
-                      setState(() {
-                        _statusFilter = v!;
-                        _applyFilters();
-                      });
-                    }),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    flex: 2,
-                    child: _buildDropdown(_tableTypeFilter, ['All Tables'], (v) {
-                      setState(() => _tableTypeFilter = v!);
-                    }),
-                  ),
-                ],
-              ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildDropdown(_statusFilter,
+                              ['All Status', 'Occupied', 'Empty'], (v) {
+                            setState(() {
+                              _statusFilter = v!;
+                              _applyFilters();
+                            });
+                          }),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              : Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Search by table number...',
+                          prefixIcon: const Icon(Icons.search, size: 20),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                  color: AppColors.rubyDark.withOpacity(0.2))),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                  color: AppColors.rubyDark.withOpacity(0.2))),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                  color: AppColors.rubyDark.withOpacity(0.5))),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      flex: 2,
+                      child: _buildDropdown(
+                          _statusFilter, ['All Status', 'Occupied', 'Empty'],
+                          (v) {
+                        setState(() {
+                          _statusFilter = v!;
+                          _applyFilters();
+                        });
+                      }),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      flex: 2,
+                      child:
+                          _buildDropdown(_tableTypeFilter, ['All Tables'], (v) {
+                        setState(() => _tableTypeFilter = v!);
+                      }),
+                    ),
+                  ],
+                ),
         ],
       ),
     );
@@ -615,7 +682,12 @@ class _TablesScreenState extends State<TablesScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4))
+          ],
         ),
         child: const Center(child: Text('No tables found')),
       );
@@ -640,8 +712,14 @@ class _TablesScreenState extends State<TablesScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+        border:
+            Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
+        ],
       ),
       child: Column(
         children: [
@@ -683,7 +761,9 @@ class _TablesScreenState extends State<TablesScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 6)],
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 6)
+        ],
         border: Border.all(color: AppColors.rubyDark.withOpacity(0.05)),
       ),
       child: Column(
@@ -691,7 +771,9 @@ class _TablesScreenState extends State<TablesScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(t.tableNumber, style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(t.tableNumber,
+                  style: GoogleFonts.inter(
+                      fontSize: 18, fontWeight: FontWeight.bold)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -700,7 +782,12 @@ class _TablesScreenState extends State<TablesScreen> {
                 ),
                 child: Text(
                   isOccupied ? 'OCC' : 'EMP',
-                  style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.bold, color: isOccupied ? Colors.red.shade800 : Colors.green.shade800),
+                  style: GoogleFonts.inter(
+                      fontSize: 9,
+                      fontWeight: FontWeight.bold,
+                      color: isOccupied
+                          ? Colors.red.shade800
+                          : Colors.green.shade800),
                 ),
               ),
             ],
@@ -712,7 +799,8 @@ class _TablesScreenState extends State<TablesScreen> {
               data: qrData,
               version: QrVersions.auto,
               size: 60,
-              eyeStyle: const QrEyeStyle(eyeShape: QrEyeShape.square, color: AppColors.rubyDark),
+              eyeStyle: const QrEyeStyle(
+                  eyeShape: QrEyeShape.square, color: AppColors.rubyDark),
             ),
           ),
           const Spacer(),
@@ -730,7 +818,8 @@ class _TablesScreenState extends State<TablesScreen> {
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 onPressed: () => _deleteTable(t.id),
-                icon: const Icon(Icons.delete_outline, size: 18, color: Colors.red),
+                icon: const Icon(Icons.delete_outline,
+                    size: 18, color: Colors.red),
               ),
               const SizedBox(width: 8),
               Transform.scale(
@@ -831,8 +920,8 @@ class _TablesScreenState extends State<TablesScreen> {
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     color: t.status == 'OCCUPIED'
-                      ? Colors.red.shade800
-                      : Colors.green.shade800,
+                        ? Colors.red.shade800
+                        : Colors.green.shade800,
                   ),
                 ),
               ),

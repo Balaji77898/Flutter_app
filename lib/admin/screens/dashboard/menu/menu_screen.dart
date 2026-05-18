@@ -237,7 +237,8 @@ class _MenuScreenState extends State<MenuScreen> {
     final isMobile = MediaQuery.of(context).size.width < 800;
     return Container(
       color: AppColors.rubyDark,
-      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 32, vertical: 16),
+      padding:
+          EdgeInsets.symmetric(horizontal: isMobile ? 16 : 32, vertical: 16),
       child: SafeArea(
         bottom: false,
         child: Column(
@@ -251,15 +252,14 @@ class _MenuScreenState extends State<MenuScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.gold, size: 14),
+                    const Icon(Icons.arrow_back_ios_new_rounded,
+                        color: AppColors.gold, size: 14),
                     const SizedBox(width: 8),
-                    Text('Back', 
-                      style: GoogleFonts.inter(
-                        color: AppColors.gold, 
-                        fontSize: 14, 
-                        fontWeight: FontWeight.w600
-                      )
-                    ),
+                    Text('Back',
+                        style: GoogleFonts.inter(
+                            color: AppColors.gold,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),
@@ -269,7 +269,11 @@ class _MenuScreenState extends State<MenuScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Menu Management', style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
+                  Text('Menu Management',
+                      style: GoogleFonts.playfairDisplay(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -308,9 +312,15 @@ class _MenuScreenState extends State<MenuScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Menu Management', style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold)),
+                        Text('Menu Management',
+                            style: GoogleFonts.playfairDisplay(
+                                color: Colors.white,
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold)),
                         const SizedBox(height: 4),
-                        Text('Manage your restaurant menu items and categories', style: GoogleFonts.inter(color: Colors.white70, fontSize: 14)),
+                        Text('Manage your restaurant menu items and categories',
+                            style: GoogleFonts.inter(
+                                color: Colors.white70, fontSize: 14)),
                       ],
                     ),
                   ),
@@ -318,12 +328,19 @@ class _MenuScreenState extends State<MenuScreen> {
                     children: [
                       OutlinedButton.icon(
                         onPressed: () => _showManualOrderForm(),
-                        icon: const Icon(Icons.receipt_long, color: Colors.white),
-                        label: Text('Create Order', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.white)),
+                        icon:
+                            const Icon(Icons.receipt_long, color: Colors.white),
+                        label: Text('Create Order',
+                            style: GoogleFonts.inter(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: AppColors.gold, width: 2),
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          side:
+                              const BorderSide(color: AppColors.gold, width: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -331,22 +348,32 @@ class _MenuScreenState extends State<MenuScreen> {
                         onPressed: () => _showTodaySpecialDialog(),
                         icon: const Text('⭐', style: TextStyle(fontSize: 16)),
                         label: Text("Today's Special",
-                            style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.white)),
+                            style: GoogleFonts.inter(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Colors.white54, width: 1.5),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          side: const BorderSide(
+                              color: Colors.white54, width: 1.5),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
                         ),
                       ),
                       const SizedBox(width: 12),
                       ElevatedButton.icon(
                         onPressed: () => _showItemForm(),
                         icon: const Icon(Icons.add, color: AppColors.rubyDark),
-                        label: Text('Add Menu Item', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: AppColors.rubyDark)),
+                        label: Text('Add Menu Item',
+                            style: GoogleFonts.inter(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.rubyDark)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.gold,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
                         ),
                       ),
                     ],
@@ -361,18 +388,23 @@ class _MenuScreenState extends State<MenuScreen> {
 
   Widget _buildSidebar() {
     final isMobile = MediaQuery.of(context).size.width < 800;
-    
+
     if (isMobile) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Text('Categories', style: GoogleFonts.playfairDisplay(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.rubyDark)),
+              Text('Categories',
+                  style: GoogleFonts.playfairDisplay(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.rubyDark)),
               const Spacer(),
               IconButton(
                 onPressed: () => _showCategoryForm(),
-                icon: const Icon(Icons.add_circle_outline, color: AppColors.rubyDark),
+                icon: const Icon(Icons.add_circle_outline,
+                    color: AppColors.rubyDark),
               ),
             ],
           ),
@@ -389,14 +421,15 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
                 const SizedBox(width: 8),
                 ..._categories.map((cat) => Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: _CategoryPill(
-                    label: cat.name,
-                    isSelected: _selectedCategoryId == cat.id,
-                    onTap: () => setState(() => _selectedCategoryId = cat.id),
-                    onLongPress: () => _showCategoryForm(cat),
-                  ),
-                )),
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: _CategoryPill(
+                        label: cat.name,
+                        isSelected: _selectedCategoryId == cat.id,
+                        onTap: () =>
+                            setState(() => _selectedCategoryId = cat.id),
+                        onLongPress: () => _showCategoryForm(cat),
+                      ),
+                    )),
               ],
             ),
           ),
@@ -545,7 +578,7 @@ class _MenuScreenState extends State<MenuScreen> {
           crossAxisCount: cols,
           mainAxisSpacing: c.maxWidth > 600 ? 32 : 16,
           crossAxisSpacing: c.maxWidth > 600 ? 32 : 16,
-          childAspectRatio: c.maxWidth > 600 ? 0.75 : 0.85, 
+          childAspectRatio: c.maxWidth > 600 ? 0.75 : 0.85,
         ),
         itemCount: items.length,
         itemBuilder: (ctx, i) => _buildItemCard(items[i], i)
@@ -907,6 +940,7 @@ class _HoverableCardState extends State<HoverableCard> {
     );
   }
 }
+
 class _HeaderButton extends StatelessWidget {
   final VoidCallback onTap;
   final IconData icon;
@@ -938,7 +972,8 @@ class _HeaderButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 16, color: isPrimary ? AppColors.rubyDark : Colors.white),
+            Icon(icon,
+                size: 16, color: isPrimary ? AppColors.rubyDark : Colors.white),
             const SizedBox(width: 8),
             Text(
               label,
@@ -980,16 +1015,20 @@ class _CategoryPill extends StatelessWidget {
           color: isSelected ? AppColors.rubyDark : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? AppColors.rubyDark : AppColors.rubyDark.withOpacity(0.1),
+            color: isSelected
+                ? AppColors.rubyDark
+                : AppColors.rubyDark.withOpacity(0.1),
             width: 1,
           ),
-          boxShadow: isSelected ? [
-            BoxShadow(
-              color: AppColors.rubyDark.withOpacity(0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            )
-          ] : null,
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: AppColors.rubyDark.withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  )
+                ]
+              : null,
         ),
         child: Center(
           child: Text(

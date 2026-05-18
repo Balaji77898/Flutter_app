@@ -72,10 +72,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       _navStartPos = startPos;
       _isNavigating = true;
     });
-    
+
     // Wait for the animation to complete (approx 600ms)
     await Future.delayed(const Duration(milliseconds: 650));
-    
+
     if (mounted) {
       setState(() => _isNavigating = false);
       context.go(route);
@@ -149,7 +149,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     ),
                   ),
                 ),
-                
+
                 // Dashboard Cards
                 SingleChildScrollView(
                   padding: EdgeInsets.symmetric(
@@ -161,8 +161,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       constraints: const BoxConstraints(maxWidth: 1200),
                       child: LayoutBuilder(builder: (ctx, constraints) {
                         int cols = 1;
-                        double aspect = 2.8; // List tile aspect for single column mobile
-                        
+                        double aspect =
+                            2.8; // List tile aspect for single column mobile
+
                         if (constraints.maxWidth > 900) {
                           cols = 4;
                           aspect = 1.0;
@@ -170,11 +171,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           cols = 2;
                           aspect = 1.1;
                         }
-                        
+
                         return GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: cols,
                             crossAxisSpacing: isMobile ? 16 : 24,
                             mainAxisSpacing: isMobile ? 16 : 24,
@@ -185,7 +187,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                             option: _dashboardOptions[i],
                             index: i,
                             isMobile: isMobile,
-                            onTap: (details) => _triggerNavAnimation(details.globalPosition, _dashboardOptions[i].route),
+                            onTap: (details) => _triggerNavAnimation(
+                                details.globalPosition,
+                                _dashboardOptions[i].route),
                           ),
                         );
                       }),
@@ -197,8 +201,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   const LinearProgressIndicator(color: AppColors.rubyRed),
 
                 // Royal Navigation Pulse
-                if (_isNavigating)
-                  _NavigationPulse(startPos: _navStartPos),
+                if (_isNavigating) _NavigationPulse(startPos: _navStartPos),
               ],
             ),
           ),
@@ -207,7 +210,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     ).animate().fadeIn();
   }
 
-  Widget _buildHeader(BuildContext context, AuthProvider auth, dynamic restaurant, bool isMobile) {
+  Widget _buildHeader(BuildContext context, AuthProvider auth,
+      dynamic restaurant, bool isMobile) {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -215,154 +219,171 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         border: Border(bottom: BorderSide(color: AppColors.gold, width: 4)),
       ),
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 20 : 40, 
-        vertical: isMobile ? 16 : 24
-      ),
+          horizontal: isMobile ? 20 : 40, vertical: isMobile ? 16 : 24),
       child: SafeArea(
         bottom: false,
-        child: isMobile 
-          ? Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _StatusBadge(isActive: restaurant?.isActive ?? true),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _NotificationButton(),
-                        const SizedBox(width: 12),
-                        _ProfileChip(email: auth.userEmail ?? 'admin@restaurant.com'),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  restaurant?.name ?? 'Restaurant Admin',
-                  style: GoogleFonts.playfairDisplay(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 1.0,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  (restaurant?.restaurantType ?? 'CAFE').toUpperCase(),
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    color: AppColors.gold,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  height: 44,
-                  child: ElevatedButton.icon(
-                    onPressed: () async {
-                      await auth.logout();
-                      if (context.mounted) {
-                        await context.read<StaffAuthProvider>().logout();
-                      }
-                      if (context.mounted) {
-                        context.read<NotificationProvider>().stopPolling();
-                        context.go('/login');
-                      }
-                    },
-                    icon: const Icon(Icons.logout_rounded, size: 18, color: Colors.white),
-                    label: Text('Logout', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white.withValues(alpha: 0.1),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                  ),
-                ),
-              ],
-            )
-          : Stack(
-              alignment: Alignment.center,
-              children: [
-                // Centered Brand Info
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      restaurant?.name ?? 'Restaurant Admin',
-                      style: GoogleFonts.playfairDisplay(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          (restaurant?.restaurantType ?? 'CAFE').toUpperCase(),
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: AppColors.gold,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 2,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        _StatusBadge(isActive: restaurant?.isActive ?? true),
-                      ],
-                    ),
-                  ],
-                ),
-                
-                // Right Side Profile & Logout (Stacked)
-                Positioned(
-                  right: 0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+        child: isMobile
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      _StatusBadge(isActive: restaurant?.isActive ?? true),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           _NotificationButton(),
-                          const SizedBox(width: 16),
-                          _ProfileChip(email: auth.userEmail ?? 'admin@restaurant.com'),
+                          const SizedBox(width: 12),
+                          _ProfileChip(
+                              email: auth.userEmail ?? 'admin@restaurant.com'),
                         ],
-                      ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        height: 40,
-                        child: ElevatedButton.icon(
-                          onPressed: () async {
-                            await auth.logout();
-                            if (context.mounted) {
-                              await context.read<StaffAuthProvider>().logout();
-                            }
-                            if (context.mounted) {
-                              context.read<NotificationProvider>().stopPolling();
-                              context.go('/login');
-                            }
-                          },
-                          icon: const Icon(Icons.logout_rounded, size: 16, color: Colors.white),
-                          label: Text('Logout', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white.withValues(alpha: 0.1),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
+                  const SizedBox(height: 16),
+                  Text(
+                    restaurant?.name ?? 'Restaurant Admin',
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 1.0,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    (restaurant?.restaurantType ?? 'CAFE').toUpperCase(),
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      color: AppColors.gold,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 44,
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        await auth.logout();
+                        if (context.mounted) {
+                          await context.read<StaffAuthProvider>().logout();
+                        }
+                        if (context.mounted) {
+                          context.read<NotificationProvider>().stopPolling();
+                          context.go('/login');
+                        }
+                      },
+                      icon: const Icon(Icons.logout_rounded,
+                          size: 18, color: Colors.white),
+                      label: Text('Logout',
+                          style: GoogleFonts.inter(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white.withValues(alpha: 0.1),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Centered Brand Info
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        restaurant?.name ?? 'Restaurant Admin',
+                        style: GoogleFonts.playfairDisplay(
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            (restaurant?.restaurantType ?? 'CAFE')
+                                .toUpperCase(),
+                            style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: AppColors.gold,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          _StatusBadge(isActive: restaurant?.isActive ?? true),
+                        ],
+                      ),
+                    ],
+                  ),
+
+                  // Right Side Profile & Logout (Stacked)
+                  Positioned(
+                    right: 0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _NotificationButton(),
+                            const SizedBox(width: 16),
+                            _ProfileChip(
+                                email:
+                                    auth.userEmail ?? 'admin@restaurant.com'),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          height: 40,
+                          child: ElevatedButton.icon(
+                            onPressed: () async {
+                              await auth.logout();
+                              if (context.mounted) {
+                                await context
+                                    .read<StaffAuthProvider>()
+                                    .logout();
+                              }
+                              if (context.mounted) {
+                                context
+                                    .read<NotificationProvider>()
+                                    .stopPolling();
+                                context.go('/login');
+                              }
+                            },
+                            icon: const Icon(Icons.logout_rounded,
+                                size: 16, color: Colors.white),
+                            label: Text('Logout',
+                                style: GoogleFonts.inter(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Colors.white.withValues(alpha: 0.1),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }
@@ -409,7 +430,8 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.rubyDark.withValues(alpha: 0.12), // Persistent maroon shadow
+                color: AppColors.rubyDark
+                    .withValues(alpha: 0.12), // Persistent maroon shadow
                 blurRadius: _isHovered ? 30 : 20,
                 offset: Offset(0, _isHovered ? 15 : 10),
               )
@@ -422,18 +444,17 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
                 width: widget.isMobile ? 56 : 72,
                 height: widget.isMobile ? 56 : 72,
                 decoration: BoxDecoration(
-                  color: _isHovered 
-                      ? AppColors.rubyRed 
+                  color: _isHovered
+                      ? AppColors.rubyRed
                       : AppColors.rubyDark.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
-                  widget.option.icon, 
-                  color: _isHovered ? Colors.white : AppColors.rubyDark, 
+                  widget.option.icon,
+                  color: _isHovered ? Colors.white : AppColors.rubyDark,
                   size: widget.isMobile ? 24 : 32,
                 ),
               ),
-
               const SizedBox(width: 20),
               Expanded(
                 child: Column(
@@ -463,10 +484,14 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 24),
+              const Icon(Icons.chevron_right_rounded,
+                  color: AppColors.gold, size: 24),
             ],
           ),
-        ).animate().fadeIn(delay: (widget.index * 100).ms).slideX(begin: 0.1, curve: Curves.easeOutCirc),
+        )
+            .animate()
+            .fadeIn(delay: (widget.index * 100).ms)
+            .slideX(begin: 0.1, curve: Curves.easeOutCirc),
       ),
     );
   }
@@ -475,7 +500,11 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
 class _DashOption {
   final String title, description, route;
   final IconData icon;
-  const _DashOption({required this.title, required this.description, required this.icon, required this.route});
+  const _DashOption(
+      {required this.title,
+      required this.description,
+      required this.icon,
+      required this.route});
 }
 
 class _StatusBadge extends StatelessWidget {
@@ -496,7 +525,8 @@ class _StatusBadge extends StatelessWidget {
           Container(
             width: 8,
             height: 8,
-            decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle),
+            decoration: const BoxDecoration(
+                color: Colors.green, shape: BoxShape.circle),
           ),
           const SizedBox(width: 8),
           Text(
@@ -537,25 +567,35 @@ class _ProfileChipState extends State<_ProfileChip> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: _isHovered ? Colors.white.withValues(alpha: 0.15) : Colors.white.withValues(alpha: 0.08),
+            color: _isHovered
+                ? Colors.white.withValues(alpha: 0.15)
+                : Colors.white.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(100),
-            border: Border.all(color: _isHovered ? AppColors.gold.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.1)),
-            boxShadow: _isHovered ? [
-              BoxShadow(color: AppColors.gold.withValues(alpha: 0.2), blurRadius: 12, spreadRadius: 2)
-            ] : null,
+            border: Border.all(
+                color: _isHovered
+                    ? AppColors.gold.withValues(alpha: 0.5)
+                    : Colors.white.withValues(alpha: 0.1)),
+            boxShadow: _isHovered
+                ? [
+                    BoxShadow(
+                        color: AppColors.gold.withValues(alpha: 0.2),
+                        blurRadius: 12,
+                        spreadRadius: 2)
+                  ]
+                : null,
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.person_pin_rounded, color: _isHovered ? Colors.white : AppColors.gold, size: 20),
+              Icon(Icons.person_pin_rounded,
+                  color: _isHovered ? Colors.white : AppColors.gold, size: 20),
               const SizedBox(width: 8),
               Text(
                 widget.email,
                 style: GoogleFonts.inter(
-                  color: Colors.white, 
-                  fontSize: 13, 
-                  fontWeight: _isHovered ? FontWeight.bold : FontWeight.w600
-                ),
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: _isHovered ? FontWeight.bold : FontWeight.w600),
               ),
             ],
           ),
@@ -583,14 +623,16 @@ class _NavigationPulse extends StatelessWidget {
               // Convert global to local (approximate since we're in a fill Stack)
               final x = startPos.dx;
               final y = startPos.dy - 100; // Account for header height approx
-              
+
               return Stack(
                 children: [
                   // Trail Particles
                   ...List.generate(5, (i) {
-                    final particleProgress = (value - (i * 0.1)).clamp(0.0, 1.0);
-                    if (particleProgress <= 0 || particleProgress >= 0.8) return const SizedBox();
-                    
+                    final particleProgress =
+                        (value - (i * 0.1)).clamp(0.0, 1.0);
+                    if (particleProgress <= 0 || particleProgress >= 0.8)
+                      return const SizedBox();
+
                     return Positioned(
                       left: x + (particleProgress * 150),
                       top: y - (particleProgress * 50),
@@ -600,7 +642,8 @@ class _NavigationPulse extends StatelessWidget {
                           scale: 0.5 + (particleProgress * 0.5),
                           child: Transform.rotate(
                             angle: -0.5,
-                            child: const Icon(Icons.navigation_rounded, color: AppColors.gold, size: 20),
+                            child: const Icon(Icons.navigation_rounded,
+                                color: AppColors.gold, size: 20),
                           ),
                         ),
                       ),
@@ -620,7 +663,8 @@ class _NavigationPulse extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.gold.withValues(alpha: 0.3 * (1 - value)),
+                                color: AppColors.gold
+                                    .withValues(alpha: 0.3 * (1 - value)),
                                 blurRadius: 20,
                                 spreadRadius: 5,
                               )
@@ -628,7 +672,8 @@ class _NavigationPulse extends StatelessWidget {
                           ),
                           child: Transform.rotate(
                             angle: -0.5,
-                            child: const Icon(Icons.navigation_rounded, color: AppColors.gold, size: 40),
+                            child: const Icon(Icons.navigation_rounded,
+                                color: AppColors.gold, size: 40),
                           ),
                         ),
                       ),

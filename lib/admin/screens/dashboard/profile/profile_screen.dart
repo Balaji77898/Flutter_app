@@ -86,10 +86,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           Container(
             width: double.infinity,
-            padding: EdgeInsets.fromLTRB(isMobile ? 20 : 40, isMobile ? 32 : 48, isMobile ? 20 : 40, 32),
+            padding: EdgeInsets.fromLTRB(
+                isMobile ? 20 : 40, isMobile ? 32 : 48, isMobile ? 20 : 40, 32),
             decoration: const BoxDecoration(
               color: AppColors.rubyDark,
-              border: Border(bottom: BorderSide(color: AppColors.gold, width: 4)),
+              border:
+                  Border(bottom: BorderSide(color: AppColors.gold, width: 4)),
             ),
             child: Row(
               children: [
@@ -98,7 +100,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   icon: const Icon(Icons.arrow_back, color: AppColors.gold),
                   style: IconButton.styleFrom(
                     backgroundColor: Colors.white.withOpacity(0.1),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -106,11 +109,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Restaurant Profile', 
-                        style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: isMobile ? 24 : 32, fontWeight: FontWeight.bold)),
+                      Text('Restaurant Profile',
+                          style: GoogleFonts.playfairDisplay(
+                              color: Colors.white,
+                              fontSize: isMobile ? 24 : 32,
+                              fontWeight: FontWeight.bold)),
                       const SizedBox(height: 4),
-                      Text('Manage your business identity', 
-                        style: GoogleFonts.inter(color: AppColors.gold, fontSize: isMobile ? 12 : 14, fontWeight: FontWeight.w500)),
+                      Text('Manage your business identity',
+                          style: GoogleFonts.inter(
+                              color: AppColors.gold,
+                              fontSize: isMobile ? 12 : 14,
+                              fontWeight: FontWeight.w500)),
                     ],
                   ),
                 ),
@@ -136,7 +145,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                             // ── Restaurant Details ─────────────────────────────────────
                             Text('Restaurant Details',
-                                style: GoogleFonts.playfairDisplay(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+                                style: GoogleFonts.playfairDisplay(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.textDark)),
                             const SizedBox(height: 16),
                             _buildDetailsGrid(r, isMobile),
 
@@ -147,7 +159,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text('Additional Contacts',
-                                    style: GoogleFonts.playfairDisplay(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+                                    style: GoogleFonts.playfairDisplay(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.textDark)),
                                 if (_isEditing)
                                   TextButton.icon(
                                     onPressed: () => setState(() {
@@ -176,7 +191,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const SizedBox(height: 32),
 
                             // ── Admin info ─────────────────────────────────────────────
-                            Text('Admin Account', style: GoogleFonts.playfairDisplay(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+                            Text('Admin Account',
+                                style: GoogleFonts.playfairDisplay(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.textDark)),
                             const SizedBox(height: 16),
                             _infoCard([
                               _InfoRow(
@@ -443,7 +462,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: GoogleFonts.inter(fontSize: 11, color: AppColors.textMuted, fontWeight: FontWeight.w600)),
+              Text(label,
+                  style: GoogleFonts.inter(
+                      fontSize: 11,
+                      color: AppColors.textMuted,
+                      fontWeight: FontWeight.w600)),
               const SizedBox(height: 4),
               Text(
                 controller.text.isEmpty ? 'Not set' : controller.text,
@@ -477,7 +500,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Text('No additional contacts added.',
-                  style: GoogleFonts.inter(fontSize: 14, color: AppColors.textMuted)),
+                  style: GoogleFonts.inter(
+                      fontSize: 14, color: AppColors.textMuted)),
             )
           else
             ListView.separated(
@@ -498,7 +522,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(contact.value,
-                          style: GoogleFonts.inter(fontSize: 14, color: AppColors.textDark, fontWeight: FontWeight.w500)),
+                          style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: AppColors.textDark,
+                              fontWeight: FontWeight.w500)),
                     ),
                     if (_isEditing)
                       IconButton(
@@ -538,7 +565,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          title: Text('Add New Contact', style: GoogleFonts.playfairDisplay(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+          title: Text('Add New Contact',
+              style: GoogleFonts.playfairDisplay(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -595,7 +626,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                 child: Row(children: [
                   Icon(row.icon, color: AppColors.rubyRed, size: 20),
                   const SizedBox(width: 14),
@@ -632,5 +664,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 class _InfoRow {
   final IconData icon;
   final String label, value;
-  const _InfoRow({required this.icon, required this.label, required this.value});
+  const _InfoRow(
+      {required this.icon, required this.label, required this.value});
 }
