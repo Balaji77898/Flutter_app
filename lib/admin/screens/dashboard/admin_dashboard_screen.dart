@@ -558,14 +558,16 @@ class _ProfileChipState extends State<_ProfileChip> {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
-    
+
     // On mobile, show a truncated version of the email (before the @ and up to 8 chars)
     final displayEmail = isMobile
-        ? (widget.email.contains('@') 
-            ? (widget.email.split('@').first.length > 8 
-                ? '${widget.email.split('@').first.substring(0, 8)}...' 
+        ? (widget.email.contains('@')
+            ? (widget.email.split('@').first.length > 8
+                ? '${widget.email.split('@').first.substring(0, 8)}...'
                 : widget.email.split('@').first)
-            : (widget.email.length > 10 ? '${widget.email.substring(0, 8)}...' : widget.email))
+            : (widget.email.length > 10
+                ? '${widget.email.substring(0, 8)}...'
+                : widget.email))
         : widget.email;
 
     return MouseRegion(
@@ -776,127 +778,127 @@ class _NotificationButtonState extends State<_NotificationButton> {
           child: Container(
             width: isMobile ? screenWidth - 32 : 400,
             constraints: const BoxConstraints(maxHeight: 500, maxWidth: 400),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 40,
-                  offset: const Offset(0, 10))
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
-                child: Row(
-                  children: [
-                    const Icon(Icons.notifications_outlined,
-                        color: AppColors.rubyRed, size: 20),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Notifications',
-                      style: GoogleFonts.playfairDisplay(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.rubyDark,
-                      ),
-                    ),
-                    const Spacer(),
-                    if (prov.notifications.isNotEmpty)
-                      TextButton(
-                        onPressed: () {
-                          prov.markAllAsRead();
-                          Navigator.pop(context);
-                        },
-                        child: Text('Mark all as read',
-                            style: GoogleFonts.inter(fontSize: 12)),
-                      ),
-                  ],
-                ),
-              ),
-              const Divider(height: 1, color: AppColors.ivoryDark),
-              if (prov.notifications.isEmpty)
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 40,
+                    offset: const Offset(0, 10))
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 60),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+                  child: Row(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: const BoxDecoration(
-                          color: AppColors.ivory,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(Icons.notifications_none_rounded,
-                            color: Colors.grey.shade300, size: 48),
-                      ),
-                      const SizedBox(height: 16),
+                      const Icon(Icons.notifications_outlined,
+                          color: AppColors.rubyRed, size: 20),
+                      const SizedBox(width: 12),
                       Text(
-                        'No new notifications',
-                        style: GoogleFonts.inter(
-                          color: Colors.grey.shade500,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
+                        'Notifications',
+                        style: GoogleFonts.playfairDisplay(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.rubyDark,
                         ),
                       ),
+                      const Spacer(),
+                      if (prov.notifications.isNotEmpty)
+                        TextButton(
+                          onPressed: () {
+                            prov.markAllAsRead();
+                            Navigator.pop(context);
+                          },
+                          child: Text('Mark all as read',
+                              style: GoogleFonts.inter(fontSize: 12)),
+                        ),
                     ],
                   ),
-                )
-              else
-                Flexible(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    itemCount: prov.notifications.length,
-                    itemBuilder: (context, i) {
-                      final n = prov.notifications[i];
-                      return ListTile(
-                        onTap: () {
-                          prov.markAsRead(n.id);
-                          Navigator.pop(context);
-                          context.go(
-                              '/admin/orders?highlightOrderId=${n.orderId}');
-                        },
-                        leading: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: n.isRead
-                                ? AppColors.ivory
-                                : AppColors.rubyRed.withValues(alpha: 0.05),
+                ),
+                const Divider(height: 1, color: AppColors.ivoryDark),
+                if (prov.notifications.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 60),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: const BoxDecoration(
+                            color: AppColors.ivory,
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(
-                            Icons.receipt_long_rounded,
-                            color: n.isRead ? Colors.grey : AppColors.rubyRed,
-                            size: 20,
-                          ),
+                          child: Icon(Icons.notifications_none_rounded,
+                              color: Colors.grey.shade300, size: 48),
                         ),
-                        title: Text(
-                          n.message,
+                        const SizedBox(height: 16),
+                        Text(
+                          'No new notifications',
                           style: GoogleFonts.inter(
-                            fontSize: 13,
-                            fontWeight:
-                                n.isRead ? FontWeight.w500 : FontWeight.bold,
-                            color: AppColors.slate900,
+                            color: Colors.grey.shade500,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        subtitle: _LiveTimeAgo(dt: n.createdAt),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 4),
-                      );
-                    },
+                      ],
+                    ),
+                  )
+                else
+                  Flexible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      itemCount: prov.notifications.length,
+                      itemBuilder: (context, i) {
+                        final n = prov.notifications[i];
+                        return ListTile(
+                          onTap: () {
+                            prov.markAsRead(n.id);
+                            Navigator.pop(context);
+                            context.go(
+                                '/admin/orders?highlightOrderId=${n.orderId}');
+                          },
+                          leading: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: n.isRead
+                                  ? AppColors.ivory
+                                  : AppColors.rubyRed.withValues(alpha: 0.05),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.receipt_long_rounded,
+                              color: n.isRead ? Colors.grey : AppColors.rubyRed,
+                              size: 20,
+                            ),
+                          ),
+                          title: Text(
+                            n.message,
+                            style: GoogleFonts.inter(
+                              fontSize: 13,
+                              fontWeight:
+                                  n.isRead ? FontWeight.w500 : FontWeight.bold,
+                              color: AppColors.slate900,
+                            ),
+                          ),
+                          subtitle: _LiveTimeAgo(dt: n.createdAt),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 4),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              const SizedBox(height: 12),
-            ],
+                const SizedBox(height: 12),
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
   }
 }
 
