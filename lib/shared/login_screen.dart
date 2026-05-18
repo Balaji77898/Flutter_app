@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:restaurant_unified_app/core/constants.dart';
 import 'package:restaurant_unified_app/core/auth_provider.dart';
 import 'package:restaurant_unified_app/staff/contexts/auth_provider.dart';
@@ -22,6 +23,27 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
   UserRole _selectedRole = UserRole.admin;
   bool _obscurePassword = true;
   String? _error;
+  String _restaurantName = 'Restaurant Unified';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRestaurantName();
+  }
+
+  Future<void> _loadRestaurantName() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final cached = prefs.getString('cached_restaurant_name');
+      if (cached != null && cached.isNotEmpty) {
+        setState(() {
+          _restaurantName = cached;
+        });
+      }
+    } catch (e) {
+      debugPrint("Error loading cached restaurant name: $e");
+    }
+  }
 
   @override
   void dispose() {
@@ -92,7 +114,7 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Restaurant Unified',
+                  _restaurantName,
                   style: AppTheme.serif(
                     size: 28,
                     weight: FontWeight.bold,
