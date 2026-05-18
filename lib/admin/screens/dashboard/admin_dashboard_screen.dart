@@ -458,21 +458,12 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
             ),
             boxShadow: [
               BoxShadow(
-<<<<<<< HEAD
-                color: AppColors.rubyDark.withValues(
-                  alpha: 0.12,
-                ), // Persistent maroon shadow
-                blurRadius: _isHovered ? 30 : 20,
-                offset: Offset(0, _isHovered ? 15 : 10),
-              ),
-=======
-                color: _isHovered 
-                    ? AppColors.gold.withValues(alpha: 0.2) 
+                color: _isHovered
+                    ? AppColors.gold.withValues(alpha: 0.2)
                     : Colors.black.withValues(alpha: 0.04),
                 blurRadius: _isHovered ? 30 : 15,
                 offset: Offset(0, _isHovered ? 15 : 5),
               )
->>>>>>> a13496d (forgot password fixed)
             ],
           ),
           child: Column(
@@ -484,8 +475,8 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
                 height: widget.isMobile ? 64 : 88,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _isHovered 
-                      ? AppColors.rubyDark 
+                  color: _isHovered
+                      ? AppColors.rubyDark
                       : AppColors.rubyDark.withValues(alpha: 0.06),
                 ),
                 child: Icon(
@@ -500,7 +491,8 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
                 style: GoogleFonts.playfairDisplay(
                   fontSize: widget.isMobile ? 18 : 22,
                   fontWeight: FontWeight.bold,
-                  color: _isHovered ? AppColors.rubyDark : const Color(0xFF1F2937),
+                  color:
+                      _isHovered ? AppColors.rubyDark : const Color(0xFF1F2937),
                   letterSpacing: 0.5,
                 ),
                 child: Text(
@@ -508,12 +500,6 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
                   textAlign: TextAlign.center,
                 ),
               ),
-<<<<<<< HEAD
-              const Icon(
-                Icons.chevron_right_rounded,
-                color: AppColors.gold,
-                size: 24,
-=======
               const SizedBox(height: 12),
               Text(
                 widget.option.description,
@@ -525,7 +511,6 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
                 ),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
->>>>>>> a13496d (forgot password fixed)
               ),
             ],
           ),

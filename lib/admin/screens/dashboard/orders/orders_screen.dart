@@ -1701,65 +1701,59 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                           ),
                         ],
                       ),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          final useVertical = constraints.maxWidth < 600;
-                          final children = [
-                            _summaryItem(
-                              'Order ID',
-                              '#${_currentOrder.id.length > 8 ? _currentOrder.id.substring(0, 8) : _currentOrder.id}',
-                              isBold: true,
-                            ),
-                            _summaryItem(
-                              'Order Type',
-                              _currentOrder.orderType
-                                  .replaceAll('_', ' ')
-                                  .toUpperCase(),
-                              isBold: true,
-                            ),
-                            _summaryItem(
-                              'Status',
-                              _currentOrder.status.toUpperCase(),
-                              isBadge: true,
-                            ),
-                            _summaryItem(
-                              'Payment',
-                              _currentOrder.paymentStatus.toUpperCase(),
-                              isBadge: true,
-                            ),
-                          ];
+                      child: LayoutBuilder(builder: (context, constraints) {
+                        final useVertical = constraints.maxWidth < 600;
+                        final children = [
+                          _summaryItem(
+                            'Order ID',
+                            '#${_currentOrder.id.length > 8 ? _currentOrder.id.substring(0, 8) : _currentOrder.id}',
+                            isBold: true,
+                          ),
+                          _summaryItem(
+                            'Order Type',
+                            _currentOrder.orderType
+                                .replaceAll('_', ' ')
+                                .toUpperCase(),
+                            isBold: true,
+                          ),
+                          _summaryItem(
+                            'Status',
+                            _currentOrder.status.toUpperCase(),
+                            isBadge: true,
+                          ),
+                          _summaryItem(
+                            'Payment',
+                            _currentOrder.paymentStatus.toUpperCase(),
+                            isBadge: true,
+                          ),
+                        ];
 
-                          if (useVertical) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(child: children[0]),
-                                    Expanded(child: children[1]),
-                                  ],
-                                ),
-                                const SizedBox(height: 16),
-                                Row(
-                                  children: [
-                                    Expanded(child: children[2]),
-                                    Expanded(child: children[3]),
-                                  ],
-                                ),
-                              ],
-                            );
-                          }
+                        if (useVertical) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(child: children[0]),
+                                  Expanded(child: children[1]),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                children: [
+                                  Expanded(child: children[2]),
+                                  Expanded(child: children[3]),
+                                ],
+                              ),
+                            ],
+                          );
+                        }
 
-<<<<<<< HEAD
-                          return Row(children: children);
-                        },
-                      ),
-=======
                         return Row(
-                          children: children.map((c) => Expanded(child: c)).toList(),
+                          children:
+                              children.map((c) => Expanded(child: c)).toList(),
                         );
                       }),
->>>>>>> a13496d (forgot password fixed)
                     ),
 
                     const SizedBox(height: 32),
