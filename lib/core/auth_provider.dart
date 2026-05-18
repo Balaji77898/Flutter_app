@@ -68,8 +68,10 @@ class AuthProvider extends ChangeNotifier {
         final prefs = await SharedPreferences.getInstance();
         if (_token != null) await prefs.setString(kTokenKey, _token!);
         await prefs.setString(kRoleKey, role.name);
-        if (_user?.restaurantName != null && _user!.restaurantName!.isNotEmpty) {
-          await prefs.setString('cached_restaurant_name', _user!.restaurantName!);
+        if (_user?.restaurantName != null &&
+            _user!.restaurantName!.isNotEmpty) {
+          await prefs.setString(
+              'cached_restaurant_name', _user!.restaurantName!);
         }
 
         notifyListeners();

@@ -71,9 +71,11 @@ class StaffAuthProvider extends ChangeNotifier {
           if (data is Map<String, dynamic>) {
             _user = StaffUser.fromJson(data);
             _role = _user!.role;
-            if (_user?.restaurantName != null && _user!.restaurantName!.isNotEmpty) {
+            if (_user?.restaurantName != null &&
+                _user!.restaurantName!.isNotEmpty) {
               final prefs = await SharedPreferences.getInstance();
-              await prefs.setString('cached_restaurant_name', _user!.restaurantName!);
+              await prefs.setString(
+                  'cached_restaurant_name', _user!.restaurantName!);
             }
             notifyListeners();
             return; // Success!
