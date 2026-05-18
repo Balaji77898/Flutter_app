@@ -157,12 +157,21 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.receipt_long, color: Colors.white, size: 28),
+                  Icon(Icons.receipt_long, color: Colors.white, size: isDesktop ? 28 : 22),
                   const SizedBox(width: 16),
-                  Text('Create Manual Order', style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
-                  const Spacer(),
+                  Expanded(
+                    child: Text(
+                      'Create Manual Order', 
+                      style: GoogleFonts.playfairDisplay(
+                        color: Colors.white, 
+                        fontSize: isDesktop ? 26 : 18, 
+                        fontWeight: FontWeight.bold
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white70),
+                    icon: const Icon(Icons.close, color: Colors.white70, size: 20),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],

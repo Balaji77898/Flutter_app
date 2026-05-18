@@ -218,83 +218,125 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   Widget _buildCustomHeader() {
+    final isMobile = MediaQuery.of(context).size.width < 800;
     return Container(
       color: AppColors.rubyDark,
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 32, vertical: 16),
       child: SafeArea(
         bottom: false,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: () => context.go('/admin/dashboard'),
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.gold, size: 14),
-                          const SizedBox(width: 8),
-                          Text('Back to Dashboard', 
-                            style: GoogleFonts.inter(
-                              color: AppColors.gold, 
-                              fontSize: 14, 
-                              fontWeight: FontWeight.w600
-                            )
-                          ),
-                        ],
-                      ),
+            InkWell(
+              onTap: () => context.go('/admin/dashboard'),
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.gold, size: 14),
+                    const SizedBox(width: 8),
+                    Text('Back', 
+                      style: GoogleFonts.inter(
+                        color: AppColors.gold, 
+                        fontSize: 14, 
+                        fontWeight: FontWeight.w600
+                      )
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text('Menu Management', style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 4),
-                  Text('Manage your restaurant menu items and categories', style: GoogleFonts.inter(color: Colors.white70, fontSize: 14)),
-                ],
+                  ],
+                ),
               ),
             ),
-            Row(
-              children: [
-                OutlinedButton.icon(
-                  onPressed: () => _showManualOrderForm(),
-                  icon: const Icon(Icons.receipt_long, color: Colors.white),
-                  label: Text('Create Order', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.white)),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: AppColors.gold, width: 2),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            const SizedBox(height: 12),
+            if (isMobile)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Menu Management', style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 16),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        _HeaderButton(
+                          onTap: _showManualOrderForm,
+                          icon: Icons.receipt_long,
+                          label: 'Order',
+                          isPrimary: false,
+                        ),
+                        const SizedBox(width: 8),
+                        _HeaderButton(
+                          onTap: _showTodaySpecialDialog,
+                          icon: Icons.star_border_rounded,
+                          label: 'Specials',
+                          isPrimary: false,
+                        ),
+                        const SizedBox(width: 8),
+                        _HeaderButton(
+                          onTap: () => _showItemForm(),
+                          icon: Icons.add,
+                          label: 'Add Item',
+                          isPrimary: true,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                OutlinedButton.icon(
-                  onPressed: () => _showTodaySpecialDialog(),
-                  icon: const Text('⭐', style: TextStyle(fontSize: 16)),
-                  label: Text("Today's Special",
-                      style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.white)),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white54, width: 1.5),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ],
+              )
+            else
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Menu Management', style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 4),
+                        Text('Manage your restaurant menu items and categories', style: GoogleFonts.inter(color: Colors.white70, fontSize: 14)),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                ElevatedButton.icon(
-                  onPressed: () => _showItemForm(),
-                  icon: const Icon(Icons.add, color: AppColors.rubyDark),
-                  label: Text('Add Menu Item', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: AppColors.rubyDark)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.gold,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  Row(
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () => _showManualOrderForm(),
+                        icon: const Icon(Icons.receipt_long, color: Colors.white),
+                        label: Text('Create Order', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.white)),
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: AppColors.gold, width: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      OutlinedButton.icon(
+                        onPressed: () => _showTodaySpecialDialog(),
+                        icon: const Text('⭐', style: TextStyle(fontSize: 16)),
+                        label: Text("Today's Special",
+                            style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.white)),
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Colors.white54, width: 1.5),
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      ElevatedButton.icon(
+                        onPressed: () => _showItemForm(),
+                        icon: const Icon(Icons.add, color: AppColors.rubyDark),
+                        label: Text('Add Menu Item', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: AppColors.rubyDark)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.gold,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
           ],
         ),
       ),
@@ -302,6 +344,50 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   Widget _buildSidebar() {
+    final isMobile = MediaQuery.of(context).size.width < 800;
+    
+    if (isMobile) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text('Categories', style: GoogleFonts.playfairDisplay(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.rubyDark)),
+              const Spacer(),
+              IconButton(
+                onPressed: () => _showCategoryForm(),
+                icon: const Icon(Icons.add_circle_outline, color: AppColors.rubyDark),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 44,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                _CategoryPill(
+                  label: 'All Items',
+                  isSelected: _selectedCategoryId.isEmpty,
+                  onTap: () => setState(() => _selectedCategoryId = ''),
+                ),
+                const SizedBox(width: 8),
+                ..._categories.map((cat) => Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: _CategoryPill(
+                    label: cat.name,
+                    isSelected: _selectedCategoryId == cat.id,
+                    onTap: () => setState(() => _selectedCategoryId = cat.id),
+                    onLongPress: () => _showCategoryForm(cat),
+                  ),
+                )),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -429,9 +515,9 @@ class _MenuScreenState extends State<MenuScreen> {
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: cols,
-          mainAxisSpacing: 32,
-          crossAxisSpacing: 32,
-          childAspectRatio: 0.75, // Much more balanced ratio
+          mainAxisSpacing: c.maxWidth > 600 ? 32 : 16,
+          crossAxisSpacing: c.maxWidth > 600 ? 32 : 16,
+          childAspectRatio: c.maxWidth > 600 ? 0.75 : 0.85, 
         ),
         itemCount: items.length,
         itemBuilder: (ctx, i) => _buildItemCard(items[i], i).animate().fadeIn(delay: (i * 30).ms, duration: 400.ms),
@@ -729,6 +815,104 @@ class _HoverableCardState extends State<HoverableCard> {
         clipBehavior: Clip.antiAlias,
         transform: Matrix4.translationValues(0, _isHovered ? -4 : 0, 0),
         child: widget.child,
+      ),
+    );
+  }
+}
+class _HeaderButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final IconData icon;
+  final String label;
+  final bool isPrimary;
+
+  const _HeaderButton({
+    required this.onTap,
+    required this.icon,
+    required this.label,
+    required this.isPrimary,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: isPrimary ? AppColors.gold : Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isPrimary ? AppColors.gold : Colors.white.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 16, color: isPrimary ? AppColors.rubyDark : Colors.white),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: isPrimary ? AppColors.rubyDark : Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CategoryPill extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final VoidCallback? onLongPress;
+
+  const _CategoryPill({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+    this.onLongPress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.rubyDark : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected ? AppColors.rubyDark : AppColors.rubyDark.withOpacity(0.1),
+            width: 1,
+          ),
+          boxShadow: isSelected ? [
+            BoxShadow(
+              color: AppColors.rubyDark.withOpacity(0.2),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            )
+          ] : null,
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: isSelected ? Colors.white : AppColors.rubyDark,
+            ),
+          ),
+        ),
       ),
     );
   }

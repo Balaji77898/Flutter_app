@@ -66,7 +66,7 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
         ),
       ),
       content: SizedBox(
-        width: 400,
+        width: MediaQuery.of(context).size.width * 0.9,
         child: Form(
           key: _formKey,
           child: Column(

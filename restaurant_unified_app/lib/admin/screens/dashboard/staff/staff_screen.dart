@@ -181,15 +181,18 @@ class _StaffScreenState extends State<StaffScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 800;
+
     return Scaffold(
       backgroundColor: AppColors.ivory,
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: AppColors.rubyRed))
           : CustomScrollView(
               slivers: [
-                SliverToBoxAdapter(child: _buildHeader()),
+                SliverToBoxAdapter(child: _buildHeader(isMobile)),
                 SliverPadding(
-                  padding: const EdgeInsets.all(40),
+                  padding: EdgeInsets.all(isMobile ? 16 : 40),
                   sliver: SliverToBoxAdapter(
                     child: Center(
                       child: ConstrainedBox(
@@ -197,12 +200,12 @@ class _StaffScreenState extends State<StaffScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildStatsRow(),
-                            const SizedBox(height: 40),
-                            _buildFiltersBar(),
+                            _buildStatsRow(isMobile),
+                            const SizedBox(height: 24),
+                            _buildFiltersBar(isMobile),
                             const SizedBox(height: 24),
                             Text(
-                              'Showing ${_filteredStaff.length} ${widget.role == 'server' ? 'serving' : 'billing'} staff members',
+                              'Showing ${_filteredStaff.length} members',
                               style: GoogleFonts.inter(
                                 color: AppColors.textMuted,
                                 fontSize: 14,
@@ -210,7 +213,7 @@ class _StaffScreenState extends State<StaffScreen> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            _buildStaffList(),
+                            _buildStaffList(isMobile),
                             const SizedBox(height: 100), // Bottom padding
                           ],
                         ),
@@ -223,198 +226,358 @@ class _StaffScreenState extends State<StaffScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(bool isMobile) {
     return Container(
       color: AppColors.rubyDark,
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 48),
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 20 : 40, vertical: isMobile ? 32 : 48),
       child: SafeArea(
         bottom: false,
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 1200),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
+            child: isMobile 
+              ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ElevatedButton.icon(
+                    IconButton(
                       onPressed: () => context.go('/admin/staff'),
-                      icon: const Icon(Icons.arrow_back, size: 16),
-                      label: const Text('Back to Staff Management'),
-                      style: ElevatedButton.styleFrom(
+                      icon: const Icon(Icons.arrow_back, color: AppColors.gold),
+                      style: IconButton.styleFrom(
                         backgroundColor: Colors.white.withOpacity(0.1),
-                        foregroundColor: AppColors.gold,
-                        elevation: 0,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 20),
                     Text(_roleLabel,
                         style: GoogleFonts.playfairDisplay(
                           color: Colors.white, 
-                          fontSize: 48, 
+                          fontSize: 32, 
                           fontWeight: FontWeight.bold,
                         )),
                     const SizedBox(height: 4),
                     Text(_roleSubtitle,
                         style: GoogleFonts.inter(
                           color: AppColors.gold.withOpacity(0.8), 
-                          fontSize: 16,
+                          fontSize: 14,
                         )),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: _showAddDialog,
+                        icon: const Icon(Icons.person_add, size: 18),
+                        label: Text('Add New $_roleLabel'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.gold,
+                          foregroundColor: AppColors.rubyDark,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () => context.go('/admin/staff'),
+                          icon: const Icon(Icons.arrow_back, size: 16),
+                          label: const Text('Back to Staff Management'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white.withOpacity(0.1),
+                            foregroundColor: AppColors.gold,
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Text(_roleLabel,
+                            style: GoogleFonts.playfairDisplay(
+                              color: Colors.white, 
+                              fontSize: 48, 
+                              fontWeight: FontWeight.bold,
+                            )),
+                        const SizedBox(height: 4),
+                        Text(_roleSubtitle,
+                            style: GoogleFonts.inter(
+                              color: AppColors.gold.withOpacity(0.8), 
+                              fontSize: 16,
+                            )),
+                      ],
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: _showAddDialog,
+                      icon: const Icon(Icons.person_add, color: AppColors.rubyDark),
+                      label: Text('Add $_roleLabel'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.gold,
+                        foregroundColor: AppColors.rubyDark,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                        textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ],
                 ),
-                ElevatedButton.icon(
-                  onPressed: _showAddDialog,
-                  icon: const Icon(Icons.person_add, color: AppColors.rubyDark),
-                  label: Text('Add $_roleLabel'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.gold,
-                    foregroundColor: AppColors.rubyDark,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                    textStyle: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildStatsRow() {
+  Widget _buildStatsRow(bool isMobile) {
     final total = _allStaff.length;
     final active = _allStaff.where((s) => s.isActive).length;
     final inactive = total - active;
 
+    if (isMobile) {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            _buildStatCard('Total', total.toString(), AppColors.rubyRed, isMobile),
+            const SizedBox(width: 12),
+            _buildStatCard('Active', active.toString(), Colors.green, isMobile),
+            const SizedBox(width: 12),
+            _buildStatCard('Inactive', inactive.toString(), Colors.red, isMobile),
+          ],
+        ),
+      );
+    }
+
     return Row(
       children: [
-        _buildStatCard('Total $_roleLabel', total.toString(), AppColors.rubyRed),
+        _buildStatCard('Total $_roleLabel', total.toString(), AppColors.rubyRed, false),
         const SizedBox(width: 24),
-        _buildStatCard('Active', active.toString(), Colors.green),
+        _buildStatCard('Active', active.toString(), Colors.green, false),
         const SizedBox(width: 24),
-        _buildStatCard('Inactive', inactive.toString(), Colors.red),
+        _buildStatCard('Inactive', inactive.toString(), Colors.red, false),
       ],
     );
   }
 
-  Widget _buildStatCard(String label, String value, Color color) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
-          boxShadow: AppShadows.card,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(label, style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: 14, fontWeight: FontWeight.w500)),
-            const SizedBox(height: 8),
-            Text(value, style: GoogleFonts.inter(color: color, fontSize: 32, fontWeight: FontWeight.bold)),
-          ],
-        ),
+  Widget _buildStatCard(String label, String value, Color color, bool isMobile) {
+    return Container(
+      width: isMobile ? 140 : null,
+      padding: EdgeInsets.all(isMobile ? 16 : 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
+        boxShadow: AppShadows.card,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: 12, fontWeight: FontWeight.w500)),
+          const SizedBox(height: 8),
+          Text(value, style: GoogleFonts.inter(color: color, fontSize: isMobile ? 24 : 32, fontWeight: FontWeight.bold)),
+        ],
       ),
     );
   }
 
-  Widget _buildFiltersBar() {
+  Widget _buildFiltersBar(bool isMobile) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
+        border: Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
         boxShadow: AppShadows.card,
       ),
-      child: Row(
-        children: [
-          const Icon(Icons.search, color: AppColors.textMuted),
-          const SizedBox(width: 12),
-          Expanded(
-            child: TextField(
-              controller: _searchController,
-              decoration: const InputDecoration(
-                hintText: 'Search by name or email...',
-                border: InputBorder.none,
-                filled: false,
-                contentPadding: EdgeInsets.zero,
+      child: isMobile 
+        ? Column(
+            children: [
+              TextField(
+                controller: _searchController,
+                decoration: const InputDecoration(
+                  hintText: 'Search...',
+                  prefixIcon: Icon(Icons.search, size: 20),
+                  border: InputBorder.none,
+                  filled: false,
+                ),
               ),
+              const Divider(),
+              DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  value: _statusFilter,
+                  items: ['All Status', 'Active', 'Inactive'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                  onChanged: (v) {
+                    setState(() {
+                      _statusFilter = v!;
+                      _applyFilters();
+                    });
+                  },
+                ),
+              ),
+            ],
+          )
+        : Row(
+            children: [
+              const Icon(Icons.search, color: AppColors.textMuted),
+              const SizedBox(width: 12),
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  decoration: const InputDecoration(
+                    hintText: 'Search by name or email...',
+                    border: InputBorder.none,
+                    filled: false,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.rubyDark.withOpacity(0.2)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: _statusFilter,
+                    items: ['All Status', 'Active', 'Inactive'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                    onChanged: (v) {
+                      setState(() {
+                        _statusFilter = v!;
+                        _applyFilters();
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+    );
+  }
+
+  Widget _buildStaffList(bool isMobile) {
+    if (_filteredStaff.isEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(48),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: AppShadows.card,
+        ),
+        child: const Center(child: Text('No members found')),
+      );
+    }
+
+    if (isMobile) {
+      return ListView.separated(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: _filteredStaff.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        itemBuilder: (ctx, i) => _buildStaffMobileCard(_filteredStaff[i]),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
+        boxShadow: AppShadows.card,
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                _headerCell('NAME', 2),
+                _headerCell('EMAIL', 3),
+                _headerCell('ROLE', 2),
+                _headerCell('PHONE', 2),
+                _headerCell('STATUS', 1),
+                _headerCell('ACTIONS', 1),
+              ],
             ),
           ),
-          const SizedBox(width: 16),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.rubyDark.withOpacity(0.2)),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: _statusFilter,
-                items: ['All Status', 'Active', 'Inactive'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                onChanged: (v) {
-                  setState(() {
-                    _statusFilter = v!;
-                    _applyFilters();
-                  });
-                },
-              ),
-            ),
+          const Divider(height: 1),
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: _filteredStaff.length,
+            separatorBuilder: (_, __) => const Divider(height: 1),
+            itemBuilder: (ctx, i) => _buildStaffRow(_filteredStaff[i], i),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildStaffList() {
-    return Column(
-      children: [
-        // Table Header
-        Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
-            boxShadow: AppShadows.card,
-          ),
-          child: Column(
+  Widget _buildStaffMobileCard(StaffMember s) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: AppShadows.card,
+        border: Border.all(color: AppColors.rubyDark.withOpacity(0.05)),
+      ),
+      child: Column(
+        children: [
+          Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: Row(
+              CircleAvatar(
+                backgroundColor: AppColors.rubyDark.withOpacity(0.1),
+                child: Text(s.name[0].toUpperCase(), style: const TextStyle(color: AppColors.rubyDark, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _headerCell('NAME', 2),
-                    _headerCell('EMAIL', 3),
-                    _headerCell('ROLE', 2),
-                    _headerCell('PHONE', 2),
-                    _headerCell('STATUS', 1),
-                    _headerCell('ACTIONS', 1),
+                    Text(s.name, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16)),
+                    Text(s.email, style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: 12)),
                   ],
                 ),
               ),
-              const Divider(height: 1),
-              if (_filteredStaff.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.all(48),
-                  child: Center(child: Text('No members found')),
-                )
-              else
-                ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: _filteredStaff.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1),
-                  itemBuilder: (ctx, i) => _buildStaffRow(_filteredStaff[i], i),
-                ),
+              Switch(
+                value: s.isActive,
+                onChanged: (v) => _toggleStaff(s.id),
+                activeColor: AppColors.success,
+              ),
             ],
           ),
-        ),
-      ],
+          const Divider(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('PHONE', style: GoogleFonts.inter(fontSize: 10, color: AppColors.textMuted, fontWeight: FontWeight.w800)),
+                  Text(s.phone ?? '—', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600)),
+                ],
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.edit_outlined, color: AppColors.info, size: 20),
+                  ),
+                  IconButton(
+                    onPressed: () => _deleteStaff(s.id),
+                    icon: const Icon(Icons.delete_outline, color: AppColors.danger, size: 20),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

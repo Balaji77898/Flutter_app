@@ -140,19 +140,22 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
       );
     }
 
+    final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
+
     return AlertDialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text(
         widget.item == null ? 'Add Menu Item' : 'Edit Menu Item',
         style: GoogleFonts.playfairDisplay(
-          fontSize: 24,
+          fontSize: isMobile ? 20 : 24,
           fontWeight: FontWeight.w700,
           color: AppColors.rubyRed,
         ),
       ),
       content: SizedBox(
-        width: 500,
+        width: isMobile ? size.width * 0.9 : 500,
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,

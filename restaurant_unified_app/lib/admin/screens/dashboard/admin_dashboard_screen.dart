@@ -75,14 +75,16 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     final restaurantProv = context.watch<RestaurantProvider>();
     final restaurant = restaurantProv.restaurant;
     final size = MediaQuery.of(context).size;
-    final isWide = size.width > 900;
+    final isMobile = size.width < 600;
+    final isTablet = size.width >= 600 && size.width <= 1024;
+    final isWide = size.width > 1024;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F5F2),
       body: Column(
         children: [
           // ── Header Section ──────────────────────────────────────────────────
-          _buildHeader(context, auth, restaurant),
+          _buildHeader(context, auth, restaurant, isMobile),
 
           // ── Main Body Section ───────────────────────────────────────────────
           Expanded(
@@ -111,27 +113,38 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 // Dashboard Cards
                 SingleChildScrollView(
                   padding: EdgeInsets.symmetric(
-                    horizontal: isWide ? 80 : 20,
-                    vertical: 60,
+                    horizontal: isWide ? 80 : (isTablet ? 40 : 20),
+                    vertical: isMobile ? 30 : 60,
                   ),
                   child: Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 1200),
                       child: LayoutBuilder(builder: (ctx, constraints) {
-                        final cols = constraints.maxWidth > 900 ? 4 : (constraints.maxWidth > 600 ? 2 : 1);
+                        int cols = 1;
+                        double aspect = 2.8; // List tile aspect for single column mobile
+                        
+                        if (constraints.maxWidth > 900) {
+                          cols = 4;
+                          aspect = 1.0;
+                        } else if (constraints.maxWidth > 600) {
+                          cols = 2;
+                          aspect = 1.1;
+                        }
+                        
                         return GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: cols,
-                            crossAxisSpacing: 24,
-                            mainAxisSpacing: 24,
-                            childAspectRatio: 1.0, // Perfectly square cards
+                            crossAxisSpacing: isMobile ? 16 : 24,
+                            mainAxisSpacing: isMobile ? 16 : 24,
+                            childAspectRatio: aspect,
                           ),
                           itemCount: _dashboardOptions.length,
                           itemBuilder: (ctx, i) => _HoverableDashCard(
                             option: _dashboardOptions[i],
                             index: i,
+                            isMobile: isMobile,
                             onTap: (details) => _triggerNavAnimation(details.globalPosition, _dashboardOptions[i].route),
                           ),
                         );
@@ -156,97 +169,158 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
 
 
-  Widget _buildHeader(BuildContext context, AuthProvider auth, dynamic restaurant) {
+  Widget _buildHeader(BuildContext context, AuthProvider auth, dynamic restaurant, bool isMobile) {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
         color: AppColors.rubyDark,
         border: Border(bottom: BorderSide(color: AppColors.gold, width: 4)),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 20 : 40, 
+        vertical: isMobile ? 16 : 24
+      ),
       child: SafeArea(
         bottom: false,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Centered Brand Info
-            Column(
+        child: isMobile 
+          ? Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _StatusBadge(isActive: restaurant?.isActive ?? true),
+                    _ProfileChip(email: auth.userEmail ?? 'admin@restaurant.com'),
+                  ],
+                ),
+                const SizedBox(height: 16),
                 Text(
                   restaurant?.name ?? 'Restaurant Admin',
                   style: GoogleFonts.playfairDisplay(
-                    fontSize: 48,
+                    fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    letterSpacing: 1.2,
+                    letterSpacing: 1.0,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  (restaurant?.restaurantType ?? 'CAFE').toUpperCase(),
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: AppColors.gold,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Row(
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  height: 44,
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      await auth.logout();
+                      if (context.mounted) {
+                        await context.read<StaffAuthProvider>().logout();
+                        context.go('/login');
+                      }
+                    },
+                    icon: const Icon(Icons.logout_rounded, size: 18, color: Colors.white),
+                    label: Text('Logout', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white.withOpacity(0.1),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : Stack(
+              alignment: Alignment.center,
+              children: [
+                // Centered Brand Info
+                Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      (restaurant?.restaurantType ?? 'CAFE').toUpperCase(),
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: AppColors.gold,
+                      restaurant?.name ?? 'Restaurant Admin',
+                      style: GoogleFonts.playfairDisplay(
+                        fontSize: 48,
                         fontWeight: FontWeight.bold,
-                        letterSpacing: 2,
+                        color: Colors.white,
+                        letterSpacing: 1.2,
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    _StatusBadge(isActive: restaurant?.isActive ?? true),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          (restaurant?.restaurantType ?? 'CAFE').toUpperCase(),
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: AppColors.gold,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        _StatusBadge(isActive: restaurant?.isActive ?? true),
+                      ],
+                    ),
                   ],
+                ),
+                
+                // Right Side Profile & Logout (Stacked)
+                Positioned(
+                  right: 0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _ProfileChip(email: auth.userEmail ?? 'admin@restaurant.com'),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        height: 40,
+                        child: ElevatedButton.icon(
+                          onPressed: () async {
+                            await auth.logout();
+                            if (context.mounted) {
+                              await context.read<StaffAuthProvider>().logout();
+                              context.go('/login');
+                            }
+                          },
+                          icon: const Icon(Icons.logout_rounded, size: 16, color: Colors.white),
+                          label: Text('Logout', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white.withOpacity(0.1),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-            
-            // Right Side Profile & Logout (Stacked)
-            Positioned(
-              right: 0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  _ProfileChip(email: auth.userEmail ?? 'admin@restaurant.com'),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 40,
-                    child: ElevatedButton.icon(
-                      onPressed: () async {
-                        await auth.logout();
-                        if (context.mounted) {
-                          await context.read<StaffAuthProvider>().logout();
-                          context.go('/login');
-                        }
-                      },
-                      icon: const Icon(Icons.logout_rounded, size: 16, color: Colors.white),
-                      label: Text('Logout', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.1),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
+
 }
 
 class _HoverableDashCard extends StatefulWidget {
   final _DashOption option;
   final int index;
+  final bool isMobile;
   final Function(TapDownDetails) onTap;
 
   const _HoverableDashCard({
     required this.option,
     required this.index,
+    required this.isMobile,
     required this.onTap,
   });
 
@@ -268,7 +342,7 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(widget.isMobile ? 16 : 24),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(24),
@@ -284,13 +358,12 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
               )
             ],
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
             children: [
               AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                width: 72,
-                height: 72,
+                width: widget.isMobile ? 56 : 72,
+                height: widget.isMobile ? 56 : 72,
                 decoration: BoxDecoration(
                   color: _isHovered 
                       ? AppColors.rubyRed 
@@ -300,34 +373,43 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
                 child: Icon(
                   widget.option.icon, 
                   color: _isHovered ? Colors.white : AppColors.rubyDark, 
-                  size: 32,
+                  size: widget.isMobile ? 24 : 32,
                 ),
               ),
 
-              const SizedBox(height: 24),
-              Text(
-                widget.option.title,
-                style: GoogleFonts.playfairDisplay(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.rubyDark,
-                  letterSpacing: 0.5,
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.option.title,
+                      style: GoogleFonts.playfairDisplay(
+                        fontSize: widget.isMobile ? 18 : 22,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.rubyDark,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.option.description,
+                      style: GoogleFonts.inter(
+                        fontSize: widget.isMobile ? 12 : 14,
+                        color: Colors.grey.shade500,
+                        height: 1.3,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
-                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 12),
-              Text(
-                widget.option.description,
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: Colors.grey.shade500,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.center,
-              ),
+              const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 24),
             ],
           ),
-        ).animate().fadeIn(delay: (widget.index * 100).ms).slideY(begin: 0.1, curve: Curves.easeOutCirc),
+        ).animate().fadeIn(delay: (widget.index * 100).ms).slideX(begin: 0.1, curve: Curves.easeOutCirc),
       ),
     );
   }

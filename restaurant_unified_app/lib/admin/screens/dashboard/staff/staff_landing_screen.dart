@@ -9,35 +9,37 @@ class StaffLandingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
+
     return Scaffold(
       backgroundColor: AppColors.ivory,
       body: Stack(
         children: [
           // Light Elegant "Foggy" Background
-                  // Clean Elegant Background
-                  Positioned.fill(
-                    child: Container(
-                      color: AppColors.ivory,
-                      child: Stack(
-                        children: [
-                          Opacity(
-                            opacity: 0.05,
-                            child: Image.network(
-                              'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop',
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                            ),
-                          ),
-                        ],
-                      ),
+          Positioned.fill(
+            child: Container(
+              color: AppColors.ivory,
+              child: Stack(
+                children: [
+                  Opacity(
+                    opacity: 0.05,
+                    child: Image.network(
+                      'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
                     ),
                   ),
+                ],
+              ),
+            ),
+          ),
 
           SafeArea(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(vertical: 40),
+              padding: EdgeInsets.symmetric(vertical: isMobile ? 20 : 40),
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 1000),
@@ -46,7 +48,7 @@ class StaffLandingScreen extends StatelessWidget {
                     children: [
                       // ── Header (Back Button) ───────────────────────────
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        padding: EdgeInsets.symmetric(horizontal: isMobile ? 20 : 40),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: IconButton(
@@ -65,7 +67,7 @@ class StaffLandingScreen extends StatelessWidget {
                       
                       // ── Title Section ───────────────────────────────────
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        padding: EdgeInsets.symmetric(horizontal: isMobile ? 20 : 40),
                         child: Column(
                           children: [
                             Text(
@@ -73,7 +75,7 @@ class StaffLandingScreen extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: GoogleFonts.playfairDisplay(
                                 color: AppColors.rubyDark,
-                                fontSize: 48,
+                                fontSize: isMobile ? 32 : 48,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: -0.5,
                               ),
@@ -84,7 +86,7 @@ class StaffLandingScreen extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: GoogleFonts.inter(
                                 color: AppColors.rubyDark.withOpacity(0.7),
-                                fontSize: 16,
+                                fontSize: isMobile ? 14 : 16,
                                 fontStyle: FontStyle.italic,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -93,14 +95,14 @@ class StaffLandingScreen extends StatelessWidget {
                         ),
                       ),
 
-                      const SizedBox(height: 60),
+                      SizedBox(height: isMobile ? 40 : 60),
 
                       // ── Cards Section ───────────────────────────────────────
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        padding: EdgeInsets.symmetric(horizontal: isMobile ? 20 : 40),
                         child: Wrap(
-                          spacing: 40,
-                          runSpacing: 30,
+                          spacing: isMobile ? 20 : 40,
+                          runSpacing: isMobile ? 20 : 30,
                           alignment: WrapAlignment.center,
                           children: [
                             _StaffTypeCard(
@@ -109,6 +111,7 @@ class StaffLandingScreen extends StatelessWidget {
                               icon: Icons.receipt_long_rounded,
                               role: 'cashier',
                               index: 0,
+                              isMobile: isMobile,
                             ),
                             _StaffTypeCard(
                               title: 'Serving Staff',
@@ -116,6 +119,7 @@ class StaffLandingScreen extends StatelessWidget {
                               icon: Icons.restaurant_rounded,
                               role: 'server',
                               index: 1,
+                              isMobile: isMobile,
                             ),
                           ],
                         ),
@@ -132,12 +136,14 @@ class StaffLandingScreen extends StatelessWidget {
       ),
     );
   }
+
 }
 
 class _StaffTypeCard extends StatefulWidget {
   final String title, description, role;
   final IconData icon;
   final int index;
+  final bool isMobile;
 
   const _StaffTypeCard({
     required this.title,
@@ -145,6 +151,7 @@ class _StaffTypeCard extends StatefulWidget {
     required this.role,
     required this.icon,
     required this.index,
+    required this.isMobile,
   });
 
   @override
@@ -164,9 +171,9 @@ class _StaffTypeCardState extends State<_StaffTypeCard> {
         onTap: () => context.go('/admin/staff/${widget.role}'),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          width: 320,
-          height: 320, // Square like the dashboard
-          padding: const EdgeInsets.all(32),
+          width: widget.isMobile ? 280 : 320,
+          height: widget.isMobile ? 260 : 320, // Slightly shorter on mobile
+          padding: EdgeInsets.all(widget.isMobile ? 24 : 32),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(28),
@@ -206,7 +213,7 @@ class _StaffTypeCardState extends State<_StaffTypeCard> {
                 widget.title,
                 style: GoogleFonts.playfairDisplay(
                   color: AppColors.rubyDark,
-                  fontSize: 28,
+                  fontSize: widget.isMobile ? 22 : 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),

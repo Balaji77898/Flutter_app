@@ -61,9 +61,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
       .where((o) => o.paymentStatus.toUpperCase() == 'PAID')
       .fold(0, (sum, o) => sum + o.totalAmount);
 
+
+
+
   @override
   Widget build(BuildContext context) {
-    final filtered = _filtered;
+    final size = MediaQuery.of(context).size;
+    final bool isMobile = size.width < 800;
     return Scaffold(
       backgroundColor: AppColors.ivory,
       body: _isLoading
@@ -73,19 +77,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
               : CustomScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
-                    SliverToBoxAdapter(child: _buildHeader()),
+                    SliverToBoxAdapter(child: _buildHeader(context, isMobile)),
                     SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 32),
+                      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 40, vertical: 32),
                       sliver: SliverList(
                         delegate: SliverChildListDelegate([
-                          _buildStatsGrid(),
+                          _buildStatsGrid(isMobile),
                           const SizedBox(height: 32),
-                          _buildFilterSection(),
+                          _buildFilterSection(isMobile),
                           const SizedBox(height: 24),
-                          Text('Showing ${filtered.length} orders', 
-                            style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
+                          Text('Showing ${_filtered.length} orders', 
+                              style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 12),
-                          _buildOrdersTable(filtered),
+                          _buildOrdersList(_filtered, isMobile),
                         ]),
                       ),
                     ),
@@ -94,91 +98,129 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  
+
+  Widget _buildHeader(BuildContext context, bool isMobile) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(40, 48, 40, 32),
+      padding: EdgeInsets.fromLTRB(isMobile ? 20 : 40, isMobile ? 32 : 48, isMobile ? 20 : 40, 32),
       decoration: const BoxDecoration(
         color: AppColors.rubyDark,
         border: Border(bottom: BorderSide(color: AppColors.gold, width: 4)),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: isMobile 
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () => context.go('/admin/dashboard'),
+                icon: const Icon(Icons.arrow_back, color: AppColors.gold),
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.white.withOpacity(0.1),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text('Orders', 
+                style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              Text('Track customer orders', 
+                style: GoogleFonts.inter(color: AppColors.gold, fontSize: 14, fontWeight: FontWeight.w500)),
+            ],
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OutlinedButton.icon(
+                onPressed: () => context.go('/admin/dashboard'),
+                icon: const Icon(Icons.arrow_back, color: AppColors.gold, size: 18),
+                label: Text('Back to Dashboard', style: GoogleFonts.inter(color: AppColors.gold, fontWeight: FontWeight.bold)),
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: Colors.white.withOpacity(0.1),
+                  side: BorderSide(color: AppColors.gold.withOpacity(0.3)),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: Column(
+                    children: [
+                      Text('Orders Management', 
+                        style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 4),
+                      Text('View and track customer orders', 
+                        style: GoogleFonts.inter(color: AppColors.gold, fontSize: 14, fontWeight: FontWeight.w500)),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 48),
+            ],
+          ),
+    );
+  }
+
+  Widget _buildStatsGrid(bool isMobile) {
+    if (isMobile) {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            _statCard('Total Orders', _orders.length.toString(), AppColors.rubyDark, isMobile),
+            const SizedBox(width: 12),
+            _statCard('Placed', _orders.where((o) => o.status == 'PLACED').length.toString(), const Color(0xFF0284C7), isMobile),
+            const SizedBox(width: 12),
+            _statCard('Served', _orders.where((o) => o.status == 'SERVED').length.toString(), const Color(0xFF16A34A), isMobile),
+            const SizedBox(width: 12),
+            _statCard('Revenue', '₹${_totalRevenue.toStringAsFixed(0)}', AppColors.rubyDark, isMobile),
+          ],
+        ),
+      );
+    }
+
+    return Row(
+      children: [
+        _statCard('Total Orders', _orders.length.toString(), AppColors.rubyDark, false),
+        const SizedBox(width: 24),
+        _statCard('Placed', _orders.where((o) => o.status == 'PLACED').length.toString(), const Color(0xFF0284C7), false),
+        const SizedBox(width: 24),
+        _statCard('Served', _orders.where((o) => o.status == 'SERVED').length.toString(), const Color(0xFF16A34A), false),
+        const SizedBox(width: 24),
+        _statCard('Total Revenue', '₹${_totalRevenue.toStringAsFixed(0)}', AppColors.rubyDark, false),
+      ],
+    );
+  }
+
+  Widget _statCard(String title, String value, Color color, bool isMobile) {
+    return Container(
+      width: isMobile ? 130 : null,
+      padding: EdgeInsets.all(isMobile ? 16 : 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 4, offset: const Offset(0, 2))],
+      ),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          OutlinedButton.icon(
-            onPressed: () => context.go('/admin/dashboard'),
-            icon: const Icon(Icons.arrow_back, color: AppColors.gold, size: 18),
-            label: Text('Back to Dashboard', style: GoogleFonts.inter(color: AppColors.gold, fontWeight: FontWeight.bold)),
-            style: OutlinedButton.styleFrom(
-              backgroundColor: Colors.white.withOpacity(0.1),
-              side: BorderSide(color: AppColors.gold.withOpacity(0.3)),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: Column(
-                children: [
-                  Text('Orders Management', 
-                    style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 4),
-                  Text('View and track customer orders', 
-                    style: GoogleFonts.inter(color: AppColors.gold, fontSize: 14, fontWeight: FontWeight.w500)),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 48), // Placeholder to maintain spacing if needed, or just remove
+          Text(title, style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: isMobile ? 12 : 14, fontWeight: FontWeight.w500)),
+          const SizedBox(height: 8),
+          Text(value, style: GoogleFonts.inter(color: color, fontSize: isMobile ? 22 : 28, fontWeight: FontWeight.bold)),
         ],
       ),
     );
   }
 
-  Widget _buildStatsGrid() {
-    return Row(
-      children: [
-        _statCard('Total Orders', _orders.length.toString(), AppColors.rubyDark),
-        const SizedBox(width: 24),
-        _statCard('Placed', _orders.where((o) => o.status == 'PLACED').length.toString(), const Color(0xFF0284C7)),
-        const SizedBox(width: 24),
-        _statCard('Served', _orders.where((o) => o.status == 'SERVED').length.toString(), const Color(0xFF16A34A)),
-        const SizedBox(width: 24),
-        _statCard('Total Revenue', '₹${_totalRevenue.toStringAsFixed(0)}', AppColors.rubyDark),
-      ],
-    );
-  }
-
-  Widget _statCard(String title, String value, Color color) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 4, offset: const Offset(0, 2))],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: 14, fontWeight: FontWeight.w500)),
-            const SizedBox(height: 8),
-            Text(value, style: GoogleFonts.inter(color: color, fontSize: 28, fontWeight: FontWeight.bold)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFilterSection() {
+  Widget _buildFilterSection(bool isMobile) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
+        border: Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
         boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 4, offset: const Offset(0, 2))],
       ),
       child: Column(
@@ -192,55 +234,61 @@ class _OrdersScreenState extends State<OrdersScreen> {
             ],
           ),
           const SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: TextField(
-                  onChanged: (v) => setState(() => _searchQuery = v),
-                  decoration: InputDecoration(
-                    hintText: 'Search by Order ID...',
-                    hintStyle: GoogleFonts.inter(color: Colors.grey.shade400, fontSize: 14),
-                    prefixIcon: Icon(Icons.search, size: 20, color: Colors.grey.shade500),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.2))),
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.1))),
-                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.5))),
+          isMobile 
+            ? Column(
+                children: [
+                  TextField(
+                    onChanged: (v) => setState(() => _searchQuery = v),
+                    decoration: InputDecoration(
+                      hintText: 'Search Order ID...',
+                      prefixIcon: const Icon(Icons.search, size: 20),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.1))),
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(child: _buildDropdown(_statusFilter, ['All Status', 'PLACED', 'CONFIRMED', 'PREPARING', 'READY', 'SERVED', 'CANCELLED'], (v) => setState(() => _statusFilter = v!))),
-              const SizedBox(width: 16),
-              Expanded(child: _buildDropdown(_paymentFilter, ['All Payments', 'PAID', 'PENDING'], (v) => setState(() => _paymentFilter = v!))),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.rubyDark.withOpacity(0.2)),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  const SizedBox(height: 12),
+                  _buildDropdown(_statusFilter, ['All Status', 'PLACED', 'CONFIRMED', 'PREPARING', 'READY', 'SERVED', 'CANCELLED'], (v) => setState(() => _statusFilter = v!)),
+                  const SizedBox(height: 12),
+                  _buildDropdown(_paymentFilter, ['All Payments', 'PAID', 'PENDING'], (v) => setState(() => _paymentFilter = v!)),
+                  const SizedBox(height: 12),
+                  _buildDropdown(_typeFilter, ['All Types', 'DINE_IN', 'TAKEAWAY'], (v) => setState(() => _typeFilter = v!)),
+                ],
+              )
+            : Column(
+                children: [
+                  Row(
                     children: [
-                      Text('dd-mm-yyyy', style: GoogleFonts.inter(color: Colors.grey.shade500, fontSize: 14)),
-                      Icon(Icons.calendar_today_outlined, size: 16, color: Colors.grey.shade500),
+                      Expanded(
+                        flex: 2,
+                        child: TextField(
+                          onChanged: (v) => setState(() => _searchQuery = v),
+                          decoration: InputDecoration(
+                            hintText: 'Search by Order ID...',
+                            hintStyle: GoogleFonts.inter(color: Colors.grey.shade400, fontSize: 14),
+                            prefixIcon: Icon(Icons.search, size: 20, color: Colors.grey.shade500),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.2))),
+                            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.1))),
+                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.rubyDark.withOpacity(0.5))),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(child: _buildDropdown(_statusFilter, ['All Status', 'PLACED', 'CONFIRMED', 'PREPARING', 'READY', 'SERVED', 'CANCELLED'], (v) => setState(() => _statusFilter = v!))),
+                      const SizedBox(width: 16),
+                      Expanded(child: _buildDropdown(_paymentFilter, ['All Payments', 'PAID', 'PENDING'], (v) => setState(() => _paymentFilter = v!))),
                     ],
                   ),
-                ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: _buildDropdown(_typeFilter, ['All Types', 'DINE_IN', 'TAKEAWAY'], (v) => setState(() => _typeFilter = v!))
+                      ),
+                      const Spacer(flex: 3),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: _buildDropdown(_typeFilter, ['All Types', 'DINE_IN', 'TAKEAWAY'], (v) => setState(() => _typeFilter = v!))
-              ),
-              const Spacer(flex: 3), // Add space to push the "All Types" dropdown to the left like the screenshot
-            ],
-          ),
         ],
       ),
     );
@@ -265,103 +313,93 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
-  Widget _buildOrdersTable(List<OrderModel> orders) {
+  Widget _buildOrdersList(List<OrderModel> orders, bool isMobile) {
+    if (orders.isEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(48),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 4, offset: const Offset(0, 2))],
+        ),
+        child: const Center(child: Text('No orders found')),
+      );
+    }
+
+    if (isMobile) {
+      return ListView.separated(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: orders.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        itemBuilder: (ctx, i) => _buildOrderMobileCard(orders[i]),
+      );
+    }
+
+    return _buildOrdersTable(orders);
+  }
+
+  Widget _buildOrderMobileCard(OrderModel o) {
     return Container(
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.rubyDark.withOpacity(0.2), width: 1),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 4, offset: const Offset(0, 2))],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 6)],
+        border: Border.all(color: AppColors.rubyDark.withOpacity(0.05)),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - 80),
-            child: DataTable(
-          headingRowColor: WidgetStateProperty.all(Colors.white),
-          dataRowMaxHeight: 80,
-          horizontalMargin: 24,
-          columnSpacing: 24,
-          dividerThickness: 1,
-          columns: [
-            DataColumn(label: Text('ORDER ID', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 11, color: Colors.grey.shade600, letterSpacing: 0.5))),
-            DataColumn(label: Text('CUSTOMER', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 11, color: Colors.grey.shade600, letterSpacing: 0.5))),
-            DataColumn(label: Text('TABLE', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 11, color: Colors.grey.shade600, letterSpacing: 0.5))),
-            DataColumn(label: Text('STATUS', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 11, color: Colors.grey.shade600, letterSpacing: 0.5))),
-            DataColumn(label: Text('TOTAL AMOUNT', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 11, color: Colors.grey.shade600, letterSpacing: 0.5))),
-            DataColumn(label: Text('PAYMENT', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 11, color: Colors.grey.shade600, letterSpacing: 0.5))),
-            DataColumn(label: Text('DATE', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 11, color: Colors.grey.shade600, letterSpacing: 0.5))),
-            DataColumn(label: Text('ACTIONS', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 11, color: Colors.grey.shade600, letterSpacing: 0.5))),
-          ],
-          rows: orders.map((o) => DataRow(cells: [
-            DataCell(
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('#${o.id.substring(0, 8)}', style: GoogleFonts.inter(fontWeight: FontWeight.w700, color: AppColors.rubyDark, fontSize: 13)),
-                  const SizedBox(height: 6),
-                  _badge(o.orderType.replaceAll('_', '-'), const Color(0xFFE0F2FE), const Color(0xFF0284C7)),
-                ],
-              )
-            ),
-            DataCell(
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(color: Colors.grey.shade100, shape: BoxShape.circle),
-                    child: Icon(Icons.person_outline, size: 14, color: Colors.grey.shade600),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(o.customerName, 
-                      style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              )
-            ),
-            DataCell(
-              Row(
-                children: [
-                  Icon(Icons.location_on_outlined, size: 14, color: Colors.grey.shade600),
-                  const SizedBox(width: 4),
-                  Expanded(
-                    child: Text(o.tableNumber ?? 'N/A', 
-                      style: GoogleFonts.inter(fontSize: 13, color: AppColors.textDark),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              )
-            ),
-            DataCell(_statusBadge(o.status)),
-            DataCell(Text('₹${o.totalAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(fontWeight: FontWeight.w800, color: AppColors.rubyDark, fontSize: 14))),
-            DataCell(_paymentBadge(o.paymentStatus)),
-            DataCell(Text(DateFormat('dd MMM yyyy, hh:mm a').format(DateTime.tryParse(o.createdAt) ?? DateTime.now()), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted))),
-            DataCell(ElevatedButton.icon(
-              onPressed: () => _showOrderDetails(o),
-              icon: const Icon(Icons.visibility, size: 14),
-              label: Text('View Details', style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 12)),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF2563EB),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                elevation: 0,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('#${o.id.substring(0, 8)}', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: AppColors.rubyDark)),
+              _statusBadge(o.status),
+            ],
+          ),
+          const Divider(height: 24),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('CUSTOMER', style: GoogleFonts.inter(fontSize: 10, color: AppColors.textMuted, fontWeight: FontWeight.w800)),
+                    Text(o.customerName, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600)),
+                  ],
+                ),
               ),
-            )),
-          ])).toList(),
-        ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('TOTAL', style: GoogleFonts.inter(fontSize: 10, color: AppColors.textMuted, fontWeight: FontWeight.w800)),
+                  Text('₹${o.totalAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.rubyDark)),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _paymentBadge(o.paymentStatus),
+              ElevatedButton(
+                onPressed: () => _showOrderDetails(o),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.rubyDark.withOpacity(0.05),
+                  foregroundColor: AppColors.rubyDark,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                child: const Text('Details'),
+              ),
+            ],
+          ),
+        ],
       ),
-    ),
-  ),
-);
-}
+    );
+  }
 
   Widget _badge(String text, Color bg, Color textCol) {
     return Container(
@@ -413,6 +451,59 @@ class _OrdersScreenState extends State<OrdersScreen> {
     showDialog(
       context: context,
       builder: (ctx) => _OrderDetailsDialog(order: order),
+    );
+  }
+
+  Widget _buildOrdersTable(List<OrderModel> orders) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 4, offset: const Offset(0, 2))],
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey.shade100))),
+            child: Row(
+              children: [
+                _headerCell('ORDER ID', 2),
+                _headerCell('CUSTOMER', 3),
+                _headerCell('TOTAL', 2),
+                _headerCell('STATUS', 2),
+                _headerCell('PAYMENT', 2),
+                _headerCell('ACTIONS', 2),
+              ],
+            ),
+          ),
+          ...orders.asMap().entries.map((entry) => _buildOrderRow(entry.value, entry.key, orders.length)),
+        ],
+      ),
+    );
+  }
+
+  Widget _headerCell(String label, int flex) {
+    return Expanded(flex: flex, child: Text(label, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textMuted)));
+  }
+
+  Widget _buildOrderRow(OrderModel o, int index, int total) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      decoration: BoxDecoration(
+        border: index == total - 1 ? null : Border(bottom: BorderSide(color: Colors.grey.shade100)),
+      ),
+      child: Row(
+        children: [
+          Expanded(flex: 2, child: Text('#${o.id.substring(0, 8)}', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: AppColors.rubyDark))),
+          Expanded(flex: 3, child: Text(o.customerName, style: GoogleFonts.inter(fontWeight: FontWeight.w500))),
+          Expanded(flex: 2, child: Text('₹${o.totalAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(fontWeight: FontWeight.bold))),
+          Expanded(flex: 2, child: _statusBadge(o.status)),
+          Expanded(flex: 2, child: _paymentBadge(o.paymentStatus)),
+          Expanded(flex: 2, child: IconButton(icon: const Icon(Icons.visibility, color: AppColors.rubyDark, size: 20), onPressed: () => _showOrderDetails(o))),
+        ],
+      ),
     );
   }
 

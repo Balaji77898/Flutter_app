@@ -31,6 +31,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final restaurantProv = context.watch<RestaurantProvider>();
     final r = restaurantProv.restaurant;
 
+    final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
+
     return Scaffold(
       backgroundColor: AppColors.ivory,
       appBar: AppBar(
@@ -49,14 +52,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ? const Center(
               child: CircularProgressIndicator(color: AppColors.rubyRed))
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+              padding: EdgeInsets.all(isMobile ? 16 : 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ── Profile header card ────────────────────────────────────
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(28),
+                    padding: EdgeInsets.all(isMobile ? 20 : 28),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         colors: [AppColors.rubyRed, AppColors.rubyDark],
@@ -69,16 +72,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
                           Container(
-                            width: 64,
-                            height: 64,
+                            width: isMobile ? 48 : 64,
+                            height: isMobile ? 48 : 64,
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(isMobile ? 12 : 16),
                             ),
-                            child: const Icon(Icons.restaurant_rounded,
-                                color: Colors.white, size: 32),
+                            child: Icon(Icons.restaurant_rounded,
+                                color: Colors.white, size: isMobile ? 24 : 32),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
@@ -87,45 +92,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Text(r?.name ?? 'Restaurant',
                                   style: GoogleFonts.playfairDisplay(
-                                    fontSize: 24,
+                                    fontSize: isMobile ? 20 : 24,
                                     fontWeight: FontWeight.w900,
                                     color: Colors.white,
                                   )),
                               Text(r?.restaurantType ?? 'Fine Dining',
                                   style: GoogleFonts.inter(
-                                    fontSize: 13,
+                                    fontSize: isMobile ? 11 : 13,
                                     color: AppColors.gold.withValues(alpha: 0.9),
                                     fontWeight: FontWeight.w500,
                                   )),
                             ],
                           )),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: r != null && r.isActive
-                                  ? AppColors.success.withValues(alpha: 0.2)
-                                  : AppColors.warning.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(100),
-                              border: Border.all(
-                                color: r != null && r.isActive
-                                    ? AppColors.success.withValues(alpha: 0.5)
-                                    : AppColors.warning.withValues(alpha: 0.5),
-                              ),
-                            ),
-                            child: Text(
-                              r?.status ?? 'UNKNOWN',
-                              style: GoogleFonts.inter(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                color: r != null && r.isActive
-                                    ? AppColors.success
-                                    : AppColors.warning,
-                                letterSpacing: 1,
-                              ),
-                            ),
-                          ),
+                          if (!isMobile) ...[
+                            const SizedBox(width: 16),
+                            _buildStatusBadge(r),
+                          ],
                         ]),
+                        if (isMobile) ...[
+                          const SizedBox(height: 16),
+                          _buildStatusBadge(r),
+                        ],
                       ],
                     ),
                   ).animate().fadeIn().slideY(begin: -0.05),
@@ -214,6 +201,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildStatusBadge(dynamic r) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: r != null && r.isActive
+            ? AppColors.success.withValues(alpha: 0.2)
+            : AppColors.warning.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(
+          color: r != null && r.isActive
+              ? AppColors.success.withValues(alpha: 0.5)
+              : AppColors.warning.withValues(alpha: 0.5),
+        ),
+      ),
+      child: Text(
+        r?.status ?? 'UNKNOWN',
+        style: GoogleFonts.inter(
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          color: r != null && r.isActive ? AppColors.success : AppColors.warning,
+          letterSpacing: 1,
+        ),
+      ),
     );
   }
 
