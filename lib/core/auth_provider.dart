@@ -116,7 +116,11 @@ class AuthProvider extends ChangeNotifier {
       final response = await http.post(
         Uri.parse('$kBackendBase${ApiEndpoints.forgotPassword}'),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({'email': email}),
+        body: json.encode({
+          'email': email,
+          'redirectUrl': 'http://localhost:8080/#',
+          'clientUrl': 'http://localhost:8080/#'
+        }),
       );
 
       if (response.statusCode != 200) {

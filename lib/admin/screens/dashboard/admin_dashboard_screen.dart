@@ -86,7 +86,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     const _DashOption(
       title: 'Menu Management',
       description: 'Add, update, or remove menu items.',
-      icon: Icons.restaurant_menu_rounded,
+      icon: Icons.restaurant_rounded,
       route: '/admin/menu',
     ),
     const _DashOption(
@@ -445,82 +445,94 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOutCubic,
-          padding: EdgeInsets.all(widget.isMobile ? 16 : 24),
+          padding: EdgeInsets.symmetric(
+            horizontal: widget.isMobile ? 16 : 24,
+            vertical: widget.isMobile ? 24 : 32,
+          ),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: _isHovered ? AppColors.gold : AppColors.rubyDark,
-              width: 1.0, // Thin maroon outline
+              color: _isHovered ? AppColors.gold : Colors.transparent,
+              width: 1.0,
             ),
             boxShadow: [
               BoxShadow(
+<<<<<<< HEAD
                 color: AppColors.rubyDark.withValues(
                   alpha: 0.12,
                 ), // Persistent maroon shadow
                 blurRadius: _isHovered ? 30 : 20,
                 offset: Offset(0, _isHovered ? 15 : 10),
               ),
+=======
+                color: _isHovered 
+                    ? AppColors.gold.withValues(alpha: 0.2) 
+                    : Colors.black.withValues(alpha: 0.04),
+                blurRadius: _isHovered ? 30 : 15,
+                offset: Offset(0, _isHovered ? 15 : 5),
+              )
+>>>>>>> a13496d (forgot password fixed)
             ],
           ),
-          child: Row(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                width: widget.isMobile ? 56 : 72,
-                height: widget.isMobile ? 56 : 72,
+                width: widget.isMobile ? 64 : 88,
+                height: widget.isMobile ? 64 : 88,
                 decoration: BoxDecoration(
-                  color: _isHovered
-                      ? AppColors.rubyRed
-                      : AppColors.rubyDark.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(16),
+                  shape: BoxShape.circle,
+                  color: _isHovered 
+                      ? AppColors.rubyDark 
+                      : AppColors.rubyDark.withValues(alpha: 0.06),
                 ),
                 child: Icon(
                   widget.option.icon,
-                  color: _isHovered ? Colors.white : AppColors.rubyDark,
-                  size: widget.isMobile ? 24 : 32,
+                  color: _isHovered ? AppColors.gold : AppColors.rubyDark,
+                  size: widget.isMobile ? 32 : 40,
                 ),
               ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.option.title,
-                      style: GoogleFonts.playfairDisplay(
-                        fontSize: widget.isMobile ? 18 : 22,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.rubyDark,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      widget.option.description,
-                      style: GoogleFonts.inter(
-                        fontSize: widget.isMobile ? 12 : 14,
-                        color: Colors.grey.shade500,
-                        height: 1.3,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+              const SizedBox(height: 24),
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 300),
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: widget.isMobile ? 18 : 22,
+                  fontWeight: FontWeight.bold,
+                  color: _isHovered ? AppColors.rubyDark : const Color(0xFF1F2937),
+                  letterSpacing: 0.5,
+                ),
+                child: Text(
+                  widget.option.title,
+                  textAlign: TextAlign.center,
                 ),
               ),
+<<<<<<< HEAD
               const Icon(
                 Icons.chevron_right_rounded,
                 color: AppColors.gold,
                 size: 24,
+=======
+              const SizedBox(height: 12),
+              Text(
+                widget.option.description,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  fontSize: widget.isMobile ? 12 : 13,
+                  color: Colors.grey.shade500,
+                  height: 1.5,
+                ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+>>>>>>> a13496d (forgot password fixed)
               ),
             ],
           ),
         )
             .animate()
             .fadeIn(delay: (widget.index * 100).ms)
-            .slideX(begin: 0.1, curve: Curves.easeOutCirc),
+            .slideY(begin: 0.1, curve: Curves.easeOutCirc),
       ),
     );
   }

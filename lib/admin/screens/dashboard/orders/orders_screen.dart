@@ -1750,9 +1750,16 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                             );
                           }
 
+<<<<<<< HEAD
                           return Row(children: children);
                         },
                       ),
+=======
+                        return Row(
+                          children: children.map((c) => Expanded(child: c)).toList(),
+                        );
+                      }),
+>>>>>>> a13496d (forgot password fixed)
                     ),
 
                     const SizedBox(height: 32),
