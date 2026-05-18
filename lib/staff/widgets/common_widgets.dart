@@ -91,7 +91,7 @@ class PageHeader extends StatelessWidget {
         final textAlign = isCentered
             ? TextAlign.center
             : (isWide ? TextAlign.left : TextAlign.center);
-        final verticalPadding = isWide ? 64.0 : 40.0;
+        final verticalPadding = isWide ? 64.0 : 20.0;
 
         return Container(
           width: double.infinity,
@@ -295,7 +295,7 @@ class _Title extends StatelessWidget {
       title,
       textAlign: textAlign,
       style: AppTheme.serif(
-        size: isWide ? 56 : 36,
+        size: isWide ? 56 : 28,
         weight: FontWeight.w800,
         color: AppColors.white,
         letterSpacing: -1,
@@ -331,7 +331,7 @@ class _Subtitle extends StatelessWidget {
         size: isWide ? 14 : 12,
         weight: FontWeight.w700,
         color: AppColors.gold,
-        letterSpacing: 3.0,
+        letterSpacing: isWide ? 3.0 : 1.8,
       ),
     );
   }

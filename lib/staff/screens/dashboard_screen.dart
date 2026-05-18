@@ -126,7 +126,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 16),
 
                           // ── Feature Grid ──────────────────────────────────
                           LayoutBuilder(
@@ -274,7 +274,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ],
                                 ),
 
-                                const SizedBox(height: 32),
+                                const SizedBox(height: 14),
 
                                 if (recentOrders.isEmpty)
                                   const EmptyState(
@@ -428,7 +428,7 @@ class _DashboardHero extends StatelessWidget {
           SafeArea(
             bottom: false,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
+              padding: const EdgeInsets.fromLTRB(20, 14, 20, 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -487,7 +487,7 @@ class _DashboardHero extends StatelessWidget {
                     ],
                   ).animate().fade(duration: 600.ms).slideY(begin: -0.2),
 
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 14),
 
                   // Greeting Section
                   Column(
@@ -506,7 +506,7 @@ class _DashboardHero extends StatelessWidget {
                       Text(
                         firstName,
                         style: AppTheme.serif(
-                          size: 40,
+                          size: 30,
                           weight: FontWeight.w900,
                           color: AppColors.white,
                           letterSpacing: -0.5,
@@ -518,7 +518,7 @@ class _DashboardHero extends StatelessWidget {
                       .fade(duration: 600.ms, delay: 200.ms)
                       .slideX(begin: -0.1),
 
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 14),
 
                   // Live Stats Row
                   Container(
