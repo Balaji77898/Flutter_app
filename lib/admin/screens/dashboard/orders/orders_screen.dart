@@ -2153,11 +2153,19 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                   fontSize: 14,
                   color: AppColors.slate500,
                   fontWeight: FontWeight.w500)),
-          Text(value,
+          const SizedBox(width: 16),
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
               style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.slate900)),
+                  color: AppColors.slate900),
+            ),
+          ),
         ],
       ),
     );

@@ -803,33 +803,36 @@ class _TablesScreenState extends State<TablesScreen> {
             ),
           ),
           const Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                onPressed: () => _showQRDialog(t),
-                icon: const Icon(Icons.qr_code, size: 18, color: Colors.blue),
-              ),
-              const SizedBox(width: 8),
-              IconButton(
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                onPressed: () => _deleteTable(t.id),
-                icon: const Icon(Icons.delete_outline,
-                    size: 18, color: Colors.red),
-              ),
-              const SizedBox(width: 8),
-              Transform.scale(
-                scale: 0.7,
-                child: Switch(
-                  value: t.isActive,
-                  onChanged: (v) => _toggleTable(t.id),
-                  activeColor: Colors.green,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: () => _showQRDialog(t),
+                  icon: const Icon(Icons.qr_code, size: 18, color: Colors.blue),
                 ),
-              ),
-            ],
+                const SizedBox(width: 4),
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: () => _deleteTable(t.id),
+                  icon: const Icon(Icons.delete_outline,
+                      size: 18, color: Colors.red),
+                ),
+                const SizedBox(width: 4),
+                Transform.scale(
+                  scale: 0.7,
+                  child: Switch(
+                    value: t.isActive,
+                    onChanged: (v) => _toggleTable(t.id),
+                    activeColor: Colors.green,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
