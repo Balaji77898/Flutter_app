@@ -159,40 +159,43 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   child: Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 1200),
-                      child: LayoutBuilder(builder: (ctx, constraints) {
-                        int cols = 1;
-                        double aspect =
-                            2.8; // List tile aspect for single column mobile
+                      child: LayoutBuilder(
+                        builder: (ctx, constraints) {
+                          int cols = 1;
+                          double aspect =
+                              2.8; // List tile aspect for single column mobile
 
-                        if (constraints.maxWidth > 900) {
-                          cols = 4;
-                          aspect = 1.0;
-                        } else if (constraints.maxWidth > 600) {
-                          cols = 2;
-                          aspect = 1.1;
-                        }
+                          if (constraints.maxWidth > 900) {
+                            cols = 4;
+                            aspect = 1.0;
+                          } else if (constraints.maxWidth > 600) {
+                            cols = 2;
+                            aspect = 1.1;
+                          }
 
-                        return GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: cols,
-                            crossAxisSpacing: isMobile ? 16 : 24,
-                            mainAxisSpacing: isMobile ? 16 : 24,
-                            childAspectRatio: aspect,
-                          ),
-                          itemCount: _dashboardOptions.length,
-                          itemBuilder: (ctx, i) => _HoverableDashCard(
-                            option: _dashboardOptions[i],
-                            index: i,
-                            isMobile: isMobile,
-                            onTap: (details) => _triggerNavAnimation(
+                          return GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: cols,
+                              crossAxisSpacing: isMobile ? 16 : 24,
+                              mainAxisSpacing: isMobile ? 16 : 24,
+                              childAspectRatio: aspect,
+                            ),
+                            itemCount: _dashboardOptions.length,
+                            itemBuilder: (ctx, i) => _HoverableDashCard(
+                              option: _dashboardOptions[i],
+                              index: i,
+                              isMobile: isMobile,
+                              onTap: (details) => _triggerNavAnimation(
                                 details.globalPosition,
-                                _dashboardOptions[i].route),
-                          ),
-                        );
-                      }),
+                                _dashboardOptions[i].route,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -210,8 +213,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     ).animate().fadeIn();
   }
 
-  Widget _buildHeader(BuildContext context, AuthProvider auth,
-      dynamic restaurant, bool isMobile) {
+  Widget _buildHeader(
+    BuildContext context,
+    AuthProvider auth,
+    dynamic restaurant,
+    bool isMobile,
+  ) {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -219,7 +226,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         border: Border(bottom: BorderSide(color: AppColors.gold, width: 4)),
       ),
       padding: EdgeInsets.symmetric(
-          horizontal: isMobile ? 20 : 40, vertical: isMobile ? 16 : 24),
+        horizontal: isMobile ? 20 : 40,
+        vertical: isMobile ? 16 : 24,
+      ),
       child: SafeArea(
         bottom: false,
         child: isMobile
@@ -236,7 +245,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           _NotificationButton(),
                           const SizedBox(width: 12),
                           _ProfileChip(
-                              email: auth.userEmail ?? 'admin@restaurant.com'),
+                            email: auth.userEmail ?? 'admin@restaurant.com',
+                          ),
                         ],
                       ),
                     ],
@@ -277,17 +287,24 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           context.go('/login');
                         }
                       },
-                      icon: const Icon(Icons.logout_rounded,
-                          size: 18, color: Colors.white),
-                      label: Text('Logout',
-                          style: GoogleFonts.inter(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)),
+                      icon: const Icon(
+                        Icons.logout_rounded,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                      label: Text(
+                        'Logout',
+                        style: GoogleFonts.inter(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white.withValues(alpha: 0.1),
                         elevation: 0,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ),
@@ -342,8 +359,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                             _NotificationButton(),
                             const SizedBox(width: 16),
                             _ProfileChip(
-                                email:
-                                    auth.userEmail ?? 'admin@restaurant.com'),
+                              email: auth.userEmail ?? 'admin@restaurant.com',
+                            ),
                           ],
                         ),
                         const SizedBox(height: 12),
@@ -364,18 +381,26 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                 context.go('/login');
                               }
                             },
-                            icon: const Icon(Icons.logout_rounded,
-                                size: 16, color: Colors.white),
-                            label: Text('Logout',
-                                style: GoogleFonts.inter(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold)),
+                            icon: const Icon(
+                              Icons.logout_rounded,
+                              size: 16,
+                              color: Colors.white,
+                            ),
+                            label: Text(
+                              'Logout',
+                              style: GoogleFonts.inter(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Colors.white.withValues(alpha: 0.1),
+                              backgroundColor: Colors.white.withValues(
+                                alpha: 0.1,
+                              ),
                               elevation: 0,
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
                           ),
                         ),
@@ -430,11 +455,12 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.rubyDark
-                    .withValues(alpha: 0.12), // Persistent maroon shadow
+                color: AppColors.rubyDark.withValues(
+                  alpha: 0.12,
+                ), // Persistent maroon shadow
                 blurRadius: _isHovered ? 30 : 20,
                 offset: Offset(0, _isHovered ? 15 : 10),
-              )
+              ),
             ],
           ),
           child: Row(
@@ -484,8 +510,11 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded,
-                  color: AppColors.gold, size: 24),
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.gold,
+                size: 24,
+              ),
             ],
           ),
         )
@@ -500,11 +529,12 @@ class _HoverableDashCardState extends State<_HoverableDashCard> {
 class _DashOption {
   final String title, description, route;
   final IconData icon;
-  const _DashOption(
-      {required this.title,
-      required this.description,
-      required this.icon,
-      required this.route});
+  const _DashOption({
+    required this.title,
+    required this.description,
+    required this.icon,
+    required this.route,
+  });
 }
 
 class _StatusBadge extends StatelessWidget {
@@ -526,7 +556,9 @@ class _StatusBadge extends StatelessWidget {
             width: 8,
             height: 8,
             decoration: const BoxDecoration(
-                color: Colors.green, shape: BoxShape.circle),
+              color: Colors.green,
+              shape: BoxShape.circle,
+            ),
           ),
           const SizedBox(width: 8),
           Text(
@@ -579,37 +611,45 @@ class _ProfileChipState extends State<_ProfileChip> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 10 : 16, vertical: isMobile ? 6 : 8),
+            horizontal: isMobile ? 10 : 16,
+            vertical: isMobile ? 6 : 8,
+          ),
           decoration: BoxDecoration(
             color: _isHovered
                 ? Colors.white.withValues(alpha: 0.15)
                 : Colors.white.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(100),
             border: Border.all(
-                color: _isHovered
-                    ? AppColors.gold.withValues(alpha: 0.5)
-                    : Colors.white.withValues(alpha: 0.1)),
+              color: _isHovered
+                  ? AppColors.gold.withValues(alpha: 0.5)
+                  : Colors.white.withValues(alpha: 0.1),
+            ),
             boxShadow: _isHovered
                 ? [
                     BoxShadow(
-                        color: AppColors.gold.withValues(alpha: 0.2),
-                        blurRadius: 12,
-                        spreadRadius: 2)
+                      color: AppColors.gold.withValues(alpha: 0.2),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                    ),
                   ]
                 : null,
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.person_pin_rounded,
-                  color: _isHovered ? Colors.white : AppColors.gold, size: 20),
+              Icon(
+                Icons.person_pin_rounded,
+                color: _isHovered ? Colors.white : AppColors.gold,
+                size: 20,
+              ),
               const SizedBox(width: 8),
               Text(
                 displayEmail,
                 style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontSize: 13,
-                    fontWeight: _isHovered ? FontWeight.bold : FontWeight.w600),
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: _isHovered ? FontWeight.bold : FontWeight.w600,
+                ),
               ),
             ],
           ),
@@ -642,8 +682,10 @@ class _NavigationPulse extends StatelessWidget {
                 children: [
                   // Trail Particles
                   ...List.generate(5, (i) {
-                    final particleProgress =
-                        (value - (i * 0.1)).clamp(0.0, 1.0);
+                    final particleProgress = (value - (i * 0.1)).clamp(
+                      0.0,
+                      1.0,
+                    );
                     if (particleProgress <= 0 || particleProgress >= 0.8)
                       return const SizedBox();
 
@@ -656,8 +698,11 @@ class _NavigationPulse extends StatelessWidget {
                           scale: 0.5 + (particleProgress * 0.5),
                           child: Transform.rotate(
                             angle: -0.5,
-                            child: const Icon(Icons.navigation_rounded,
-                                color: AppColors.gold, size: 20),
+                            child: const Icon(
+                              Icons.navigation_rounded,
+                              color: AppColors.gold,
+                              size: 20,
+                            ),
                           ),
                         ),
                       ),
@@ -677,17 +722,21 @@ class _NavigationPulse extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.gold
-                                    .withValues(alpha: 0.3 * (1 - value)),
+                                color: AppColors.gold.withValues(
+                                  alpha: 0.3 * (1 - value),
+                                ),
                                 blurRadius: 20,
                                 spreadRadius: 5,
-                              )
+                              ),
                             ],
                           ),
                           child: Transform.rotate(
                             angle: -0.5,
-                            child: const Icon(Icons.navigation_rounded,
-                                color: AppColors.gold, size: 40),
+                            child: const Icon(
+                              Icons.navigation_rounded,
+                              color: AppColors.gold,
+                              size: 40,
+                            ),
                           ),
                         ),
                       ),
@@ -731,16 +780,20 @@ class _NotificationButtonState extends State<_NotificationButton> {
                 : Colors.white.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-                color: _isHovered
-                    ? AppColors.gold.withValues(alpha: 0.5)
-                    : Colors.white.withValues(alpha: 0.1)),
+              color: _isHovered
+                  ? AppColors.gold.withValues(alpha: 0.5)
+                  : Colors.white.withValues(alpha: 0.1),
+            ),
           ),
           child: Center(
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                const Icon(Icons.notifications_outlined,
-                    color: Colors.white, size: 24),
+                const Icon(
+                  Icons.notifications_outlined,
+                  color: Colors.white,
+                  size: 24,
+                ),
                 if (unread > 0)
                   Positioned(
                     right: -2,
@@ -749,7 +802,9 @@ class _NotificationButtonState extends State<_NotificationButton> {
                       width: 10,
                       height: 10,
                       decoration: const BoxDecoration(
-                          color: AppColors.success, shape: BoxShape.circle),
+                        color: AppColors.success,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   ),
               ],
@@ -783,9 +838,10 @@ class _NotificationButtonState extends State<_NotificationButton> {
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 40,
-                    offset: const Offset(0, 10))
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 40,
+                  offset: const Offset(0, 10),
+                ),
               ],
             ),
             child: Column(
@@ -795,8 +851,11 @@ class _NotificationButtonState extends State<_NotificationButton> {
                   padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
                   child: Row(
                     children: [
-                      const Icon(Icons.notifications_outlined,
-                          color: AppColors.rubyRed, size: 20),
+                      const Icon(
+                        Icons.notifications_outlined,
+                        color: AppColors.rubyRed,
+                        size: 20,
+                      ),
                       const SizedBox(width: 12),
                       Text(
                         'Notifications',
@@ -813,8 +872,10 @@ class _NotificationButtonState extends State<_NotificationButton> {
                             prov.markAllAsRead();
                             Navigator.pop(context);
                           },
-                          child: Text('Mark all as read',
-                              style: GoogleFonts.inter(fontSize: 12)),
+                          child: Text(
+                            'Mark all as read',
+                            style: GoogleFonts.inter(fontSize: 12),
+                          ),
                         ),
                     ],
                   ),
@@ -832,8 +893,11 @@ class _NotificationButtonState extends State<_NotificationButton> {
                             color: AppColors.ivory,
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(Icons.notifications_none_rounded,
-                              color: Colors.grey.shade300, size: 48),
+                          child: Icon(
+                            Icons.notifications_none_rounded,
+                            color: Colors.grey.shade300,
+                            size: 48,
+                          ),
                         ),
                         const SizedBox(height: 16),
                         Text(
@@ -860,7 +924,8 @@ class _NotificationButtonState extends State<_NotificationButton> {
                             prov.markAsRead(n.id);
                             Navigator.pop(context);
                             context.go(
-                                '/admin/orders?highlightOrderId=${n.orderId}');
+                              '/admin/orders?highlightOrderId=${n.orderId}',
+                            );
                           },
                           leading: Container(
                             padding: const EdgeInsets.all(8),
@@ -887,7 +952,9 @@ class _NotificationButtonState extends State<_NotificationButton> {
                           ),
                           subtitle: _LiveTimeAgo(dt: n.createdAt),
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 4),
+                            horizontal: 24,
+                            vertical: 4,
+                          ),
                         );
                       },
                     ),
@@ -1009,8 +1076,9 @@ class _TopToastWidgetState extends State<_TopToastWidget>
               constraints: const BoxConstraints(maxWidth: 600),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               decoration: BoxDecoration(
-                color:
-                    Colors.white.withValues(alpha: 0.95), // Transparent white
+                color: Colors.white.withValues(
+                  alpha: 0.95,
+                ), // Transparent white
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
                 boxShadow: [
@@ -1018,7 +1086,7 @@ class _TopToastWidgetState extends State<_TopToastWidget>
                     color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
-                  )
+                  ),
                 ],
               ),
               child: Row(
@@ -1029,8 +1097,11 @@ class _TopToastWidgetState extends State<_TopToastWidget>
                       color: AppColors.rubyRed.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.receipt_long_rounded,
-                        color: AppColors.rubyRed, size: 20),
+                    child: const Icon(
+                      Icons.receipt_long_rounded,
+                      color: AppColors.rubyRed,
+                      size: 20,
+                    ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -1049,7 +1120,9 @@ class _TopToastWidgetState extends State<_TopToastWidget>
                     style: TextButton.styleFrom(
                       foregroundColor: AppColors.rubyRed,
                       textStyle: GoogleFonts.inter(
-                          fontWeight: FontWeight.w900, letterSpacing: 1),
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1,
+                      ),
                     ),
                     child: const Text('VIEW'),
                   ),

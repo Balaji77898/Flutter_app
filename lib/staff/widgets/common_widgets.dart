@@ -97,10 +97,7 @@ class PageHeader extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [
-                AppColors.primary,
-                AppColors.primaryDark,
-              ],
+              colors: [AppColors.primary, AppColors.primaryDark],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -194,7 +191,9 @@ class PageHeader extends StatelessWidget {
                                   .animate()
                                   .fade(duration: 600.ms, delay: 200.ms)
                                   .slideX(
-                                      begin: 0.2, curve: Curves.easeOutQuad),
+                                    begin: 0.2,
+                                    curve: Curves.easeOutQuad,
+                                  ),
                           ],
                         )
                       : Column(
@@ -236,8 +235,9 @@ class PageHeader extends StatelessWidget {
                                   .animate()
                                   .fade(duration: 600.ms, delay: 300.ms)
                                   .scale(
-                                      begin: const Offset(0.8, 0.8),
-                                      curve: Curves.easeOutBack),
+                                    begin: const Offset(0.8, 0.8),
+                                    curve: Curves.easeOutBack,
+                                  ),
                             ],
                           ],
                         ),
@@ -369,8 +369,10 @@ class _HeaderIconButtonState extends State<HeaderIconButton> {
         duration: 100.ms,
         child: widget.label != null
             ? Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [AppColors.gold, AppColors.goldDark],
@@ -402,8 +404,9 @@ class _HeaderIconButtonState extends State<HeaderIconButton> {
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(18),
-                  border:
-                      Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.2),
+                  ),
                   boxShadow: [
                     if (_isPressed)
                       BoxShadow(
@@ -445,18 +448,11 @@ class AppCard extends StatelessWidget {
         boxShadow: AppShadows.card,
       ),
       clipBehavior: Clip.antiAlias,
-      child: Padding(
-        padding: padding,
-        child: child,
-      ),
+      child: Padding(padding: padding, child: child),
     );
 
     if (onTap != null) {
-      return _AnimatedTap(
-        onTap: onTap!,
-        animate: animateOnTap,
-        child: card,
-      );
+      return _AnimatedTap(onTap: onTap!, animate: animateOnTap, child: card);
     }
     return card;
   }
@@ -466,8 +462,11 @@ class _AnimatedTap extends StatefulWidget {
   final Widget child;
   final VoidCallback onTap;
   final bool animate;
-  const _AnimatedTap(
-      {required this.child, required this.onTap, this.animate = true});
+  const _AnimatedTap({
+    required this.child,
+    required this.onTap,
+    this.animate = true,
+  });
 
   @override
   State<_AnimatedTap> createState() => _AnimatedTapState();
@@ -542,7 +541,9 @@ class _PrimaryButtonState extends State<PrimaryButton> {
         child: AnimatedContainer(
           duration: 200.ms,
           padding: EdgeInsets.symmetric(
-              horizontal: isSmall ? 16 : 28, vertical: isSmall ? 10 : 18),
+            horizontal: isSmall ? 16 : 28,
+            vertical: isSmall ? 10 : 18,
+          ),
           decoration: BoxDecoration(
             color: bg,
             borderRadius: BorderRadius.circular(isSmall ? 12 : 18),
@@ -576,8 +577,11 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (widget.icon != null) ...[
-                        Icon(widget.icon,
-                            color: textC, size: isSmall ? 16 : 20),
+                        Icon(
+                          widget.icon,
+                          color: textC,
+                          size: isSmall ? 16 : 20,
+                        ),
                         const SizedBox(width: 8),
                       ],
                       Text(
@@ -764,7 +768,11 @@ class EmptyState extends StatelessWidget {
             ),
             child: Icon(icon, size: 56, color: AppColors.slate300),
           ).animate(onPlay: (c) => c.repeat(reverse: true)).moveY(
-              begin: -5, end: 5, duration: 2000.ms, curve: Curves.easeInOut),
+                begin: -5,
+                end: 5,
+                duration: 2000.ms,
+                curve: Curves.easeInOut,
+              ),
           const SizedBox(height: 24),
           Text(
             title,
@@ -896,7 +904,9 @@ class StatCard extends StatelessWidget {
                   Text(
                     subtitle!,
                     style: AppTheme.sans(
-                        size: isSmall ? 11 : 13, color: AppColors.slate400),
+                      size: isSmall ? 11 : 13,
+                      color: AppColors.slate400,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

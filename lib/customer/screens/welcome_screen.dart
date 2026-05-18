@@ -32,12 +32,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       await prefs.setString('tableNumber', widget.tableNumber!);
       _savedTable = widget.tableNumber;
       debugPrint(
-          'WelcomeScreen: Saved tableNumber to SharedPreferences: $_savedTable');
+        'WelcomeScreen: Saved tableNumber to SharedPreferences: $_savedTable',
+      );
     } else {
       // Try to read previously saved table
       _savedTable = prefs.getString('tableNumber');
       debugPrint(
-          'WelcomeScreen: Loaded tableNumber from SharedPreferences: $_savedTable');
+        'WelcomeScreen: Loaded tableNumber from SharedPreferences: $_savedTable',
+      );
     }
     if (mounted) {
       setState(() => _isSaving = false);
@@ -111,7 +113,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 if (_savedTable != null && !_isSaving)
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 28, vertical: 14),
+                      horizontal: 28,
+                      vertical: 14,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.gold.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(40),
@@ -120,8 +124,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.table_restaurant,
-                            color: AppColors.gold, size: 20),
+                        const Icon(
+                          Icons.table_restaurant,
+                          color: AppColors.gold,
+                          size: 20,
+                        ),
                         const SizedBox(width: 10),
                         Text(
                           'Table #$_savedTable',
@@ -137,8 +144,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 else if (!_isSaving)
                   Text(
                     'Please scan a table QR code\nto start ordering',
-                    style:
-                        GoogleFonts.inter(color: Colors.white54, fontSize: 15),
+                    style: GoogleFonts.inter(
+                      color: Colors.white54,
+                      fontSize: 15,
+                    ),
                     textAlign: TextAlign.center,
                   ).animate().fadeIn(delay: 400.ms),
 

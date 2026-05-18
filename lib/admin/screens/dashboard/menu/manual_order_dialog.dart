@@ -61,9 +61,9 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
     } catch (e) {
       setState(() => _isLoadingTables = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load tables: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to load tables: $e')));
       }
     }
   }
@@ -81,12 +81,14 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
     if (!_formKey.currentState!.validate()) return;
     if (_orderMode == 'Dine-in' && _selectedTableId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select a table for Dine-in')));
+        const SnackBar(content: Text('Please select a table for Dine-in')),
+      );
       return;
     }
     if (_selectedItems.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please add at least one item')));
+        const SnackBar(content: Text('Please add at least one item')),
+      );
       return;
     }
 
@@ -94,10 +96,7 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
 
     try {
       final itemsList = _selectedItems.entries.map((e) {
-        return {
-          "menu_item_id": e.key,
-          "quantity": e.value,
-        };
+        return {"menu_item_id": e.key, "quantity": e.value};
       }).toList();
 
       final orderTypeMap = {
@@ -121,16 +120,18 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
         Navigator.pop(context, true);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Order created successfully!'),
-              backgroundColor: AppColors.success),
+            content: Text('Order created successfully!'),
+            backgroundColor: AppColors.success,
+          ),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Failed to create order: $e'),
-              backgroundColor: AppColors.danger),
+            content: Text('Failed to create order: $e'),
+            backgroundColor: AppColors.danger,
+          ),
         );
       }
     } finally {
@@ -160,27 +161,35 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
               decoration: const BoxDecoration(
                 color: AppColors.rubyDark,
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20)),
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.receipt_long,
-                      color: Colors.white, size: isDesktop ? 28 : 22),
+                  Icon(
+                    Icons.receipt_long,
+                    color: Colors.white,
+                    size: isDesktop ? 28 : 22,
+                  ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Text(
                       'Create Manual Order',
                       style: GoogleFonts.playfairDisplay(
-                          color: Colors.white,
-                          fontSize: isDesktop ? 26 : 18,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.white,
+                        fontSize: isDesktop ? 26 : 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close,
-                        color: Colors.white70, size: 20),
+                    icon: const Icon(
+                      Icons.close,
+                      color: Colors.white70,
+                      size: 20,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -199,8 +208,9 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                 color: Colors.white,
                 border: Border(top: BorderSide(color: Colors.grey.shade100)),
                 borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20)),
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -209,14 +219,21 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Total Amount',
-                          style: GoogleFonts.inter(
-                              color: AppColors.textMuted, fontSize: 13)),
-                      Text('₹${_totalAmount.toStringAsFixed(2)}',
-                          style: GoogleFonts.inter(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.rubyRed)),
+                      Text(
+                        'Total Amount',
+                        style: GoogleFonts.inter(
+                          color: AppColors.textMuted,
+                          fontSize: 13,
+                        ),
+                      ),
+                      Text(
+                        '₹${_totalAmount.toStringAsFixed(2)}',
+                        style: GoogleFonts.inter(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.rubyRed,
+                        ),
+                      ),
                     ],
                   ),
                   Row(
@@ -225,8 +242,8 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                         onPressed:
                             _isSubmitting ? null : () => Navigator.pop(context),
                         style: TextButton.styleFrom(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 24)),
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                        ),
                         child: const Text('Cancel'),
                       ),
                       const SizedBox(width: 16),
@@ -235,20 +252,29 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.rubyRed,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 18),
+                            horizontal: 40,
+                            vertical: 18,
+                          ),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         child: _isSubmitting
                             ? const SizedBox(
                                 width: 20,
                                 height: 20,
                                 child: CircularProgressIndicator(
-                                    color: Colors.white, strokeWidth: 2))
-                            : const Text('Submit Order',
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text(
+                                'Submit Order',
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold)),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                       ),
                     ],
                   ),
@@ -271,7 +297,8 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
           child: Container(
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-                border: Border(right: BorderSide(color: Colors.grey.shade100))),
+              border: Border(right: BorderSide(color: Colors.grey.shade100)),
+            ),
             child: SingleChildScrollView(child: _buildOrderDetailsForm()),
           ),
         ),
@@ -293,14 +320,17 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
         Expanded(
           flex: 2,
           child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: _buildOrderDetailsForm()),
+            padding: const EdgeInsets.all(24),
+            child: _buildOrderDetailsForm(),
+          ),
         ),
         Container(height: 1, color: Colors.grey.shade200),
         Expanded(
           flex: 3,
           child: Container(
-              color: const Color(0xFFF9FAFB), child: _buildMenuSelection()),
+            color: const Color(0xFFF9FAFB),
+            child: _buildMenuSelection(),
+          ),
         ),
       ],
     );
@@ -312,11 +342,14 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Order Configuration',
-              style: GoogleFonts.inter(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.rubyDark)),
+          Text(
+            'Order Configuration',
+            style: GoogleFonts.inter(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppColors.rubyDark,
+            ),
+          ),
           const SizedBox(height: 24),
 
           // Order Mode
@@ -324,17 +357,20 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
           SegmentedButton<String>(
             segments: const [
               ButtonSegment(
-                  value: 'Dine-in',
-                  label: Text('Dine-in'),
-                  icon: Icon(Icons.restaurant, size: 14)),
+                value: 'Dine-in',
+                label: Text('Dine-in'),
+                icon: Icon(Icons.restaurant, size: 14),
+              ),
               ButtonSegment(
-                  value: 'Takeaway',
-                  label: Text('Takeaway'),
-                  icon: Icon(Icons.shopping_bag, size: 14)),
+                value: 'Takeaway',
+                label: Text('Takeaway'),
+                icon: Icon(Icons.shopping_bag, size: 14),
+              ),
               ButtonSegment(
-                  value: 'Delivery',
-                  label: Text('Delivery'),
-                  icon: Icon(Icons.delivery_dining, size: 14)),
+                value: 'Delivery',
+                label: Text('Delivery'),
+                icon: Icon(Icons.delivery_dining, size: 14),
+              ),
             ],
             selected: {_orderMode},
             onSelectionChanged: (v) => setState(() => _orderMode = v.first),
@@ -342,8 +378,10 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
             style: SegmentedButton.styleFrom(
               selectedBackgroundColor: AppColors.rubyRed,
               selectedForegroundColor: Colors.white,
-              textStyle:
-                  const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+              textStyle: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+              ),
               visualDensity: VisualDensity.compact,
             ),
           ),
@@ -358,13 +396,20 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                 : DropdownButtonFormField<String>(
                     initialValue: _selectedTableId,
                     decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 16)),
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 16,
+                      ),
+                    ),
                     hint: const Text('Choose a table'),
                     items: _tables
-                        .map((t) => DropdownMenuItem(
-                            value: t.id, child: Text('Table ${t.tableNumber}')))
+                        .map(
+                          (t) => DropdownMenuItem(
+                            value: t.id,
+                            child: Text('Table ${t.tableNumber}'),
+                          ),
+                        )
                         .toList(),
                     onChanged: (v) => setState(() => _selectedTableId = v),
                     validator: (v) => _orderMode == 'Dine-in' && v == null
@@ -379,12 +424,18 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
           DropdownButtonFormField<String>(
             initialValue: _paymentMode,
             decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 16)),
-            items: ['Cash', 'Card', 'UPI', 'Online']
-                .map((m) => DropdownMenuItem(value: m, child: Text(m)))
-                .toList(),
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 16,
+              ),
+            ),
+            items: [
+              'Cash',
+              'Card',
+              'UPI',
+              'Online',
+            ].map((m) => DropdownMenuItem(value: m, child: Text(m))).toList(),
             onChanged: (v) => setState(() => _paymentMode = v!),
           ),
 
@@ -395,8 +446,10 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
             controller: _nameCtrl,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 16,
+              ),
             ),
           ),
 
@@ -408,8 +461,10 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
             keyboardType: TextInputType.phone,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 16,
+              ),
             ),
           ),
         ],
@@ -420,11 +475,14 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
   Widget _fieldLabel(String label) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: Text(label,
-          style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 13,
-              color: AppColors.textDark)),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 13,
+          color: AppColors.textDark,
+        ),
+      ),
     );
   }
 
@@ -446,9 +504,13 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
             children: [
               const Icon(Icons.category_rounded, color: AppColors.rubyRed),
               const SizedBox(width: 12),
-              Text('Select Category',
-                  style: GoogleFonts.inter(
-                      fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(
+                'Select Category',
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ),
@@ -498,12 +560,18 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                 onPressed: () => setState(() => _viewMode = 'categories'),
               ),
               const SizedBox(width: 8),
-              Text(_activeCategory?.name ?? 'Items',
-                  style: GoogleFonts.inter(
-                      fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(
+                _activeCategory?.name ?? 'Items',
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const Spacer(),
-              Text('${items.length} items',
-                  style: GoogleFonts.inter(color: Colors.grey, fontSize: 13)),
+              Text(
+                '${items.length} items',
+                style: GoogleFonts.inter(color: Colors.grey, fontSize: 13),
+              ),
             ],
           ),
         ),
@@ -526,15 +594,17 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.03),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2))
+                            color: Colors.black.withValues(alpha: 0.03),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
                         ],
                         border: Border.all(
-                            color: qty > 0
-                                ? AppColors.rubyRed.withValues(alpha: 0.4)
-                                : AppColors.rubyDark.withValues(alpha: 0.12),
-                            width: 1.5),
+                          color: qty > 0
+                              ? AppColors.rubyRed.withValues(alpha: 0.4)
+                              : AppColors.rubyDark.withValues(alpha: 0.12),
+                          width: 1.5,
+                        ),
                       ),
                       child: Row(
                         children: [
@@ -542,33 +612,47 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                               item.imageUrl!.isNotEmpty)
                             ClipRRect(
                               borderRadius: BorderRadius.circular(12),
-                              child: Image.network(item.imageUrl!,
-                                  width: 64, height: 64, fit: BoxFit.cover),
+                              child: Image.network(
+                                item.imageUrl!,
+                                width: 64,
+                                height: 64,
+                                fit: BoxFit.cover,
+                              ),
                             )
                           else
                             Container(
                               width: 64,
                               height: 64,
                               decoration: BoxDecoration(
-                                  color: Colors.grey.shade50,
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: const Icon(Icons.restaurant,
-                                  color: Colors.grey, size: 28),
+                                color: Colors.grey.shade50,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.restaurant,
+                                color: Colors.grey,
+                                size: 28,
+                              ),
                             ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(item.name,
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15)),
+                                Text(
+                                  item.name,
+                                  style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
                                 const SizedBox(height: 4),
-                                Text('₹${item.price.toStringAsFixed(2)}',
-                                    style: GoogleFonts.inter(
-                                        color: AppColors.rubyRed,
-                                        fontWeight: FontWeight.w600)),
+                                Text(
+                                  '₹${item.price.toStringAsFixed(2)}',
+                                  style: GoogleFonts.inter(
+                                    color: AppColors.rubyRed,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -576,8 +660,11 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                             children: [
                               if (qty > 0) ...[
                                 IconButton(
-                                  icon: const Icon(Icons.remove_circle_outline,
-                                      color: AppColors.rubyRed, size: 24),
+                                  icon: const Icon(
+                                    Icons.remove_circle_outline,
+                                    color: AppColors.rubyRed,
+                                    size: 24,
+                                  ),
                                   onPressed: () {
                                     setState(() {
                                       if (qty == 1) {
@@ -588,18 +675,22 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                                     });
                                   },
                                 ),
-                                Text('$qty',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16)),
+                                Text(
+                                  '$qty',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
                               ],
                               IconButton(
                                 icon: Icon(
-                                    qty > 0
-                                        ? Icons.add_circle
-                                        : Icons.add_circle_outline,
-                                    color: AppColors.success,
-                                    size: 24),
+                                  qty > 0
+                                      ? Icons.add_circle
+                                      : Icons.add_circle_outline,
+                                  color: AppColors.success,
+                                  size: 24,
+                                ),
                                 onPressed: () {
                                   setState(() {
                                     _selectedItems[item.id] = qty + 1;
@@ -653,7 +744,7 @@ class _CategoryCardState extends State<_CategoryCard> {
                 color: Colors.black.withValues(alpha: _isHovered ? 0.08 : 0.04),
                 blurRadius: _isHovered ? 15 : 10,
                 offset: Offset(0, _isHovered ? 6 : 4),
-              )
+              ),
             ],
             border: Border.all(
               color: _isHovered

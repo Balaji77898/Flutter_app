@@ -48,11 +48,7 @@ class OrderItem {
   final int quantity;
   final String price;
 
-  OrderItem({
-    required this.name,
-    required this.quantity,
-    required this.price,
-  });
+  OrderItem({required this.name, required this.quantity, required this.price});
 
   double get total => (double.tryParse(price) ?? 0.0) * quantity;
 }
@@ -144,14 +140,18 @@ class Order {
       table: "Table $tableNumberStr",
       customerName: json['customer_name'] ?? json['customerName'],
       items: itemsList.length,
-      total: double.tryParse(json['total_amount']?.toString() ??
-              json['totalAmount']?.toString() ??
-              "0") ??
+      total: double.tryParse(
+            json['total_amount']?.toString() ??
+                json['totalAmount']?.toString() ??
+                "0",
+          ) ??
           0,
       subtotal: double.tryParse(json['subtotal']?.toString() ?? "0") ?? 0,
-      tax: double.tryParse(json['tax_amount']?.toString() ??
-              json['taxAmount']?.toString() ??
-              "0") ??
+      tax: double.tryParse(
+            json['tax_amount']?.toString() ??
+                json['taxAmount']?.toString() ??
+                "0",
+          ) ??
           0,
       status: parsedStatus, // ✅ IMPORTANT FIX
       time: _formatTime(dt.toIso8601String()),
@@ -161,17 +161,21 @@ class Order {
           .toList(),
 
       itemsDetails: itemsList
-          .map((i) => OrderItem(
-                name: i['item_name'] ?? i['name'] ?? '',
-                quantity: i['quantity'] ?? 0,
-                price: i['price'].toString(),
-              ))
+          .map(
+            (i) => OrderItem(
+              name: i['item_name'] ?? i['name'] ?? '',
+              quantity: i['quantity'] ?? 0,
+              price: i['price'].toString(),
+            ),
+          )
           .toList(),
     );
 
     if (order.subtotal == 0 && order.itemsDetails.isNotEmpty) {
-      double calcSubtotal =
-          order.itemsDetails.fold(0.0, (sum, item) => sum + item.total);
+      double calcSubtotal = order.itemsDetails.fold(
+        0.0,
+        (sum, item) => sum + item.total,
+      );
       double calcTax = calcSubtotal * 0.05; // Default 5% tax
       double calcTotal = calcSubtotal + calcTax;
 
@@ -184,10 +188,7 @@ class Order {
       // If subtotal was provided but tax is 0, calculate tax
       double calcTax = order.subtotal * 0.05;
       double calcTotal = order.subtotal + calcTax;
-      return order.copyWith(
-        tax: calcTax,
-        total: calcTotal,
-      );
+      return order.copyWith(tax: calcTax, total: calcTotal);
     }
 
     return order;
@@ -215,7 +216,7 @@ class Order {
         'Sep',
         'Oct',
         'Nov',
-        'Dec'
+        'Dec',
       ];
       final month = months[dt.month - 1];
 
@@ -294,9 +295,9 @@ class TableModel {
               'Table')
           .toString(),
       status: status,
-      seats: int.tryParse(json['capacity']?.toString() ??
-              json['seats']?.toString() ??
-              '4') ??
+      seats: int.tryParse(
+            json['capacity']?.toString() ?? json['seats']?.toString() ?? '4',
+          ) ??
           4,
       server: json['current_server_name'] ?? json['server'],
     );

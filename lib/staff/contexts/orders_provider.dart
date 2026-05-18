@@ -16,8 +16,10 @@ class OrdersProvider extends ChangeNotifier {
       _orders.where((o) => o.status == OrderStatus.placed).toList();
 
   List<Order> get activeOrders => _orders
-      .where((o) =>
-          o.status != OrderStatus.placed && o.status != OrderStatus.cancelled)
+      .where(
+        (o) =>
+            o.status != OrderStatus.placed && o.status != OrderStatus.cancelled,
+      )
       .toList();
 
   Order? findById(String id) {
@@ -64,7 +66,10 @@ class OrdersProvider extends ChangeNotifier {
 
   // 🔥 UPDATE STATUS (WITH TOKEN)
   Future<void> updateOrderStatus(
-      String id, OrderStatus status, String token) async {
+    String id,
+    OrderStatus status,
+    String token,
+  ) async {
     try {
       await http.patch(
         Uri.parse("$kBackendBase${ApiEndpoints.ordersList}/$id/status"),
@@ -96,9 +101,7 @@ class OrdersProvider extends ChangeNotifier {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
         },
-        body: json.encode({
-          "status": "BILLED",
-        }),
+        body: json.encode({"status": "BILLED"}),
       );
 
       debugPrint("BILLED STATUS: ${billedResponse.statusCode}");
@@ -111,10 +114,7 @@ class OrdersProvider extends ChangeNotifier {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
         },
-        body: json.encode({
-          "status": "PAID",
-          "payment_status": "PAID",
-        }),
+        body: json.encode({"status": "PAID", "payment_status": "PAID"}),
       );
 
       debugPrint("PAID STATUS: ${paidResponse.statusCode}");

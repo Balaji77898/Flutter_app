@@ -57,7 +57,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           child: Container(
             width: double.infinity,
             constraints: const BoxConstraints(maxWidth: 420),
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 48),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 40,
+              vertical: 48,
+            ),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
@@ -90,17 +93,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-
                 if (_emailSent) ...[
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 16),
+                      vertical: 16,
+                      horizontal: 16,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFEEFBF2), // Light green bg
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                          color: const Color(0xFFBCE8CC)), // Light green border
+                        color: const Color(0xFFBCE8CC),
+                      ), // Light green border
                     ),
                     child: Text(
                       'Reset link sent to your email!',
@@ -114,7 +119,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ).animate().fadeIn(duration: 300.ms),
                   const SizedBox(height: 24),
                 ],
-
                 Form(
                   key: _formKey,
                   child: Column(
@@ -132,38 +136,53 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
-                        style: GoogleFonts.inter(color: AppColors.textDark),
+                        style: GoogleFonts.inter(
+                          color: AppColors.textDark,
+                        ),
                         decoration: InputDecoration(
                           hintText: 'Enter your registered email',
                           hintStyle: GoogleFonts.inter(
-                            color: AppColors.textMuted.withValues(alpha: 0.5),
+                            color: AppColors.textMuted.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                           filled: true,
-                          fillColor: const Color(0xFFEFECE5), // Beige/ivory fill
+                          fillColor: const Color(
+                            0xFFEFECE5,
+                          ), // Beige/ivory fill
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 18),
+                            horizontal: 16,
+                            vertical: 18,
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: const BorderSide(
-                                color: Color(0xFF4A1E1E), width: 1.5),
+                              color: Color(0xFF4A1E1E),
+                              width: 1.5,
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: const BorderSide(
-                                color: Color(0xFF4A1E1E), width: 1.5),
+                              color: Color(0xFF4A1E1E),
+                              width: 1.5,
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: const BorderSide(
-                                color: AppColors.gold, width: 2),
+                              color: AppColors.gold,
+                              width: 2,
+                            ),
                           ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
                           }
-                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                              .hasMatch(value)) {
+                          if (!RegExp(
+                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                          ).hasMatch(value)) {
                             return 'Please enter a valid email';
                           }
                           return null;
@@ -177,12 +196,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           onPressed:
                               authProvider.isLoading ? null : _handleSubmit,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFDCA738), // Yellow
-                            foregroundColor: const Color(0xFF4A1E1E), // Brown
+                            backgroundColor: const Color(
+                              0xFFDCA738,
+                            ), // Yellow
+                            foregroundColor: const Color(
+                              0xFF4A1E1E,
+                            ), // Brown
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                               side: const BorderSide(
-                                  color: Color(0xFF4A1E1E), width: 1), // Brown
+                                color: Color(0xFF4A1E1E),
+                                width: 1,
+                              ), // Brown
                             ),
                             elevation: 0,
                           ),
@@ -193,7 +218,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        Color(0xFF4A1E1E)),
+                                      Color(0xFF4A1E1E),
+                                    ),
                                   ),
                                 )
                               : Text(
@@ -208,9 +234,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 32),
-
                 TextButton(
                   onPressed: () => context.go('/login'),
                   child: Text(
@@ -222,9 +246,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 8),
-
                 TextButton(
                   onPressed: () => context.go('/login'),
                   child: Text(
@@ -239,7 +261,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ],
             ),
           ).animate().fadeIn(duration: 400.ms).scale(
-              begin: const Offset(0.95, 0.95), curve: Curves.easeOutQuart),
+                begin: const Offset(0.95, 0.95),
+                curve: Curves.easeOutQuart,
+              ),
         ),
       ),
     );

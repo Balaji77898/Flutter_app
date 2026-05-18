@@ -32,8 +32,9 @@ GoRouter createRouter(AuthProvider authProvider) {
       final isLoggedIn = authProvider.isAuthenticated;
       final isLoggingIn = state.matchedLocation == '/login';
       final isForgotPassword = state.matchedLocation == '/forgot-password';
-      final isResetPassword =
-          state.matchedLocation.startsWith('/reset-password');
+      final isResetPassword = state.matchedLocation.startsWith(
+        '/reset-password',
+      );
       final isCustomerScan = state.matchedLocation == '/customer/scan-qr';
       final isCustomerMenu = state.matchedLocation == '/customer/menu';
       final isAuthRoute = isLoggingIn ||

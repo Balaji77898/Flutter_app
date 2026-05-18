@@ -160,10 +160,7 @@ class _RoleAwareBottomNav extends StatelessWidget {
         boxShadow: AppShadows.float,
         // Role-specific top border accent
         border: Border(
-          top: BorderSide(
-            color: accentColor.withValues(alpha: 0.25),
-            width: 2,
-          ),
+          top: BorderSide(color: accentColor.withValues(alpha: 0.25), width: 2),
         ),
       ),
       child: SafeArea(
@@ -183,8 +180,10 @@ class _RoleAwareBottomNav extends StatelessWidget {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 220),
                     curve: Curves.easeOutCubic,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 4,
+                    ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -193,11 +192,14 @@ class _RoleAwareBottomNav extends StatelessWidget {
                           duration: const Duration(milliseconds: 220),
                           curve: Curves.easeOutCubic,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 18, vertical: 8),
+                            horizontal: 18,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             color: isActive
                                 ? accentColor.withValues(
-                                    alpha: isBilling ? 0.12 : 0.15)
+                                    alpha: isBilling ? 0.12 : 0.15,
+                                  )
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(20),
                             border: isActive
@@ -264,9 +266,7 @@ class _Sidebar extends StatelessWidget {
       width: 256,
       decoration: const BoxDecoration(
         color: AppColors.white,
-        border: Border(
-          right: BorderSide(color: AppColors.slate100),
-        ),
+        border: Border(right: BorderSide(color: AppColors.slate100)),
       ),
       child: Column(
         children: [
@@ -275,9 +275,7 @@ class _Sidebar extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(24),
             decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: AppColors.slate100),
-              ),
+              border: Border(bottom: BorderSide(color: AppColors.slate100)),
             ),
             child: Row(
               children: [
@@ -300,9 +298,7 @@ class _Sidebar extends StatelessWidget {
             decoration: BoxDecoration(
               color: accentColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: accentColor.withValues(alpha: 0.2),
-              ),
+              border: Border.all(color: accentColor.withValues(alpha: 0.2)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -348,7 +344,9 @@ class _Sidebar extends StatelessWidget {
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 13),
+                          horizontal: 16,
+                          vertical: 13,
+                        ),
                         decoration: BoxDecoration(
                           color:
                               isActive ? AppColors.primary : Colors.transparent,
@@ -391,9 +389,7 @@ class _Sidebar extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: const BoxDecoration(
-              border: Border(
-                top: BorderSide(color: AppColors.slate100),
-              ),
+              border: Border(top: BorderSide(color: AppColors.slate100)),
             ),
             child: Row(
               children: [
@@ -403,10 +399,7 @@ class _Sidebar extends StatelessWidget {
                   height: 42,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [
-                        AppColors.primary,
-                        AppColors.primaryDark,
-                      ],
+                      colors: [AppColors.primary, AppColors.primaryDark],
                     ),
                     shape: BoxShape.circle,
                     boxShadow: AppShadows.primaryGlow,
@@ -449,7 +442,9 @@ class _Sidebar extends StatelessWidget {
                           Text(
                             'Online',
                             style: AppTheme.sans(
-                                size: 11, color: AppColors.slate400),
+                              size: 11,
+                              color: AppColors.slate400,
+                            ),
                           ),
                         ],
                       ),

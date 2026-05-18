@@ -154,8 +154,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         .withValues(alpha: 0.08),
                                     title: 'Create Order',
                                     description: 'Start a new table order',
-                                    onTap: () =>
-                                        context.push('/staff/create-order'),
+                                    onTap: () => context.push(
+                                      '/staff/create-order',
+                                    ),
                                   ),
                                   _FeatureCard(
                                     icon: Icons.notifications_active_rounded,
@@ -166,8 +167,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     badge: newOrdersCount > 0
                                         ? '$newOrdersCount'
                                         : null,
-                                    onTap: () =>
-                                        context.push('/staff/new-orders'),
+                                    onTap: () => context.push(
+                                      '/staff/new-orders',
+                                    ),
                                   ),
                                   _FeatureCard(
                                     icon: Icons.receipt_long_rounded,
@@ -195,16 +197,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ]
                                     .asMap()
                                     .entries
-                                    .map((e) => e.value
-                                        .animate(
+                                    .map(
+                                      (e) => e.value
+                                          .animate(
                                             delay: Duration(
-                                                milliseconds: e.key * 80))
-                                        .fade(duration: 400.ms)
-                                        .slideY(
+                                              milliseconds: e.key * 80,
+                                            ),
+                                          )
+                                          .fade(duration: 400.ms)
+                                          .slideY(
                                             begin: 0.15,
                                             end: 0,
                                             duration: 400.ms,
-                                            curve: Curves.easeOutQuad))
+                                            curve: Curves.easeOutQuad,
+                                          ),
+                                    )
                                     .toList(),
                               );
                             },
@@ -217,9 +224,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.6),
                               borderRadius: BorderRadius.circular(40),
-                              border: Border.all(
-                                color: AppColors.slate100,
-                              ),
+                              border: Border.all(color: AppColors.slate100),
                             ),
                             padding: EdgeInsets.all(isMobile ? 24 : 32),
                             child: Column(
@@ -303,15 +308,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         ),
                                         itemCount: recentOrders.length,
                                         itemBuilder: (ctx, i) => _MiniOrderCard(
-                                                order: recentOrders[i])
+                                          order: recentOrders[i],
+                                        )
                                             .animate(
-                                                delay: Duration(
-                                                    milliseconds: i * 60))
+                                              delay: Duration(
+                                                milliseconds: i * 60,
+                                              ),
+                                            )
                                             .fade(duration: 300.ms)
                                             .slideY(
-                                                begin: 0.1,
-                                                end: 0,
-                                                duration: 300.ms),
+                                              begin: 0.1,
+                                              end: 0,
+                                              duration: 300.ms,
+                                            ),
                                       );
                                     },
                                   ),
@@ -321,9 +330,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               .animate()
                               .fade(duration: 500.ms, delay: 300.ms)
                               .slideY(
-                                  begin: 0.05,
-                                  duration: 500.ms,
-                                  curve: Curves.easeOutQuad),
+                                begin: 0.05,
+                                duration: 500.ms,
+                                curve: Curves.easeOutQuad,
+                              ),
                         ],
                       ),
                     ),
@@ -362,7 +372,8 @@ class _DashboardHero extends StatelessWidget {
         color: AppColors.primaryDark,
         image: DecorationImage(
           image: const NetworkImage(
-              'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop'),
+            'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop',
+          ),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
             AppColors.primaryDark.withValues(alpha: 0.85),
@@ -427,12 +438,15 @@ class _DashboardHero extends StatelessWidget {
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 7),
+                          horizontal: 14,
+                          vertical: 7,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.2)),
+                            color: Colors.white.withValues(alpha: 0.2),
+                          ),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -697,19 +711,25 @@ class _FeatureCardState extends State<_FeatureCard> {
                       ),
                     ],
                   ),
-                  child: Icon(widget.icon,
-                      color: widget.iconColor, size: isSmall ? 24 : 28),
+                  child: Icon(
+                    widget.icon,
+                    color: widget.iconColor,
+                    size: isSmall ? 24 : 28,
+                  ),
                 ),
                 const Spacer(),
                 // Badge
                 if (widget.badge != null)
                   Container(
                     margin: const EdgeInsets.only(bottom: 6),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
-                      color: (widget.badgeColor ?? AppColors.danger)
-                          .withValues(alpha: 0.1),
+                      color: (widget.badgeColor ?? AppColors.danger).withValues(
+                        alpha: 0.1,
+                      ),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
@@ -815,8 +835,10 @@ class _MiniOrderCard extends StatelessWidget {
               top: 0,
               right: 0,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: config.bg,
                   borderRadius: const BorderRadius.only(
@@ -889,8 +911,11 @@ class _MiniOrderCard extends StatelessWidget {
                             const SizedBox(height: 2),
                             Row(
                               children: [
-                                const Icon(Icons.access_time,
-                                    size: 12, color: AppColors.slate400),
+                                const Icon(
+                                  Icons.access_time,
+                                  size: 12,
+                                  color: AppColors.slate400,
+                                ),
                                 const SizedBox(width: 4),
                                 Text(
                                   order.time,
@@ -916,8 +941,11 @@ class _MiniOrderCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.shopping_bag_outlined,
-                              size: 14, color: AppColors.slate400),
+                          const Icon(
+                            Icons.shopping_bag_outlined,
+                            size: 14,
+                            color: AppColors.slate400,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             '${order.items} items',

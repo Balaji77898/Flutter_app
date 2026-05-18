@@ -30,10 +30,12 @@ class TablesProvider extends ChangeNotifier {
         final List tablesList = decoded['data'] ?? [];
         _tables = tablesList.map((t) => TableModel.fromJson(t)).toList();
         debugPrint(
-            "TablesProvider: Successfully loaded ${_tables.length} tables");
+          "TablesProvider: Successfully loaded ${_tables.length} tables",
+        );
       } else {
         debugPrint(
-            "TablesProvider Error: ${response.statusCode} - ${response.body}");
+          "TablesProvider Error: ${response.statusCode} - ${response.body}",
+        );
       }
     } catch (e) {
       debugPrint("Error fetching tables: $e");

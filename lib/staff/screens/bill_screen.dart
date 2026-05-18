@@ -197,7 +197,9 @@ class BillScreen extends StatelessWidget {
                                       if (order.customerName != null) ...[
                                         const SizedBox(height: 10),
                                         _ReceiptRow(
-                                            'Customer', order.customerName!),
+                                          'Customer',
+                                          order.customerName!,
+                                        ),
                                       ],
                                     ],
                                     const SizedBox(height: 10),
@@ -378,8 +380,12 @@ class BillScreen extends StatelessWidget {
                   _pdfInfoRow('Customer', order.customerName!, font, boldFont),
               ],
               _pdfInfoRow('Date', _formatDate(), font, boldFont),
-              _pdfInfoRow('Payment Method', paymentMethod.toUpperCase(), font,
-                  boldFont),
+              _pdfInfoRow(
+                'Payment Method',
+                paymentMethod.toUpperCase(),
+                font,
+                boldFont,
+              ),
 
               pw.SizedBox(height: 16),
               pw.Container(height: 1, color: PdfColors.grey400),
@@ -415,7 +421,9 @@ class BillScreen extends StatelessWidget {
                           child: pw.Text(
                             'Item',
                             style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold, font: boldFont),
+                              fontWeight: pw.FontWeight.bold,
+                              font: boldFont,
+                            ),
                           ),
                         ),
                         pw.Padding(
@@ -423,7 +431,9 @@ class BillScreen extends StatelessWidget {
                           child: pw.Text(
                             'Qty',
                             style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold, font: boldFont),
+                              fontWeight: pw.FontWeight.bold,
+                              font: boldFont,
+                            ),
                           ),
                         ),
                         pw.Padding(
@@ -431,7 +441,9 @@ class BillScreen extends StatelessWidget {
                           child: pw.Text(
                             'Amount',
                             style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold, font: boldFont),
+                              fontWeight: pw.FontWeight.bold,
+                              font: boldFont,
+                            ),
                             textAlign: pw.TextAlign.right,
                           ),
                         ),
@@ -442,20 +454,26 @@ class BillScreen extends StatelessWidget {
                         children: [
                           pw.Padding(
                             padding: const pw.EdgeInsets.all(6),
-                            child: pw.Text(item.name,
-                                style: pw.TextStyle(font: font)),
-                          ),
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(6),
-                            child: pw.Text('${item.quantity}',
-                                style: pw.TextStyle(font: font)),
+                            child: pw.Text(
+                              item.name,
+                              style: pw.TextStyle(font: font),
+                            ),
                           ),
                           pw.Padding(
                             padding: const pw.EdgeInsets.all(6),
                             child: pw.Text(
-                              CurrencyUtils.format((item.quantity *
-                                      (double.tryParse(item.price) ?? 0))
-                                  .round()),
+                              '${item.quantity}',
+                              style: pw.TextStyle(font: font),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding: const pw.EdgeInsets.all(6),
+                            child: pw.Text(
+                              CurrencyUtils.format(
+                                (item.quantity *
+                                        (double.tryParse(item.price) ?? 0))
+                                    .round(),
+                              ),
                               style: pw.TextStyle(font: font),
                               textAlign: pw.TextAlign.right,
                             ),
@@ -472,16 +490,25 @@ class BillScreen extends StatelessWidget {
                 pw.SizedBox(height: 10),
                 if (order.subtotal > 0)
                   _pdfInfoRow(
-                      'Subtotal',
-                      CurrencyUtils.format(order.subtotal.round()),
-                      font,
-                      boldFont),
+                    'Subtotal',
+                    CurrencyUtils.format(order.subtotal.round()),
+                    font,
+                    boldFont,
+                  ),
                 if (order.tax > 0)
-                  _pdfInfoRow('Tax', CurrencyUtils.format(order.tax.round()),
-                      font, boldFont),
+                  _pdfInfoRow(
+                    'Tax',
+                    CurrencyUtils.format(order.tax.round()),
+                    font,
+                    boldFont,
+                  ),
                 if (tipAmount > 0)
                   _pdfInfoRow(
-                      'Tip', CurrencyUtils.format(tipAmount), font, boldFont),
+                    'Tip',
+                    CurrencyUtils.format(tipAmount),
+                    font,
+                    boldFont,
+                  ),
                 pw.SizedBox(height: 6),
                 pw.Container(height: 1, color: PdfColors.grey400),
                 pw.SizedBox(height: 6),
@@ -549,7 +576,11 @@ class BillScreen extends StatelessWidget {
   }
 
   pw.Widget _pdfInfoRow(
-      String label, String value, pw.Font font, pw.Font boldFont) {
+    String label,
+    String value,
+    pw.Font font,
+    pw.Font boldFont,
+  ) {
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 3),
       child: pw.Row(
@@ -559,7 +590,10 @@ class BillScreen extends StatelessWidget {
           pw.Text(
             value,
             style: pw.TextStyle(
-                fontSize: 12, fontWeight: pw.FontWeight.bold, font: boldFont),
+              fontSize: 12,
+              fontWeight: pw.FontWeight.bold,
+              font: boldFont,
+            ),
           ),
         ],
       ),

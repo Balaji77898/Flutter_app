@@ -32,10 +32,7 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
 
     setState(() => _isLoading = true);
     try {
-      final body = {
-        'name': _name,
-        'description': _description,
-      };
+      final body = {'name': _name, 'description': _description};
 
       if (widget.category == null) {
         await MenuService.createCategory(body);
@@ -47,8 +44,10 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(
-                  'Failed: ${e.toString().replaceAll('Exception: ', '')}')),
+            content: Text(
+              'Failed: ${e.toString().replaceAll('Exception: ', '')}',
+            ),
+          ),
         );
       }
     } finally {
@@ -86,8 +85,9 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
               const SizedBox(height: 16),
               TextFormField(
                 initialValue: _description,
-                decoration:
-                    const InputDecoration(labelText: 'Description (Optional)'),
+                decoration: const InputDecoration(
+                  labelText: 'Description (Optional)',
+                ),
                 maxLines: 3,
                 onSaved: (val) => _description = val?.trim() ?? '',
               ),
@@ -98,8 +98,10 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text('Cancel',
-              style: GoogleFonts.inter(color: AppColors.textMuted)),
+          child: Text(
+            'Cancel',
+            style: GoogleFonts.inter(color: AppColors.textMuted),
+          ),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _submit,
@@ -108,7 +110,10 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
                   width: 20,
                   height: 20,
                   child: CircularProgressIndicator(
-                      strokeWidth: 2, color: Colors.white))
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
               : Text(widget.category == null ? 'Create' : 'Save'),
         ),
       ],

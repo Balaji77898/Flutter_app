@@ -77,15 +77,17 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
 
         if (shouldBeSpecial && !isCurrentlySpecial) {
           // Move to Today's Special
-          futures.add(MenuService.updateItem(item.id, {
-            'name': item.name,
-            'description': item.description ?? '',
-            'price': item.price,
-            'is_available': item.isAvailable,
-            'image_url': item.imageUrl ?? '',
-            'category_id': catId,
-            'preparation_time': item.preparationTime ?? '',
-          }));
+          futures.add(
+            MenuService.updateItem(item.id, {
+              'name': item.name,
+              'description': item.description ?? '',
+              'price': item.price,
+              'is_available': item.isAvailable,
+              'image_url': item.imageUrl ?? '',
+              'category_id': catId,
+              'preparation_time': item.preparationTime ?? '',
+            }),
+          );
         } else if (!shouldBeSpecial && isCurrentlySpecial) {
           // Remove from Today's Special — move to first non-special category
           final fallback = widget.categories
@@ -94,15 +96,17 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                   .firstOrNull ??
               '';
           if (fallback.isNotEmpty) {
-            futures.add(MenuService.updateItem(item.id, {
-              'name': item.name,
-              'description': item.description ?? '',
-              'price': item.price,
-              'is_available': item.isAvailable,
-              'image_url': item.imageUrl ?? '',
-              'category_id': fallback,
-              'preparation_time': item.preparationTime ?? '',
-            }));
+            futures.add(
+              MenuService.updateItem(item.id, {
+                'name': item.name,
+                'description': item.description ?? '',
+                'price': item.price,
+                'is_available': item.isAvailable,
+                'image_url': item.imageUrl ?? '',
+                'category_id': fallback,
+                'preparation_time': item.preparationTime ?? '',
+              }),
+            );
           }
         }
       }
@@ -122,8 +126,9 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text('Failed: ${e.toString().replaceAll('Exception: ', '')}'),
+            content: Text(
+              'Failed: ${e.toString().replaceAll('Exception: ', '')}',
+            ),
             backgroundColor: AppColors.danger,
           ),
         );
@@ -163,11 +168,14 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                 children: [
                   const Text('⭐', style: TextStyle(fontSize: 22)),
                   const SizedBox(width: 10),
-                  Text("Today's Special",
-                      style: GoogleFonts.playfairDisplay(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold)),
+                  Text(
+                    "Today's Special",
+                    style: GoogleFonts.playfairDisplay(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.white),
@@ -183,14 +191,19 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
               color: AppColors.gold.withValues(alpha: 0.1),
               child: Row(
                 children: [
-                  const Icon(Icons.info_outline,
-                      size: 14, color: AppColors.gold),
+                  const Icon(
+                    Icons.info_outline,
+                    size: 14,
+                    color: AppColors.gold,
+                  ),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
                       'Select items to feature as Today\'s Special. Unselected items are removed.',
                       style: GoogleFonts.inter(
-                          fontSize: 12, color: AppColors.textMuted),
+                        fontSize: 12,
+                        color: AppColors.textMuted,
+                      ),
                     ),
                   ),
                 ],
@@ -205,10 +218,13 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                 decoration: InputDecoration(
                   hintText: 'Search items...',
                   prefixIcon: const Icon(Icons.search, size: 18),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   isDense: true,
                 ),
               ),
@@ -218,11 +234,16 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
             Expanded(
               child: filtered.isEmpty
                   ? Center(
-                      child: Text('No items found',
-                          style: GoogleFonts.inter(color: AppColors.textMuted)))
+                      child: Text(
+                        'No items found',
+                        style: GoogleFonts.inter(color: AppColors.textMuted),
+                      ),
+                    )
                   : ListView.separated(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
                       itemCount: filtered.length,
                       separatorBuilder: (_, __) => const Divider(height: 1),
                       itemBuilder: (ctx, i) {
@@ -240,23 +261,32 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                             });
                           },
                           activeColor: AppColors.rubyDark,
-                          title: Text(item.name,
-                              style: GoogleFonts.inter(
-                                  fontWeight: FontWeight.w600,
-                                  color: isSelected
-                                      ? AppColors.rubyDark
-                                      : AppColors.textDark)),
-                          subtitle: Text('₹${item.price.toStringAsFixed(2)}',
-                              style: GoogleFonts.inter(
-                                  fontSize: 12, color: AppColors.textMuted)),
+                          title: Text(
+                            item.name,
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w600,
+                              color: isSelected
+                                  ? AppColors.rubyDark
+                                  : AppColors.textDark,
+                            ),
+                          ),
+                          subtitle: Text(
+                            '₹${item.price.toStringAsFixed(2)}',
+                            style: GoogleFonts.inter(
+                              fontSize: 12,
+                              color: AppColors.textMuted,
+                            ),
+                          ),
                           secondary:
                               item.imageUrl != null && item.imageUrl!.isNotEmpty
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(6),
-                                      child: Image.network(item.imageUrl!,
-                                          width: 44,
-                                          height: 44,
-                                          fit: BoxFit.cover),
+                                      child: Image.network(
+                                        item.imageUrl!,
+                                        width: 44,
+                                        height: 44,
+                                        fit: BoxFit.cover,
+                                      ),
                                     )
                                   : Container(
                                       width: 44,
@@ -265,11 +295,15 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                                         color: AppColors.ivoryDark,
                                         borderRadius: BorderRadius.circular(6),
                                       ),
-                                      child: const Icon(Icons.fastfood,
-                                          size: 20, color: AppColors.textMuted),
+                                      child: const Icon(
+                                        Icons.fastfood,
+                                        size: 20,
+                                        color: AppColors.textMuted,
+                                      ),
                                     ),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                           tileColor: isSelected
                               ? AppColors.rubyDark.withValues(alpha: 0.05)
                               : null,
@@ -296,7 +330,9 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                   Text(
                     '${_specialItemIds.length} item${_specialItemIds.length == 1 ? '' : 's'} selected',
                     style: GoogleFonts.inter(
-                        color: AppColors.rubyDark, fontWeight: FontWeight.w600),
+                      color: AppColors.rubyDark,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   Row(
                     children: [
@@ -313,18 +349,27 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                                 width: 14,
                                 height: 14,
                                 child: CircularProgressIndicator(
-                                    color: Colors.white, strokeWidth: 2))
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
                             : const Text('⭐', style: TextStyle(fontSize: 14)),
-                        label: Text('Save Specials',
-                            style: GoogleFonts.inter(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold)),
+                        label: Text(
+                          'Save Specials',
+                          style: GoogleFonts.inter(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.rubyDark,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 12),
+                            horizontal: 20,
+                            vertical: 12,
+                          ),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
                     ],

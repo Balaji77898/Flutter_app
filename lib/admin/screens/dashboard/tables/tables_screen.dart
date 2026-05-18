@@ -79,8 +79,9 @@ class _TablesScreenState extends State<TablesScreen> {
       _loadTables();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Failed: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed: $e')));
       }
     }
   }
@@ -93,8 +94,9 @@ class _TablesScreenState extends State<TablesScreen> {
         content: const Text('Are you sure you want to delete this table?'),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             child: const Text('Delete', style: TextStyle(color: Colors.red)),
@@ -108,8 +110,9 @@ class _TablesScreenState extends State<TablesScreen> {
         _loadTables();
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Failed: $e')));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Failed: $e')));
         }
       }
     }
@@ -121,10 +124,13 @@ class _TablesScreenState extends State<TablesScreen> {
         data: qrData,
         version: QrVersions.auto,
         eyeStyle: const QrEyeStyle(
-            eyeShape: QrEyeShape.square, color: AppColors.rubyDark),
+          eyeShape: QrEyeShape.square,
+          color: AppColors.rubyDark,
+        ),
         dataModuleStyle: const QrDataModuleStyle(
-            dataModuleShape: QrDataModuleShape.square,
-            color: AppColors.rubyDark),
+          dataModuleShape: QrDataModuleShape.square,
+          color: AppColors.rubyDark,
+        ),
       );
       final image = await painter.toImage(512);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
@@ -153,27 +159,38 @@ class _TablesScreenState extends State<TablesScreen> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.qr_code_2,
-                      color: AppColors.rubyDark, size: 22),
+                  const Icon(
+                    Icons.qr_code_2,
+                    color: AppColors.rubyDark,
+                    size: 22,
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('QR Code - Table ${t.tableNumber}',
-                            style: GoogleFonts.playfairDisplay(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.rubyDark)),
-                        Text('Table ${t.tableNumber}',
-                            style: GoogleFonts.inter(
-                                fontSize: 12, color: AppColors.textMuted)),
+                        Text(
+                          'QR Code - Table ${t.tableNumber}',
+                          style: GoogleFonts.playfairDisplay(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.rubyDark,
+                          ),
+                        ),
+                        Text(
+                          'Table ${t.tableNumber}',
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: AppColors.textMuted,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   IconButton(
-                      icon: const Icon(Icons.close, size: 20),
-                      onPressed: () => Navigator.pop(ctx)),
+                    icon: const Icon(Icons.close, size: 20),
+                    onPressed: () => Navigator.pop(ctx),
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -183,18 +200,22 @@ class _TablesScreenState extends State<TablesScreen> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                      color: AppColors.rubyDark.withValues(alpha: 0.3),
-                      width: 2),
+                    color: AppColors.rubyDark.withValues(alpha: 0.3),
+                    width: 2,
+                  ),
                 ),
                 child: QrImageView(
                   data: qrData,
                   version: QrVersions.auto,
                   size: 220,
                   eyeStyle: const QrEyeStyle(
-                      eyeShape: QrEyeShape.square, color: AppColors.rubyDark),
+                    eyeShape: QrEyeShape.square,
+                    color: AppColors.rubyDark,
+                  ),
                   dataModuleStyle: const QrDataModuleStyle(
-                      dataModuleShape: QrDataModuleShape.square,
-                      color: AppColors.rubyDark),
+                    dataModuleShape: QrDataModuleShape.square,
+                    color: AppColors.rubyDark,
+                  ),
                 ),
               ),
               const SizedBox(height: 14),
@@ -202,12 +223,17 @@ class _TablesScreenState extends State<TablesScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    color: AppColors.ivory,
-                    borderRadius: BorderRadius.circular(8)),
-                child: SelectableText(qrData,
-                    style: GoogleFonts.inter(
-                        fontSize: 10, color: AppColors.textMuted),
-                    textAlign: TextAlign.center),
+                  color: AppColors.ivory,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: SelectableText(
+                  qrData,
+                  style: GoogleFonts.inter(
+                    fontSize: 10,
+                    color: AppColors.textMuted,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
               const SizedBox(height: 20),
               Row(
@@ -218,15 +244,21 @@ class _TablesScreenState extends State<TablesScreen> {
                         Navigator.pop(ctx);
                         _downloadQR(t, qrData);
                       },
-                      icon: const Icon(Icons.download_rounded,
-                          size: 16, color: Colors.white),
-                      label: const Text('Download PNG',
-                          style: TextStyle(color: Colors.white)),
+                      icon: const Icon(
+                        Icons.download_rounded,
+                        size: 16,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        'Download PNG',
+                        style: TextStyle(color: Colors.white),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.rubyDark,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                     ),
                   ),
@@ -237,18 +269,25 @@ class _TablesScreenState extends State<TablesScreen> {
                         Clipboard.setData(ClipboardData(text: qrData));
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Link copied to clipboard')),
+                            content: Text('Link copied to clipboard'),
+                          ),
                         );
                       },
-                      icon:
-                          const Icon(Icons.copy, size: 16, color: Colors.white),
-                      label: const Text('Copy Link',
-                          style: TextStyle(color: Colors.white)),
+                      icon: const Icon(
+                        Icons.copy,
+                        size: 16,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        'Copy Link',
+                        style: TextStyle(color: Colors.white),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF2563EB),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                     ),
                   ),
@@ -267,24 +306,30 @@ class _TablesScreenState extends State<TablesScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Add Table',
-            style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
+        title: Text(
+          'Add Table',
+          style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
-                controller: _tableNumCtrl,
-                decoration: const InputDecoration(labelText: 'Table Number')),
+              controller: _tableNumCtrl,
+              decoration: const InputDecoration(labelText: 'Table Number'),
+            ),
             const SizedBox(height: 12),
             TextField(
-                controller: _capacityCtrl,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Capacity')),
+              controller: _capacityCtrl,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: 'Capacity'),
+            ),
           ],
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.rubyRed),
             onPressed: () async {
@@ -297,8 +342,9 @@ class _TablesScreenState extends State<TablesScreen> {
                 _loadTables();
               } catch (e) {
                 if (mounted) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('Failed: $e')));
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text('Failed: $e')));
                 }
               }
             },
@@ -318,14 +364,17 @@ class _TablesScreenState extends State<TablesScreen> {
       backgroundColor: const Color(0xFFF8F5F2),
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(color: AppColors.rubyRed))
+              child: CircularProgressIndicator(color: AppColors.rubyRed),
+            )
           : Column(
               children: [
                 _buildHeader(isMobile),
                 Expanded(
                   child: SingleChildScrollView(
                     padding: EdgeInsets.symmetric(
-                        horizontal: isMobile ? 16 : 40, vertical: 24),
+                      horizontal: isMobile ? 16 : 40,
+                      vertical: 24,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -333,9 +382,13 @@ class _TablesScreenState extends State<TablesScreen> {
                         const SizedBox(height: 24),
                         _buildFiltersBar(isMobile),
                         const SizedBox(height: 24),
-                        Text('Showing ${_filteredTables.length} tables',
-                            style: GoogleFonts.inter(
-                                color: AppColors.textMuted, fontSize: 14)),
+                        Text(
+                          'Showing ${_filteredTables.length} tables',
+                          style: GoogleFonts.inter(
+                            color: AppColors.textMuted,
+                            fontSize: 14,
+                          ),
+                        ),
                         const SizedBox(height: 16),
                         _buildTablesList(isMobile),
                       ],
@@ -351,7 +404,11 @@ class _TablesScreenState extends State<TablesScreen> {
     return Container(
       color: AppColors.rubyDark,
       padding: EdgeInsets.fromLTRB(
-          isMobile ? 20 : 40, isMobile ? 24 : 40, isMobile ? 20 : 40, 32),
+        isMobile ? 20 : 40,
+        isMobile ? 24 : 40,
+        isMobile ? 20 : 40,
+        32,
+      ),
       child: SafeArea(
         bottom: false,
         child: isMobile
@@ -360,29 +417,44 @@ class _TablesScreenState extends State<TablesScreen> {
                 children: [
                   OutlinedButton.icon(
                     onPressed: () => context.go('/admin/dashboard'),
-                    icon: const Icon(Icons.arrow_back,
-                        color: Colors.white, size: 16),
-                    label: Text('Back',
-                        style: GoogleFonts.inter(
-                            color: Colors.white, fontSize: 14)),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                      size: 16,
+                    ),
+                    label: Text(
+                      'Back',
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Colors.white30),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Text('Tables Management',
-                      style: GoogleFonts.playfairDisplay(
-                          color: Colors.white,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold)),
+                  Text(
+                    'Tables Management',
+                    style: GoogleFonts.playfairDisplay(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 4),
-                  Text('Manage restaurant tables and QR codes',
-                      style: GoogleFonts.inter(
-                          color: AppColors.gold,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500)),
+                  Text(
+                    'Manage restaurant tables and QR codes',
+                    style: GoogleFonts.inter(
+                      color: AppColors.gold,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
@@ -395,7 +467,8 @@ class _TablesScreenState extends State<TablesScreen> {
                         foregroundColor: AppColors.rubyDark,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ),
@@ -405,48 +478,72 @@ class _TablesScreenState extends State<TablesScreen> {
                 children: [
                   OutlinedButton.icon(
                     onPressed: () => context.go('/admin/dashboard'),
-                    icon: const Icon(Icons.arrow_back,
-                        color: Colors.white, size: 16),
-                    label: Text('Back to Dashboard',
-                        style: GoogleFonts.inter(
-                            color: Colors.white, fontSize: 14)),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                      size: 16,
+                    ),
+                    label: Text(
+                      'Back to Dashboard',
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Colors.white30),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                     ),
                   ),
                   Expanded(
                     child: Column(
                       children: [
-                        Text('Tables Management',
-                            style: GoogleFonts.playfairDisplay(
-                                color: Colors.white,
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold)),
+                        Text(
+                          'Tables Management',
+                          style: GoogleFonts.playfairDisplay(
+                            color: Colors.white,
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         const SizedBox(height: 4),
-                        Text('Manage restaurant tables and QR codes',
-                            style: GoogleFonts.inter(
-                                color: AppColors.gold,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500)),
+                        Text(
+                          'Manage restaurant tables and QR codes',
+                          style: GoogleFonts.inter(
+                            color: AppColors.gold,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   ElevatedButton.icon(
                     onPressed: _showAddDialog,
-                    icon: const Icon(Icons.add,
-                        color: AppColors.rubyDark, size: 18),
-                    label: Text('Add Table',
-                        style: GoogleFonts.inter(
-                            color: AppColors.rubyDark,
-                            fontWeight: FontWeight.bold)),
+                    icon: const Icon(
+                      Icons.add,
+                      color: AppColors.rubyDark,
+                      size: 18,
+                    ),
+                    label: Text(
+                      'Add Table',
+                      style: GoogleFonts.inter(
+                        color: AppColors.rubyDark,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.gold,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 16),
+                        horizontal: 20,
+                        vertical: 16,
+                      ),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
                 ],
@@ -473,7 +570,11 @@ class _TablesScreenState extends State<TablesScreen> {
             _buildStatCard('Empty', empty.toString(), Colors.green, isMobile),
             const SizedBox(width: 12),
             _buildStatCard(
-                'Occupied', occupied.toString(), Colors.red, isMobile),
+              'Occupied',
+              occupied.toString(),
+              Colors.red,
+              isMobile,
+            ),
           ],
         ),
       );
@@ -493,47 +594,56 @@ class _TablesScreenState extends State<TablesScreen> {
   }
 
   Widget _buildStatCard(
-      String label, String value, Color color, bool isMobile) {
+    String label,
+    String value,
+    Color color,
+    bool isMobile,
+  ) {
     Widget cardContent = Container(
       padding: EdgeInsets.all(isMobile ? 16 : 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border:
-            Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
+        border: Border.all(
+          color: AppColors.rubyDark.withOpacity(0.1),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4))
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label,
-              style: GoogleFonts.inter(
-                  color: AppColors.textMuted, fontSize: isMobile ? 11 : 13)),
+          Text(
+            label,
+            style: GoogleFonts.inter(
+              color: AppColors.textMuted,
+              fontSize: isMobile ? 11 : 13,
+            ),
+          ),
           const SizedBox(height: 8),
-          Text(value,
-              style: GoogleFonts.inter(
-                  color: color,
-                  fontSize: isMobile ? 20 : 24,
-                  fontWeight: FontWeight.bold)),
+          Text(
+            value,
+            style: GoogleFonts.inter(
+              color: color,
+              fontSize: isMobile ? 20 : 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );
 
     if (isMobile) {
-      return SizedBox(
-        width: 120,
-        child: cardContent,
-      );
+      return SizedBox(width: 120, child: cardContent);
     }
 
-    return Expanded(
-      child: cardContent,
-    );
+    return Expanded(child: cardContent);
   }
 
   Widget _buildFiltersBar(bool isMobile) {
@@ -542,13 +652,16 @@ class _TablesScreenState extends State<TablesScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border:
-            Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
+        border: Border.all(
+          color: AppColors.rubyDark.withOpacity(0.1),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4))
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Column(
@@ -556,12 +669,19 @@ class _TablesScreenState extends State<TablesScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.filter_list,
-                  size: 20, color: AppColors.textMuted),
+              const Icon(
+                Icons.filter_list,
+                size: 20,
+                color: AppColors.textMuted,
+              ),
               const SizedBox(width: 8),
-              Text('Filters',
-                  style: GoogleFonts.inter(
-                      fontWeight: FontWeight.bold, fontSize: 16)),
+              Text(
+                'Filters',
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -574,24 +694,31 @@ class _TablesScreenState extends State<TablesScreen> {
                         hintText: 'Search...',
                         prefixIcon: const Icon(Icons.search, size: 20),
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(
-                                color: AppColors.rubyDark.withOpacity(0.1))),
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                            color: AppColors.rubyDark.withOpacity(0.1),
+                          ),
+                        ),
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
                     Row(
                       children: [
                         Expanded(
-                          child: _buildDropdown(_statusFilter,
-                              ['All Status', 'Occupied', 'Empty'], (v) {
-                            setState(() {
-                              _statusFilter = v!;
-                              _applyFilters();
-                            });
-                          }),
+                          child: _buildDropdown(
+                            _statusFilter,
+                            ['All Status', 'Occupied', 'Empty'],
+                            (v) {
+                              setState(() {
+                                _statusFilter = v!;
+                                _applyFilters();
+                              });
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -607,19 +734,27 @@ class _TablesScreenState extends State<TablesScreen> {
                           hintText: 'Search by table number...',
                           prefixIcon: const Icon(Icons.search, size: 20),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                  color: AppColors.rubyDark.withOpacity(0.2))),
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(
+                              color: AppColors.rubyDark.withOpacity(0.2),
+                            ),
+                          ),
                           enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                  color: AppColors.rubyDark.withOpacity(0.2))),
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(
+                              color: AppColors.rubyDark.withOpacity(0.2),
+                            ),
+                          ),
                           focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                  color: AppColors.rubyDark.withOpacity(0.5))),
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(
+                              color: AppColors.rubyDark.withOpacity(0.5),
+                            ),
+                          ),
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                         ),
                       ),
                     ),
@@ -627,19 +762,22 @@ class _TablesScreenState extends State<TablesScreen> {
                     Expanded(
                       flex: 2,
                       child: _buildDropdown(
-                          _statusFilter, ['All Status', 'Occupied', 'Empty'],
-                          (v) {
-                        setState(() {
-                          _statusFilter = v!;
-                          _applyFilters();
-                        });
-                      }),
+                        _statusFilter,
+                        ['All Status', 'Occupied', 'Empty'],
+                        (v) {
+                          setState(() {
+                            _statusFilter = v!;
+                            _applyFilters();
+                          });
+                        },
+                      ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       flex: 2,
-                      child:
-                          _buildDropdown(_tableTypeFilter, ['All Tables'], (v) {
+                      child: _buildDropdown(_tableTypeFilter, ['All Tables'], (
+                        v,
+                      ) {
                         setState(() => _tableTypeFilter = v!);
                       }),
                     ),
@@ -651,7 +789,10 @@ class _TablesScreenState extends State<TablesScreen> {
   }
 
   Widget _buildDropdown(
-      String value, List<String> items, ValueChanged<String?> onChanged) {
+    String value,
+    List<String> items,
+    ValueChanged<String?> onChanged,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
@@ -663,9 +804,12 @@ class _TablesScreenState extends State<TablesScreen> {
           value: value,
           isExpanded: true,
           items: items
-              .map((e) => DropdownMenuItem(
+              .map(
+                (e) => DropdownMenuItem(
                   value: e,
-                  child: Text(e, style: GoogleFonts.inter(fontSize: 14))))
+                  child: Text(e, style: GoogleFonts.inter(fontSize: 14)),
+                ),
+              )
               .toList(),
           onChanged: onChanged,
         ),
@@ -683,9 +827,10 @@ class _TablesScreenState extends State<TablesScreen> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4))
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
           ],
         ),
         child: const Center(child: Text('No tables found')),
@@ -711,13 +856,16 @@ class _TablesScreenState extends State<TablesScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border:
-            Border.all(color: AppColors.rubyDark.withOpacity(0.1), width: 1),
+        border: Border.all(
+          color: AppColors.rubyDark.withOpacity(0.1),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4))
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Column(
@@ -726,8 +874,8 @@ class _TablesScreenState extends State<TablesScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             decoration: BoxDecoration(
-                border:
-                    Border(bottom: BorderSide(color: Colors.grey.shade100))),
+              border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+            ),
             child: Row(
               children: [
                 _headerCell('TABLE NUMBER', 2),
@@ -739,10 +887,9 @@ class _TablesScreenState extends State<TablesScreen> {
             ),
           ),
           // List Items
-          ..._filteredTables
-              .asMap()
-              .entries
-              .map((entry) => _buildTableRow(entry.value, entry.key)),
+          ..._filteredTables.asMap().entries.map(
+                (entry) => _buildTableRow(entry.value, entry.key),
+              ),
         ],
       ),
     );
@@ -761,7 +908,7 @@ class _TablesScreenState extends State<TablesScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 6)
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 6),
         ],
         border: Border.all(color: AppColors.rubyDark.withOpacity(0.05)),
       ),
@@ -770,9 +917,13 @@ class _TablesScreenState extends State<TablesScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(t.tableNumber,
-                  style: GoogleFonts.inter(
-                      fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(
+                t.tableNumber,
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -782,11 +933,12 @@ class _TablesScreenState extends State<TablesScreen> {
                 child: Text(
                   isOccupied ? 'OCC' : 'EMP',
                   style: GoogleFonts.inter(
-                      fontSize: 9,
-                      fontWeight: FontWeight.bold,
-                      color: isOccupied
-                          ? Colors.red.shade800
-                          : Colors.green.shade800),
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
+                    color: isOccupied
+                        ? Colors.red.shade800
+                        : Colors.green.shade800,
+                  ),
                 ),
               ),
             ],
@@ -799,7 +951,9 @@ class _TablesScreenState extends State<TablesScreen> {
               version: QrVersions.auto,
               size: 60,
               eyeStyle: const QrEyeStyle(
-                  eyeShape: QrEyeShape.square, color: AppColors.rubyDark),
+                eyeShape: QrEyeShape.square,
+                color: AppColors.rubyDark,
+              ),
             ),
           ),
           const Spacer(),
@@ -819,8 +973,11 @@ class _TablesScreenState extends State<TablesScreen> {
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => _deleteTable(t.id),
-                  icon: const Icon(Icons.delete_outline,
-                      size: 18, color: Colors.red),
+                  icon: const Icon(
+                    Icons.delete_outline,
+                    size: 18,
+                    color: Colors.red,
+                  ),
                 ),
                 const SizedBox(width: 4),
                 Transform.scale(
@@ -841,12 +998,16 @@ class _TablesScreenState extends State<TablesScreen> {
 
   Widget _headerCell(String label, int flex) {
     return Expanded(
-        flex: flex,
-        child: Text(label,
-            style: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textMuted)));
+      flex: flex,
+      child: Text(
+        label,
+        style: GoogleFonts.inter(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          color: AppColors.textMuted,
+        ),
+      ),
+    );
   }
 
   Widget _buildTableRow(TableModel t, int index) {
@@ -870,13 +1031,21 @@ class _TablesScreenState extends State<TablesScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(t.tableNumber,
-                    style: GoogleFonts.inter(
-                        fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(
+                  t.tableNumber,
+                  style: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text(t.id.length > 8 ? '${t.id.substring(0, 8)}...' : t.id,
-                    style: GoogleFonts.inter(
-                        fontSize: 11, color: Colors.grey.shade400)),
+                Text(
+                  t.id.length > 8 ? '${t.id.substring(0, 8)}...' : t.id,
+                  style: GoogleFonts.inter(
+                    fontSize: 11,
+                    color: Colors.grey.shade400,
+                  ),
+                ),
               ],
             ),
           ),
@@ -890,14 +1059,17 @@ class _TablesScreenState extends State<TablesScreen> {
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade200),
-                    borderRadius: BorderRadius.circular(4)),
+                  border: Border.all(color: Colors.grey.shade200),
+                  borderRadius: BorderRadius.circular(4),
+                ),
                 child: QrImageView(
                   data: qrData,
                   version: QrVersions.auto,
                   size: 40,
                   eyeStyle: const QrEyeStyle(
-                      eyeShape: QrEyeShape.square, color: Colors.black),
+                    eyeShape: QrEyeShape.square,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
@@ -908,8 +1080,10 @@ class _TablesScreenState extends State<TablesScreen> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: t.status == 'OCCUPIED'
                       ? const Color(0xFFFFEBEE)
@@ -947,13 +1121,22 @@ class _TablesScreenState extends State<TablesScreen> {
             child: Row(
               children: [
                 _actionIcon(
-                    Icons.qr_code_scanner, Colors.blue, () => _showQRDialog(t)),
-                const SizedBox(width: 12),
-                _actionIcon(Icons.download_rounded, Colors.green,
-                    () => _downloadQR(t, qrData)),
+                  Icons.qr_code_scanner,
+                  Colors.blue,
+                  () => _showQRDialog(t),
+                ),
                 const SizedBox(width: 12),
                 _actionIcon(
-                    Icons.delete_rounded, Colors.red, () => _deleteTable(t.id)),
+                  Icons.download_rounded,
+                  Colors.green,
+                  () => _downloadQR(t, qrData),
+                ),
+                const SizedBox(width: 12),
+                _actionIcon(
+                  Icons.delete_rounded,
+                  Colors.red,
+                  () => _deleteTable(t.id),
+                ),
               ],
             ),
           ),

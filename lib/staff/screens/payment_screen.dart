@@ -179,7 +179,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   const SizedBox(height: 20),
 
                   // 🔥 TOTAL CARD (CENTERED - FIXED)
-
                   AppCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -204,11 +203,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         const SizedBox(height: 10),
                         const Divider(),
                         const SizedBox(height: 10),
-                        _AmountRow(
-                          'Total',
-                          '₹$finalTotal',
-                          bold: true,
-                        ),
+                        _AmountRow('Total', '₹$finalTotal', bold: true),
                       ],
                     ),
                   ),
@@ -220,10 +215,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "Payment Method",
-                      style: AppTheme.sans(
-                        size: 16,
-                        weight: FontWeight.bold,
-                      ),
+                      style: AppTheme.sans(size: 16, weight: FontWeight.bold),
                     ),
                   ),
 
@@ -277,8 +269,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   ),
                                 ),
                                 if (isSelected)
-                                  const Icon(Icons.check_circle,
-                                      color: AppColors.danger),
+                                  const Icon(
+                                    Icons.check_circle,
+                                    color: AppColors.danger,
+                                  ),
                               ],
                             ),
                           ),
@@ -318,7 +312,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   // 🔥 CLEAN HANDLER
   Future<void> _handlePayment(
-      BuildContext context, OrdersProvider provider, int finalTotal) async {
+    BuildContext context,
+    OrdersProvider provider,
+    int finalTotal,
+  ) async {
     setState(() => _isProcessing = true);
 
     final token = context.read<StaffAuthProvider>().token;

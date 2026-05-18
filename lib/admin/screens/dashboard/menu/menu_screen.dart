@@ -84,9 +84,9 @@ class _MenuScreenState extends State<MenuScreen> {
       });
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed: ${e.toString()}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed: ${e.toString()}')));
       }
     }
   }
@@ -98,39 +98,43 @@ class _MenuScreenState extends State<MenuScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(!item.isSpecial
-                ? 'Added to Today\'s Special'
-                : 'Removed from Specials'),
+            content: Text(
+              !item.isSpecial
+                  ? 'Added to Today\'s Special'
+                  : 'Removed from Specials',
+            ),
             backgroundColor: AppColors.rubyDark,
           ),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Failed: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed: $e')));
       }
     }
   }
 
   Future<void> _deleteCategory(String id) async {
     final confirm = await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-              title: const Text('Delete Category'),
-              content:
-                  const Text('Are you sure you want to delete this category?'),
-              actions: [
-                TextButton(
-                    onPressed: () => Navigator.pop(ctx, false),
-                    child: const Text('Cancel')),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.danger),
-                    onPressed: () => Navigator.pop(ctx, true),
-                    child: const Text('Delete')),
-              ],
-            ));
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Category'),
+        content: const Text('Are you sure you want to delete this category?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.danger),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
 
     if (confirm != true) return;
 
@@ -142,8 +146,9 @@ class _MenuScreenState extends State<MenuScreen> {
       _loadData();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Failed: ${e.toString()}')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed: ${e.toString()}')));
       }
     }
   }
@@ -172,20 +177,16 @@ class _MenuScreenState extends State<MenuScreen> {
   void _showManualOrderForm() async {
     await showDialog(
       context: context,
-      builder: (ctx) => ManualOrderDialog(
-        menuItems: _items,
-        categories: _categories,
-      ),
+      builder: (ctx) =>
+          ManualOrderDialog(menuItems: _items, categories: _categories),
     );
   }
 
   void _showTodaySpecialDialog() async {
     final result = await showDialog(
       context: context,
-      builder: (ctx) => TodaySpecialDialog(
-        categories: _categories,
-        allItems: _items,
-      ),
+      builder: (ctx) =>
+          TodaySpecialDialog(categories: _categories, allItems: _items),
     );
     if (result == true) _loadData();
   }
@@ -198,13 +199,18 @@ class _MenuScreenState extends State<MenuScreen> {
       backgroundColor: AppColors.ivory,
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(color: AppColors.rubyRed))
+              child: CircularProgressIndicator(color: AppColors.rubyRed),
+            )
           : CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(child: _buildCustomHeader()),
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(
-                      24, 24, 24, 100), // Extra bottom padding
+                    24,
+                    24,
+                    24,
+                    100,
+                  ), // Extra bottom padding
                   sliver: SliverToBoxAdapter(
                     child: _error != null
                         ? _buildError()
@@ -236,8 +242,10 @@ class _MenuScreenState extends State<MenuScreen> {
     final isMobile = MediaQuery.of(context).size.width < 800;
     return Container(
       color: AppColors.rubyDark,
-      padding:
-          EdgeInsets.symmetric(horizontal: isMobile ? 16 : 32, vertical: 16),
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16 : 32,
+        vertical: 16,
+      ),
       child: SafeArea(
         bottom: false,
         child: Column(
@@ -251,14 +259,20 @@ class _MenuScreenState extends State<MenuScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.arrow_back_ios_new_rounded,
-                        color: AppColors.gold, size: 14),
+                    const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      color: AppColors.gold,
+                      size: 14,
+                    ),
                     const SizedBox(width: 8),
-                    Text('Back',
-                        style: GoogleFonts.inter(
-                            color: AppColors.gold,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600)),
+                    Text(
+                      'Back',
+                      style: GoogleFonts.inter(
+                        color: AppColors.gold,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -268,11 +282,14 @@ class _MenuScreenState extends State<MenuScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Menu Management',
-                      style: GoogleFonts.playfairDisplay(
-                          color: Colors.white,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold)),
+                  Text(
+                    'Menu Management',
+                    style: GoogleFonts.playfairDisplay(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -311,15 +328,22 @@ class _MenuScreenState extends State<MenuScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Menu Management',
-                            style: GoogleFonts.playfairDisplay(
-                                color: Colors.white,
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold)),
+                        Text(
+                          'Menu Management',
+                          style: GoogleFonts.playfairDisplay(
+                            color: Colors.white,
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         const SizedBox(height: 4),
-                        Text('Manage your restaurant menu items and categories',
-                            style: GoogleFonts.inter(
-                                color: Colors.white70, fontSize: 14)),
+                        Text(
+                          'Manage your restaurant menu items and categories',
+                          style: GoogleFonts.inter(
+                            color: Colors.white70,
+                            fontSize: 14,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -327,52 +351,76 @@ class _MenuScreenState extends State<MenuScreen> {
                     children: [
                       OutlinedButton.icon(
                         onPressed: () => _showManualOrderForm(),
-                        icon:
-                            const Icon(Icons.receipt_long, color: Colors.white),
-                        label: Text('Create Order',
-                            style: GoogleFonts.inter(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
+                        icon: const Icon(
+                          Icons.receipt_long,
+                          color: Colors.white,
+                        ),
+                        label: Text(
+                          'Create Order',
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                         style: OutlinedButton.styleFrom(
-                          side:
-                              const BorderSide(color: AppColors.gold, width: 2),
+                          side: const BorderSide(
+                            color: AppColors.gold,
+                            width: 2,
+                          ),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 12),
+                            horizontal: 20,
+                            vertical: 12,
+                          ),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
                       OutlinedButton.icon(
                         onPressed: () => _showTodaySpecialDialog(),
                         icon: const Text('⭐', style: TextStyle(fontSize: 16)),
-                        label: Text("Today's Special",
-                            style: GoogleFonts.inter(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
+                        label: Text(
+                          "Today's Special",
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(
-                              color: Colors.white54, width: 1.5),
+                            color: Colors.white54,
+                            width: 1.5,
+                          ),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
                       ElevatedButton.icon(
                         onPressed: () => _showItemForm(),
                         icon: const Icon(Icons.add, color: AppColors.rubyDark),
-                        label: Text('Add Menu Item',
-                            style: GoogleFonts.inter(
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.rubyDark)),
+                        label: Text(
+                          'Add Menu Item',
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.rubyDark,
+                          ),
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.gold,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 12),
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
                     ],
@@ -394,16 +442,21 @@ class _MenuScreenState extends State<MenuScreen> {
         children: [
           Row(
             children: [
-              Text('Categories',
-                  style: GoogleFonts.playfairDisplay(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.rubyDark)),
+              Text(
+                'Categories',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.rubyDark,
+                ),
+              ),
               const Spacer(),
               IconButton(
                 onPressed: () => _showCategoryForm(),
-                icon: const Icon(Icons.add_circle_outline,
-                    color: AppColors.rubyDark),
+                icon: const Icon(
+                  Icons.add_circle_outline,
+                  color: AppColors.rubyDark,
+                ),
               ),
             ],
           ),
@@ -419,16 +472,17 @@ class _MenuScreenState extends State<MenuScreen> {
                   onTap: () => setState(() => _selectedCategoryId = ''),
                 ),
                 const SizedBox(width: 8),
-                ..._categories.map((cat) => Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: _CategoryPill(
-                        label: cat.name,
-                        isSelected: _selectedCategoryId == cat.id,
-                        onTap: () =>
-                            setState(() => _selectedCategoryId = cat.id),
-                        onLongPress: () => _showCategoryForm(cat),
-                      ),
-                    )),
+                ..._categories.map(
+                  (cat) => Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: _CategoryPill(
+                      label: cat.name,
+                      isSelected: _selectedCategoryId == cat.id,
+                      onTap: () => setState(() => _selectedCategoryId = cat.id),
+                      onLongPress: () => _showCategoryForm(cat),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -456,25 +510,31 @@ class _MenuScreenState extends State<MenuScreen> {
             children: [
               const Icon(Icons.folder_outlined, color: AppColors.rubyDark),
               const SizedBox(width: 8),
-              Text('Categories',
-                  style: GoogleFonts.playfairDisplay(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.rubyDark)),
+              Text(
+                'Categories',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.rubyDark,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 20),
           OutlinedButton.icon(
             onPressed: () => _showCategoryForm(),
             icon: const Icon(Icons.add, size: 18),
-            label: Text('Add Category',
-                style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+            label: Text(
+              'Add Category',
+              style: GoogleFonts.inter(fontWeight: FontWeight.bold),
+            ),
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.rubyDark,
               side: const BorderSide(color: AppColors.rubyDark, width: 1.5),
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
           const SizedBox(height: 16),
@@ -547,8 +607,10 @@ class _MenuScreenState extends State<MenuScreen> {
         const SizedBox(height: 16),
         Align(
           alignment: Alignment.centerLeft,
-          child: Text('Showing ${_filteredItems.length} items',
-              style: GoogleFonts.inter(color: AppColors.textMuted)),
+          child: Text(
+            'Showing ${_filteredItems.length} items',
+            style: GoogleFonts.inter(color: AppColors.textMuted),
+          ),
         ),
         const SizedBox(height: 16),
         _buildItemsGrid(),
@@ -560,31 +622,36 @@ class _MenuScreenState extends State<MenuScreen> {
     final items = _filteredItems;
     if (items.isEmpty) {
       return Center(
-        child: Text('No items found.',
-            style: GoogleFonts.inter(color: AppColors.textMuted)),
+        child: Text(
+          'No items found.',
+          style: GoogleFonts.inter(color: AppColors.textMuted),
+        ),
       );
     }
-    return LayoutBuilder(builder: (ctx, c) {
-      final cols = c.maxWidth > 900
-          ? 3
-          : c.maxWidth > 600
-              ? 2
-              : 1;
-      return GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: cols,
-          mainAxisSpacing: c.maxWidth > 600 ? 32 : 16,
-          crossAxisSpacing: c.maxWidth > 600 ? 32 : 16,
-          childAspectRatio: c.maxWidth > 600 ? 0.75 : 0.70,
-        ),
-        itemCount: items.length,
-        itemBuilder: (ctx, i) => _buildItemCard(items[i], i)
-            .animate()
-            .fadeIn(delay: (i * 30).ms, duration: 400.ms),
-      );
-    });
+    return LayoutBuilder(
+      builder: (ctx, c) {
+        final cols = c.maxWidth > 900
+            ? 3
+            : c.maxWidth > 600
+                ? 2
+                : 1;
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: cols,
+            mainAxisSpacing: c.maxWidth > 600 ? 32 : 16,
+            crossAxisSpacing: c.maxWidth > 600 ? 32 : 16,
+            childAspectRatio: c.maxWidth > 600 ? 0.75 : 0.70,
+          ),
+          itemCount: items.length,
+          itemBuilder: (ctx, i) => _buildItemCard(
+            items[i],
+            i,
+          ).animate().fadeIn(delay: (i * 30).ms, duration: 400.ms),
+        );
+      },
+    );
   }
 
   Widget _buildItemCard(MenuItem item, int i) {
@@ -608,12 +675,20 @@ class _MenuScreenState extends State<MenuScreen> {
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) =>
                           const Center(
-                              child: Icon(Icons.broken_image,
-                                  color: AppColors.textMuted, size: 48)),
+                        child: Icon(
+                          Icons.broken_image,
+                          color: AppColors.textMuted,
+                          size: 48,
+                        ),
+                      ),
                     )
                   : const Center(
-                      child: Icon(Icons.restaurant,
-                          color: AppColors.textMuted, size: 48)),
+                      child: Icon(
+                        Icons.restaurant,
+                        color: AppColors.textMuted,
+                        size: 48,
+                      ),
+                    ),
             ),
           ),
           Expanded(
@@ -630,12 +705,15 @@ class _MenuScreenState extends State<MenuScreen> {
                         child: Row(
                           children: [
                             Flexible(
-                              child: Text(item.name,
-                                  style: GoogleFonts.playfairDisplay(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis),
+                              child: Text(
+                                item.name,
+                                style: GoogleFonts.playfairDisplay(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                             const SizedBox(width: 8),
                             if (item.isSpecial)
@@ -653,17 +731,22 @@ class _MenuScreenState extends State<MenuScreen> {
                           ],
                         ),
                       ),
-                      Text('₹${item.price.toStringAsFixed(2)}',
-                          style: GoogleFonts.inter(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.rubyRed)),
+                      Text(
+                        '₹${item.price.toStringAsFixed(2)}',
+                        style: GoogleFonts.inter(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.rubyRed,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.borderLight,
                       borderRadius: BorderRadius.circular(4),
@@ -671,21 +754,30 @@ class _MenuScreenState extends State<MenuScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(categoryName,
-                            style: GoogleFonts.inter(
-                                fontSize: 10,
-                                color: AppColors.textMuted,
-                                fontWeight: FontWeight.w600)),
+                        Text(
+                          categoryName,
+                          style: GoogleFonts.inter(
+                            fontSize: 10,
+                            color: AppColors.textMuted,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                         if (item.isSpecial) ...[
                           const SizedBox(width: 8),
-                          const Icon(Icons.flash_on,
-                              size: 10, color: AppColors.rubyRed),
+                          const Icon(
+                            Icons.flash_on,
+                            size: 10,
+                            color: AppColors.rubyRed,
+                          ),
                           const SizedBox(width: 2),
-                          Text('TODAY\'S SPECIAL',
-                              style: GoogleFonts.inter(
-                                  fontSize: 10,
-                                  color: AppColors.rubyRed,
-                                  fontWeight: FontWeight.w800)),
+                          Text(
+                            'TODAY\'S SPECIAL',
+                            style: GoogleFonts.inter(
+                              fontSize: 10,
+                              color: AppColors.rubyRed,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
                         ],
                       ],
                     ),
@@ -694,16 +786,22 @@ class _MenuScreenState extends State<MenuScreen> {
                   Text(
                     item.description ?? 'No description provided.',
                     style: GoogleFonts.inter(
-                        fontSize: 12, color: AppColors.textMuted),
+                      fontSize: 12,
+                      color: AppColors.textMuted,
+                    ),
                     maxLines: 1, // Reduced to 1 line for shorter card
                     overflow: TextOverflow.ellipsis,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Availability',
-                          style: GoogleFonts.inter(
-                              fontSize: 12, fontWeight: FontWeight.bold)),
+                      Text(
+                        'Availability',
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       Switch(
                         value: item.isAvailable,
                         onChanged: (_) => _toggleItem(item.id),
@@ -712,32 +810,41 @@ class _MenuScreenState extends State<MenuScreen> {
                     ],
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
+                      color: item.isAvailable
+                          ? AppColors.success.withValues(alpha: 0.1)
+                          : AppColors.danger.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
                         color: item.isAvailable
-                            ? AppColors.success.withValues(alpha: 0.1)
-                            : AppColors.danger.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                            color: item.isAvailable
-                                ? AppColors.success.withValues(alpha: 0.3)
-                                : AppColors.danger.withValues(alpha: 0.3))),
+                            ? AppColors.success.withValues(alpha: 0.3)
+                            : AppColors.danger.withValues(alpha: 0.3),
+                      ),
+                    ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.circle,
-                            size: 8,
+                        Icon(
+                          Icons.circle,
+                          size: 8,
+                          color: item.isAvailable
+                              ? AppColors.success
+                              : AppColors.danger,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          item.isAvailable ? 'Available' : 'Unavailable',
+                          style: GoogleFonts.inter(
+                            fontSize: 10,
                             color: item.isAvailable
                                 ? AppColors.success
-                                : AppColors.danger),
-                        const SizedBox(width: 6),
-                        Text(item.isAvailable ? 'Available' : 'Unavailable',
-                            style: GoogleFonts.inter(
-                                fontSize: 10,
-                                color: item.isAvailable
-                                    ? AppColors.success
-                                    : AppColors.danger)),
+                                : AppColors.danger,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -754,7 +861,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 8),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -766,13 +873,16 @@ class _MenuScreenState extends State<MenuScreen> {
 
   Widget _buildError() {
     return Center(
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        const Icon(Icons.error_outline, color: AppColors.danger, size: 42),
-        const SizedBox(height: 12),
-        Text(_error!, style: GoogleFonts.inter(color: AppColors.textMuted)),
-        const SizedBox(height: 16),
-        ElevatedButton(onPressed: _loadData, child: const Text('Retry')),
-      ]),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.error_outline, color: AppColors.danger, size: 42),
+          const SizedBox(height: 12),
+          Text(_error!, style: GoogleFonts.inter(color: AppColors.textMuted)),
+          const SizedBox(height: 16),
+          ElevatedButton(onPressed: _loadData, child: const Text('Retry')),
+        ],
+      ),
     );
   }
 }
@@ -817,7 +927,11 @@ class _SidebarItemState extends State<_SidebarItem> {
           curve: Curves.easeOutCubic,
           transform: Matrix4.identity()
             ..scaleByDouble(
-                _isHovered ? 1.02 : 1.0, _isHovered ? 1.02 : 1.0, 1.0, 1.0),
+              _isHovered ? 1.02 : 1.0,
+              _isHovered ? 1.02 : 1.0,
+              1.0,
+              1.0,
+            ),
           decoration: BoxDecoration(
             color: isAllItems
                 ? AppColors.rubyDark
@@ -841,7 +955,7 @@ class _SidebarItemState extends State<_SidebarItem> {
                       color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
-                    )
+                    ),
                   ]
                 : null,
           ),
@@ -852,29 +966,32 @@ class _SidebarItemState extends State<_SidebarItem> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.name,
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.bold,
-                          color: isAllItems ? Colors.white : AppColors.rubyDark,
-                          fontSize: 15,
-                        )),
+                    Text(
+                      widget.name,
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.bold,
+                        color: isAllItems ? Colors.white : AppColors.rubyDark,
+                        fontSize: 15,
+                      ),
+                    ),
                     if (widget.description.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Text(
-                          isAllItems
-                              ? widget.description
-                              : widget.description.toUpperCase(),
-                          style: GoogleFonts.inter(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                            color: isAllItems
-                                ? Colors.white.withValues(alpha: 0.7)
-                                : Colors.grey.shade500,
-                            letterSpacing: 0.5,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis),
-                    ]
+                        isAllItems
+                            ? widget.description
+                            : widget.description.toUpperCase(),
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: isAllItems
+                              ? Colors.white.withValues(alpha: 0.7)
+                              : Colors.grey.shade500,
+                          letterSpacing: 0.5,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -882,9 +999,11 @@ class _SidebarItemState extends State<_SidebarItem> {
                   widget.isSelected &&
                   widget.onEdit != null) ...[
                 IconButton(
-                  icon: Icon(Icons.edit,
-                      size: 16,
-                      color: AppColors.rubyDark.withValues(alpha: 0.6)),
+                  icon: Icon(
+                    Icons.edit,
+                    size: 16,
+                    color: AppColors.rubyDark.withValues(alpha: 0.6),
+                  ),
                   onPressed: widget.onEdit,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -893,12 +1012,15 @@ class _SidebarItemState extends State<_SidebarItem> {
               ],
               if (!isAllItems && widget.onDelete != null)
                 IconButton(
-                  icon: Icon(Icons.delete_outline,
-                      size: 16, color: Colors.grey.shade400),
+                  icon: Icon(
+                    Icons.delete_outline,
+                    size: 16,
+                    color: Colors.grey.shade400,
+                  ),
                   onPressed: widget.onDelete,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
-                )
+                ),
             ],
           ),
         ),
@@ -929,7 +1051,9 @@ class _HoverableCardState extends State<HoverableCard> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-              color: AppColors.rubyDark.withValues(alpha: 0.5), width: 1),
+            color: AppColors.rubyDark.withValues(alpha: 0.5),
+            width: 1,
+          ),
           boxShadow: _isHovered ? AppShadows.glow : AppShadows.card,
         ),
         clipBehavior: Clip.antiAlias,
@@ -971,8 +1095,11 @@ class _HeaderButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon,
-                size: 16, color: isPrimary ? AppColors.rubyDark : Colors.white),
+            Icon(
+              icon,
+              size: 16,
+              color: isPrimary ? AppColors.rubyDark : Colors.white,
+            ),
             const SizedBox(width: 8),
             Text(
               label,
@@ -1025,7 +1152,7 @@ class _CategoryPill extends StatelessWidget {
                     color: AppColors.rubyDark.withOpacity(0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
-                  )
+                  ),
                 ]
               : null,
         ),

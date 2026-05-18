@@ -75,26 +75,24 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
       final token = prefs.getString('auth_token');
       if (token == null) throw Exception("No authentication token found.");
 
-      await ordersProvider.createOrder(
-        {
-          "table_id": _selectedTableId,
-          "order_type": _selectedTableId == null ? "TAKEAWAY" : "DINE_IN",
-          "customer_name": _nameCtrl.text.trim().isEmpty
-              ? 'Walk-in Customer'
-              : _nameCtrl.text.trim(),
-          "customer_phone": _phoneCtrl.text.trim(),
-          "items": _orderItems,
-        },
-        token,
-      );
+      await ordersProvider.createOrder({
+        "table_id": _selectedTableId,
+        "order_type": _selectedTableId == null ? "TAKEAWAY" : "DINE_IN",
+        "customer_name": _nameCtrl.text.trim().isEmpty
+            ? 'Walk-in Customer'
+            : _nameCtrl.text.trim(),
+        "customer_phone": _phoneCtrl.text.trim(),
+        "items": _orderItems,
+      }, token);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Order created successfully!'),
           backgroundColor: AppColors.success,
           behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
       Navigator.pop(context);
@@ -105,8 +103,9 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
           content: Text(e.toString().replaceFirst('Exception: ', '')),
           backgroundColor: AppColors.danger,
           behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
     } finally {
@@ -141,41 +140,49 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
           // ── Body ─────────────────────────────────────────────────
           Expanded(
-            child: LayoutBuilder(builder: (context, constraints) {
-              final isWide = constraints.maxWidth >= 768;
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 1100),
-                    child: isWide
-                        ? Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 5,
-                                child: _buildLeftPanel(tables, grouped, menu),
-                              ),
-                              const SizedBox(width: 24),
-                              SizedBox(
-                                width: 320,
-                                child: _buildSummaryPanel(
-                                    menu.items, selectedCount, total),
-                              ),
-                            ],
-                          )
-                        : Column(
-                            children: [
-                              _buildLeftPanel(tables, grouped, menu),
-                              const SizedBox(height: 24),
-                              _buildSummaryPanel(
-                                  menu.items, selectedCount, total),
-                            ],
-                          ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isWide = constraints.maxWidth >= 768;
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1100),
+                      child: isWide
+                          ? Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 5,
+                                  child: _buildLeftPanel(tables, grouped, menu),
+                                ),
+                                const SizedBox(width: 24),
+                                SizedBox(
+                                  width: 320,
+                                  child: _buildSummaryPanel(
+                                    menu.items,
+                                    selectedCount,
+                                    total,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Column(
+                              children: [
+                                _buildLeftPanel(tables, grouped, menu),
+                                const SizedBox(height: 24),
+                                _buildSummaryPanel(
+                                  menu.items,
+                                  selectedCount,
+                                  total,
+                                ),
+                              ],
+                            ),
+                    ),
                   ),
-                ),
-              );
-            }),
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -275,16 +282,15 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
     final availableTables =
         tables.where((t) => t.status == TableStatus.available).toList();
     final tableOptions = <DropdownMenuItem<String>>[
-      const DropdownMenuItem(
-        value: '',
-        child: Text('Takeaway / Walk-in'),
-      ),
+      const DropdownMenuItem(value: '', child: Text('Takeaway / Walk-in')),
       ...availableTables.map(
         (t) => DropdownMenuItem(
           value: t.id,
-          child: Text(t.name.toLowerCase().startsWith('table')
-              ? t.name
-              : 'Table ${t.name}'),
+          child: Text(
+            t.name.toLowerCase().startsWith('table')
+                ? t.name
+                : 'Table ${t.name}',
+          ),
         ),
       ),
     ];
@@ -354,22 +360,30 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-              color: AppColors.primary.withValues(alpha: 0.6), width: 1.5),
+            color: AppColors.primary.withValues(alpha: 0.6),
+            width: 1.5,
+          ),
         ),
       );
 
   // ── Menu section ─────────────────────────────────────────────────
   Widget _buildMenuSection(
-      Map<String, List<MenuItem>> grouped, MenuProvider menu) {
+    Map<String, List<MenuItem>> grouped,
+    MenuProvider menu,
+  ) {
     if (menu.isLoading) {
       return Column(
         children: List.generate(
-            5,
-            (index) => const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: ShimmerLoading(
-                      width: double.infinity, height: 60, borderRadius: 12),
-                )),
+          5,
+          (index) => const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: ShimmerLoading(
+              width: double.infinity,
+              height: 60,
+              borderRadius: 12,
+            ),
+          ),
+        ),
       );
     }
     if (menu.error != null || menu.items.isEmpty) {
@@ -377,8 +391,11 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
         padding: const EdgeInsets.symmetric(vertical: 24),
         child: Column(
           children: [
-            const Icon(Icons.restaurant_menu_outlined,
-                size: 48, color: AppColors.slate300),
+            const Icon(
+              Icons.restaurant_menu_outlined,
+              size: 48,
+              color: AppColors.slate300,
+            ),
             const SizedBox(height: 12),
             Text(
               menu.error != null ? menu.error! : 'No menu items available',
@@ -428,22 +445,24 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                 ],
               ),
             ),
-            ...entry.value.map((item) => _MenuItemRow(
-                  item: item,
-                  qty: _qty[item.id] ?? 0,
-                  onAdd: () =>
-                      setState(() => _qty[item.id] = (_qty[item.id] ?? 0) + 1),
-                  onRemove: () {
-                    final cur = _qty[item.id] ?? 0;
-                    setState(() {
-                      if (cur <= 1) {
-                        _qty.remove(item.id);
-                      } else {
-                        _qty[item.id] = cur - 1;
-                      }
-                    });
-                  },
-                )),
+            ...entry.value.map(
+              (item) => _MenuItemRow(
+                item: item,
+                qty: _qty[item.id] ?? 0,
+                onAdd: () =>
+                    setState(() => _qty[item.id] = (_qty[item.id] ?? 0) + 1),
+                onRemove: () {
+                  final cur = _qty[item.id] ?? 0;
+                  setState(() {
+                    if (cur <= 1) {
+                      _qty.remove(item.id);
+                    } else {
+                      _qty[item.id] = cur - 1;
+                    }
+                  });
+                },
+              ),
+            ),
           ],
         );
       }).toList(),
@@ -452,7 +471,10 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
   // ── Summary panel ─────────────────────────────────────────────────
   Widget _buildSummaryPanel(
-      List<MenuItem> allItems, int selectedCount, double total) {
+    List<MenuItem> allItems,
+    int selectedCount,
+    double total,
+  ) {
     final selected = _qty.entries
         .where((e) => e.value > 0)
         .map((e) {
@@ -482,20 +504,26 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.receipt_rounded,
-                        color: AppColors.white, size: 24),
+                    const Icon(
+                      Icons.receipt_rounded,
+                      color: AppColors.white,
+                      size: 24,
+                    ),
                     const SizedBox(width: 12),
                     Text(
                       'Order Summary',
                       style: AppTheme.serif(
-                          size: 18,
-                          weight: FontWeight.w800,
-                          color: AppColors.white),
+                        size: 18,
+                        weight: FontWeight.w800,
+                        color: AppColors.white,
+                      ),
                     ),
                     const Spacer(),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(10),
@@ -503,9 +531,10 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                       child: Text(
                         '$selectedCount',
                         style: AppTheme.sans(
-                            size: 12,
-                            weight: FontWeight.w800,
-                            color: AppColors.white),
+                          size: 12,
+                          weight: FontWeight.w800,
+                          color: AppColors.white,
+                        ),
                       ),
                     ),
                   ],
@@ -542,15 +571,19 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 24),
                           child: Column(
                             children: [
-                              const Icon(Icons.shopping_basket_outlined,
-                                  size: 32, color: AppColors.slate200),
+                              const Icon(
+                                Icons.shopping_basket_outlined,
+                                size: 32,
+                                color: AppColors.slate200,
+                              ),
                               const SizedBox(height: 12),
                               Text(
                                 'No items selected',
                                 style: AppTheme.sans(
-                                    size: 14,
-                                    color: AppColors.slate400,
-                                    weight: FontWeight.w500),
+                                  size: 14,
+                                  color: AppColors.slate400,
+                                  weight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),
@@ -566,8 +599,9 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                 width: 26,
                                 height: 26,
                                 decoration: BoxDecoration(
-                                  color:
-                                      AppColors.primary.withValues(alpha: 0.1),
+                                  color: AppColors.primary.withValues(
+                                    alpha: 0.1,
+                                  ),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Center(
@@ -586,9 +620,10 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                 child: Text(
                                   e.item.name,
                                   style: AppTheme.sans(
-                                      size: 14,
-                                      color: AppColors.slate700,
-                                      weight: FontWeight.w600),
+                                    size: 14,
+                                    color: AppColors.slate700,
+                                    weight: FontWeight.w600,
+                                  ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -608,7 +643,10 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                     if (selected.isNotEmpty) ...[
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 16),
-                        child: Divider(height: 1, color: AppColors.slate100),
+                        child: Divider(
+                          height: 1,
+                          color: AppColors.slate100,
+                        ),
                       ),
                       _SummaryDetailRow(
                         label: 'Subtotal',
@@ -623,11 +661,14 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Total Amount',
-                              style: AppTheme.sans(
-                                  size: 14,
-                                  weight: FontWeight.w700,
-                                  color: AppColors.slate500)),
+                          Text(
+                            'Total Amount',
+                            style: AppTheme.sans(
+                              size: 14,
+                              weight: FontWeight.w700,
+                              color: AppColors.slate500,
+                            ),
+                          ),
                           Text(
                             '₹${(total * 1.05).toStringAsFixed(0)}',
                             style: AppTheme.serif(
@@ -765,8 +806,11 @@ class _MenuItemRow extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Icon(Icons.add_rounded,
-                    color: Colors.white, size: 20),
+                child: const Icon(
+                  Icons.add_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
             )
           else
@@ -782,8 +826,11 @@ class _MenuItemRow extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: AppColors.slate200),
                     ),
-                    child: const Icon(Icons.remove_rounded,
-                        color: AppColors.slate700, size: 20),
+                    child: const Icon(
+                      Icons.remove_rounded,
+                      color: AppColors.slate700,
+                      size: 20,
+                    ),
                   ),
                 ),
                 Container(
@@ -807,8 +854,11 @@ class _MenuItemRow extends StatelessWidget {
                       color: AppColors.primary,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(Icons.add_rounded,
-                        color: Colors.white, size: 20),
+                    child: const Icon(
+                      Icons.add_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
                 ),
               ],
@@ -827,8 +877,11 @@ class _SummaryRow extends StatelessWidget {
   final String value;
   final IconData icon;
 
-  const _SummaryRow(
-      {required this.label, required this.value, required this.icon});
+  const _SummaryRow({
+    required this.label,
+    required this.value,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -865,12 +918,22 @@ class _SummaryDetailRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label,
-            style: AppTheme.sans(
-                size: 13, color: AppColors.slate400, weight: FontWeight.w500)),
-        Text(value,
-            style: AppTheme.sans(
-                size: 13, color: AppColors.slate700, weight: FontWeight.w600)),
+        Text(
+          label,
+          style: AppTheme.sans(
+            size: 13,
+            color: AppColors.slate400,
+            weight: FontWeight.w500,
+          ),
+        ),
+        Text(
+          value,
+          style: AppTheme.sans(
+            size: 13,
+            color: AppColors.slate700,
+            weight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }

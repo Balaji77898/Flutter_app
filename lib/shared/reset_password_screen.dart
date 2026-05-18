@@ -34,10 +34,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
     final authProvider = context.read<AuthProvider>();
     try {
-      await authProvider.resetPassword(
-        widget.token,
-        _passwordController.text,
-      );
+      await authProvider.resetPassword(widget.token, _passwordController.text);
 
       if (mounted) {
         setState(() {
@@ -96,8 +93,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             ),
             filled: true,
             fillColor: const Color(0xFFF4F1EA), // Light ivory fill
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(color: Color(0xFFE2DDD2)),
@@ -129,7 +128,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           child: Container(
             width: double.infinity,
             constraints: const BoxConstraints(maxWidth: 420),
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 48),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 40,
+              vertical: 48,
+            ),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
@@ -145,7 +147,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 ? _buildSuccessState()
                 : _buildFormState(authProvider),
           ).animate().fadeIn(duration: 400.ms).scale(
-              begin: const Offset(0.95, 0.95), curve: Curves.easeOutQuart),
+                begin: const Offset(0.95, 0.95),
+                curve: Curves.easeOutQuart,
+              ),
         ),
       ),
     );
@@ -182,10 +186,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         Text(
           'Please enter your new secure password',
           textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            fontSize: 15,
-            color: AppColors.slate500,
-          ),
+          style: GoogleFonts.inter(fontSize: 15, color: AppColors.slate500),
         ),
         const SizedBox(height: 40),
 
@@ -217,7 +218,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 controller: _confirmPasswordController,
                 obscureText: _obscureConfirmPassword,
                 toggleObscure: () => setState(
-                    () => _obscureConfirmPassword = !_obscureConfirmPassword),
+                  () => _obscureConfirmPassword = !_obscureConfirmPassword,
+                ),
                 validator: (value) {
                   if (value != _passwordController.text) {
                     return 'Passwords do not match';
@@ -237,7 +239,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                       side: const BorderSide(
-                          color: Color(0xFFB8861B), width: 1), // Darker border
+                        color: Color(0xFFB8861B),
+                        width: 1,
+                      ), // Darker border
                     ),
                     elevation: 0,
                   ),
@@ -248,7 +252,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                                AppColors.primary),
+                              AppColors.primary,
+                            ),
                           ),
                         )
                       : Text(

@@ -8,12 +8,16 @@ class AuthService {
   /// ApiService._handleResponse already unwraps the envelope so [response]
   /// arrives here as { token, user }.
   static Future<Map<String, dynamic>> login(
-      String email, String password) async {
+    String email,
+    String password,
+  ) async {
     final response = await ApiService.post(
-      ApiEndpoints.login,
-      {'email': email, 'password': password},
-      requiresAuth: false,
-    );
+        ApiEndpoints.login,
+        {
+          'email': email,
+          'password': password,
+        },
+        requiresAuth: false);
 
     final data = response as Map<String, dynamic>;
 

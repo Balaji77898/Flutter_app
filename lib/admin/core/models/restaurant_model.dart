@@ -232,20 +232,24 @@ class OrderModel {
     final rawTotal = json['total_amount'] ?? json['totalAmount'];
     final rawItems = json['items'] as List<dynamic>? ?? [];
 
-    double parsedAmount = double.tryParse((rawTotal ??
-                json['amount'] ??
-                json['final_amount'] ??
-                json['bill_amount'] ??
-                '0')
-            .toString()) ??
+    double parsedAmount = double.tryParse(
+          (rawTotal ??
+                  json['amount'] ??
+                  json['final_amount'] ??
+                  json['bill_amount'] ??
+                  '0')
+              .toString(),
+        ) ??
         0;
 
     final items = rawItems.map((i) => OrderItem.fromJson(i)).toList();
 
     // Fallback to calculated subtotal if totalAmount is 0
     if (parsedAmount == 0 && items.isNotEmpty) {
-      parsedAmount =
-          items.fold(0, (sum, item) => sum + (item.price * item.quantity));
+      parsedAmount = items.fold(
+        0,
+        (sum, item) => sum + (item.price * item.quantity),
+      );
     }
 
     return OrderModel(

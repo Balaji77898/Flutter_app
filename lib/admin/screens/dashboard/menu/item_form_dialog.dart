@@ -94,8 +94,9 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedCategoryId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select a category')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select a category')));
       return;
     }
 
@@ -123,8 +124,10 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(
-                  'Failed: ${e.toString().replaceAll('Exception: ', '')}')),
+            content: Text(
+              'Failed: ${e.toString().replaceAll('Exception: ', '')}',
+            ),
+          ),
         );
       }
     } finally {
@@ -138,10 +141,13 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
       return AlertDialog(
         title: const Text('Error'),
         content: const Text(
-            'You must create a category first before adding an item.'),
+          'You must create a category first before adding an item.',
+        ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context), child: const Text('OK'))
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
         ],
       );
     }
@@ -189,9 +195,12 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                 TextFormField(
                   initialValue: _price,
                   decoration: const InputDecoration(
-                      labelText: 'Price (₹)', prefixText: '₹ '),
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                    labelText: 'Price (₹)',
+                    prefixText: '₹ ',
+                  ),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   validator: (val) =>
                       val == null || double.tryParse(val) == null
                           ? 'Valid price required'
@@ -207,16 +216,18 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                     helperText:
                         '💡 Tip: Right-click any image online and select "Copy Image Address"',
                     helperStyle: TextStyle(
-                        color: AppColors.rubyRed.withValues(alpha: 0.8),
-                        fontWeight: FontWeight.w500,
-                        fontSize: 11),
+                      color: AppColors.rubyRed.withValues(alpha: 0.8),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 11,
+                    ),
                     suffixIcon: _imageController.text.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, size: 18),
                             onPressed: () {
                               _imageController.clear();
                               setState(() => _cleanedPreview = '');
-                            })
+                            },
+                          )
                         : null,
                   ),
                   onChanged: (val) {
@@ -241,12 +252,19 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.image_outlined,
-                                color: Colors.grey.shade400, size: 32),
+                            Icon(
+                              Icons.image_outlined,
+                              color: Colors.grey.shade400,
+                              size: 32,
+                            ),
                             const SizedBox(height: 4),
-                            Text('Image Preview',
-                                style: TextStyle(
-                                    color: Colors.grey.shade500, fontSize: 12)),
+                            Text(
+                              'Image Preview',
+                              style: TextStyle(
+                                color: Colors.grey.shade500,
+                                fontSize: 12,
+                              ),
+                            ),
                           ],
                         )
                       : ClipRRect(
@@ -257,12 +275,19 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                             errorBuilder: (ctx, err, stack) => const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.broken_image,
-                                    color: AppColors.danger, size: 32),
+                                Icon(
+                                  Icons.broken_image,
+                                  color: AppColors.danger,
+                                  size: 32,
+                                ),
                                 SizedBox(height: 4),
-                                Text('Invalid Image URL',
-                                    style: TextStyle(
-                                        color: AppColors.danger, fontSize: 11)),
+                                Text(
+                                  'Invalid Image URL',
+                                  style: TextStyle(
+                                    color: AppColors.danger,
+                                    fontSize: 11,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -275,9 +300,10 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                     child: Text(
                       'Direct Link Extracted Successfully!',
                       style: TextStyle(
-                          fontSize: 10,
-                          color: AppColors.success,
-                          fontWeight: FontWeight.bold),
+                        fontSize: 10,
+                        color: AppColors.success,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 const SizedBox(height: 16),
@@ -293,8 +319,10 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                     Expanded(
                       child: SwitchListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: const Text('Available',
-                            style: TextStyle(fontSize: 14)),
+                        title: const Text(
+                          'Available',
+                          style: TextStyle(fontSize: 14),
+                        ),
                         activeThumbColor: AppColors.success,
                         value: _isAvailable,
                         onChanged: (val) => setState(() => _isAvailable = val),
@@ -310,8 +338,10 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text('Cancel',
-              style: GoogleFonts.inter(color: AppColors.textMuted)),
+          child: Text(
+            'Cancel',
+            style: GoogleFonts.inter(color: AppColors.textMuted),
+          ),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _submit,
@@ -320,7 +350,10 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
                   width: 20,
                   height: 20,
                   child: CircularProgressIndicator(
-                      strokeWidth: 2, color: Colors.white))
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
               : Text(widget.item == null ? 'Add Item' : 'Save Changes'),
         ),
       ],

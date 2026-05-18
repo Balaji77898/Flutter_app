@@ -52,7 +52,9 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       await auth.setAuth(
         result['token'] as String,
         UserProfile.fromJson(
-            result['user'] as Map<String, dynamic>, UserRole.admin),
+          result['user'] as Map<String, dynamic>,
+          UserRole.admin,
+        ),
       );
       // GoRouter's refreshListenable picks up the auth change and
       // redirects to /admin/dashboard automatically — no manual push needed.
@@ -90,11 +92,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF4B0F0F),
-              Color(0xFF8B1D1D),
-              Color(0xFF6B1515),
-            ],
+            colors: [Color(0xFF4B0F0F), Color(0xFF8B1D1D), Color(0xFF6B1515)],
           ),
         ),
         child: Stack(
@@ -103,12 +101,14 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
             Positioned(
               right: -60,
               top: -40,
-              child: Text('R',
-                  style: GoogleFonts.playfairDisplaySc(
-                    fontSize: 400,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white.withValues(alpha: 0.03),
-                  )),
+              child: Text(
+                'R',
+                style: GoogleFonts.playfairDisplaySc(
+                  fontSize: 400,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white.withValues(alpha: 0.03),
+                ),
+              ),
             ),
             SafeArea(
               child: Center(
@@ -153,22 +153,26 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       crossAxisAlignment:
           compact ? CrossAxisAlignment.center : CrossAxisAlignment.start,
       children: [
-        Text('RESTAURANT',
-            style: GoogleFonts.playfairDisplaySc(
-              fontSize: compact ? 32 : 56,
-              fontWeight: FontWeight.w900,
-              color: Colors.white,
-              letterSpacing: 4,
-              height: 0.9,
-            )).animate().fadeIn(delay: 200.ms).slideX(begin: -0.1),
-        Text('ADMIN PORTAL',
-            style: GoogleFonts.playfairDisplaySc(
-              fontSize: compact ? 32 : 56,
-              fontWeight: FontWeight.w900,
-              color: const Color(0xFFE0B840),
-              letterSpacing: 4,
-              height: 0.9,
-            )).animate().fadeIn(delay: 350.ms).slideX(begin: -0.1),
+        Text(
+          'RESTAURANT',
+          style: GoogleFonts.playfairDisplaySc(
+            fontSize: compact ? 32 : 56,
+            fontWeight: FontWeight.w900,
+            color: Colors.white,
+            letterSpacing: 4,
+            height: 0.9,
+          ),
+        ).animate().fadeIn(delay: 200.ms).slideX(begin: -0.1),
+        Text(
+          'ADMIN PORTAL',
+          style: GoogleFonts.playfairDisplaySc(
+            fontSize: compact ? 32 : 56,
+            fontWeight: FontWeight.w900,
+            color: const Color(0xFFE0B840),
+            letterSpacing: 4,
+            height: 0.9,
+          ),
+        ).animate().fadeIn(delay: 350.ms).slideX(begin: -0.1),
         const SizedBox(height: 20),
         if (!compact)
           Column(
@@ -191,12 +195,14 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         children: [
           Text(icon, style: const TextStyle(fontSize: 16)),
           const SizedBox(width: 12),
-          Text(label,
-              style: GoogleFonts.jost(
-                fontSize: 13,
-                color: Colors.white.withValues(alpha: 0.7),
-                fontWeight: FontWeight.w400,
-              )),
+          Text(
+            label,
+            style: GoogleFonts.jost(
+              fontSize: 13,
+              color: Colors.white.withValues(alpha: 0.7),
+              fontWeight: FontWeight.w400,
+            ),
+          ),
         ],
       ),
     );
@@ -229,21 +235,28 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                 color: AppColors.rubyRed,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Icon(Icons.restaurant_menu,
-                  color: Colors.white, size: 28),
+              child: const Icon(
+                Icons.restaurant_menu,
+                color: Colors.white,
+                size: 28,
+              ),
             ),
             const SizedBox(height: 20),
-            Text('Welcome Back',
-                style: GoogleFonts.playfairDisplay(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textDark,
-                )),
-            Text('Sign in to Admin Dashboard',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: AppColors.textMuted,
-                )),
+            Text(
+              'Welcome Back',
+              style: GoogleFonts.playfairDisplay(
+                fontSize: 28,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textDark,
+              ),
+            ),
+            Text(
+              'Sign in to Admin Dashboard',
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                color: AppColors.textMuted,
+              ),
+            ),
             const SizedBox(height: 32),
 
             // Error banner
@@ -297,9 +310,13 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                         child: OutlinedButton.icon(
                           onPressed: _isLoading ? null : _login,
                           icon: const Icon(Icons.refresh_rounded, size: 16),
-                          label: Text('Retry',
-                              style: GoogleFonts.inter(
-                                  fontSize: 13, fontWeight: FontWeight.w600)),
+                          label: Text(
+                            'Retry',
+                            style: GoogleFonts.inter(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: const Color(0xFFD97706),
                             side: const BorderSide(color: Color(0xFFFBBF24)),
@@ -318,12 +335,14 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
             ],
 
             // Email
-            Text('Email',
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textDark,
-                )),
+            Text(
+              'Email',
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textDark,
+              ),
+            ),
             const SizedBox(height: 8),
             TextFormField(
               controller: _emailCtrl,
@@ -341,12 +360,14 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
             const SizedBox(height: 20),
 
             // Password
-            Text('Password',
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textDark,
-                )),
+            Text(
+              'Password',
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textDark,
+              ),
+            ),
             const SizedBox(height: 8),
             TextFormField(
               controller: _passwordCtrl,
@@ -389,13 +410,18 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                         width: 24,
                         height: 24,
                         child: CircularProgressIndicator(
-                            color: Colors.white, strokeWidth: 2.5))
-                    : Text('Sign In to Dashboard',
+                          color: Colors.white,
+                          strokeWidth: 2.5,
+                        ),
+                      )
+                    : Text(
+                        'Sign In to Dashboard',
                         style: GoogleFonts.inter(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
-                        )),
+                        ),
+                      ),
               ),
             ),
             const SizedBox(height: 16),

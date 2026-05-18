@@ -43,20 +43,24 @@ class AdminLandingScreen extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('RESTAURANT',
-                  style: GoogleFonts.playfairDisplaySc(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 4,
-                    color: const Color(0xFF5C1020),
-                  )),
-              Text('Staff & Admin Portal',
-                  style: GoogleFonts.jost(
-                    fontSize: 9,
-                    letterSpacing: 5,
-                    color: const Color(0xFFC09020),
-                    fontWeight: FontWeight.w300,
-                  )),
+              Text(
+                'RESTAURANT',
+                style: GoogleFonts.playfairDisplaySc(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 4,
+                  color: const Color(0xFF5C1020),
+                ),
+              ),
+              Text(
+                'Staff & Admin Portal',
+                style: GoogleFonts.jost(
+                  fontSize: 9,
+                  letterSpacing: 5,
+                  color: const Color(0xFFC09020),
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
             ],
           ),
           const Spacer(),
@@ -65,13 +69,15 @@ class AdminLandingScreen extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
               color: const Color(0xFF5C1020),
-              child: Text('ACCESS DASHBOARD',
-                  style: GoogleFonts.jost(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 3,
-                    color: const Color(0xFFFAF4E8),
-                  )),
+              child: Text(
+                'ACCESS DASHBOARD',
+                style: GoogleFonts.jost(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 3,
+                  color: const Color(0xFFFAF4E8),
+                ),
+              ),
             ),
           ),
         ],
@@ -93,75 +99,97 @@ class AdminLandingScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(children: [
-                    Container(
-                        width: 36, height: 1, color: const Color(0xFF7B1D2A)),
-                    const SizedBox(width: 10),
-                    Text('STAFF & ADMIN PORTAL',
+                  Row(
+                    children: [
+                      Container(
+                        width: 36,
+                        height: 1,
+                        color: const Color(0xFF7B1D2A),
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        'STAFF & ADMIN PORTAL',
                         style: GoogleFonts.jost(
-                            fontSize: 9,
-                            letterSpacing: 5,
-                            color: const Color(0xFF7B1D2A),
-                            fontWeight: FontWeight.w500)),
-                  ]),
+                          fontSize: 9,
+                          letterSpacing: 5,
+                          color: const Color(0xFF7B1D2A),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 16),
-                  Text('RESTAURANT',
-                      style: GoogleFonts.playfairDisplaySc(
-                        fontSize: 72,
-                        fontWeight: FontWeight.w900,
-                        color: const Color(0xFF5C1020),
-                        letterSpacing: 4,
-                        height: 0.9,
-                      )).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
-                  Text('MANAGEMENT',
-                      style: GoogleFonts.playfairDisplaySc(
-                        fontSize: 72,
-                        fontWeight: FontWeight.w900,
-                        color: const Color(0xFF5C1020),
-                        letterSpacing: 4,
-                        height: 0.9,
-                      )).animate().fadeIn(delay: 450.ms).slideY(begin: 0.2),
+                  Text(
+                    'RESTAURANT',
+                    style: GoogleFonts.playfairDisplaySc(
+                      fontSize: 72,
+                      fontWeight: FontWeight.w900,
+                      color: const Color(0xFF5C1020),
+                      letterSpacing: 4,
+                      height: 0.9,
+                    ),
+                  ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
+                  Text(
+                    'MANAGEMENT',
+                    style: GoogleFonts.playfairDisplaySc(
+                      fontSize: 72,
+                      fontWeight: FontWeight.w900,
+                      color: const Color(0xFF5C1020),
+                      letterSpacing: 4,
+                      height: 0.9,
+                    ),
+                  ).animate().fadeIn(delay: 450.ms).slideY(begin: 0.2),
                   const SizedBox(height: 12),
-                  Text('Fine Dining',
-                      style: GoogleFonts.dmSerifDisplay(
-                        fontSize: 32,
-                        fontStyle: FontStyle.italic,
-                        color: const Color(0xFFC09020),
-                      )).animate().fadeIn(delay: 550.ms),
+                  Text(
+                    'Fine Dining',
+                    style: GoogleFonts.dmSerifDisplay(
+                      fontSize: 32,
+                      fontStyle: FontStyle.italic,
+                      color: const Color(0xFFC09020),
+                    ),
+                  ).animate().fadeIn(delay: 550.ms),
                   const SizedBox(height: 24),
                   _buildDividerRule(),
                   const SizedBox(height: 24),
-                  Text('Operations Management System',
-                      style: GoogleFonts.jost(
-                        fontSize: 12,
-                        letterSpacing: 4,
-                        color: const Color(0xFF1A0A06).withValues(alpha: 0.5),
-                        fontWeight: FontWeight.w300,
-                      )).animate().fadeIn(delay: 700.ms),
+                  Text(
+                    'Operations Management System',
+                    style: GoogleFonts.jost(
+                      fontSize: 12,
+                      letterSpacing: 4,
+                      color: const Color(0xFF1A0A06).withValues(alpha: 0.5),
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ).animate().fadeIn(delay: 700.ms),
                   const SizedBox(height: 36),
                   GestureDetector(
                     onTap: () => context.go('/admin/login'),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 48, vertical: 18),
+                        horizontal: 48,
+                        vertical: 18,
+                      ),
                       color: const Color(0xFF5C1020),
-                      child: Text('ACCESS DASHBOARD',
-                          style: GoogleFonts.jost(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 4,
-                            color: const Color(0xFFFAF4E8),
-                          )),
+                      child: Text(
+                        'ACCESS DASHBOARD',
+                        style: GoogleFonts.jost(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 4,
+                          color: const Color(0xFFFAF4E8),
+                        ),
+                      ),
                     ).animate().fadeIn(delay: 900.ms),
                   ),
                   const SizedBox(height: 12),
-                  Text('Authorised personnel only',
-                      style: GoogleFonts.jost(
-                        fontSize: 9,
-                        letterSpacing: 4,
-                        color: const Color(0xFF1A0A06).withValues(alpha: 0.3),
-                        fontWeight: FontWeight.w300,
-                      )),
+                  Text(
+                    'Authorised personnel only',
+                    style: GoogleFonts.jost(
+                      fontSize: 9,
+                      letterSpacing: 4,
+                      color: const Color(0xFF1A0A06).withValues(alpha: 0.3),
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -191,23 +219,29 @@ class AdminLandingScreen extends StatelessWidget {
                   right: 40,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 16),
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
                     color: const Color(0xFFFAF4E8),
                     child: Column(
                       children: [
-                        Text('16',
-                            style: GoogleFonts.playfairDisplaySc(
-                              fontSize: 48,
-                              fontWeight: FontWeight.w900,
-                              color: const Color(0xFF5C1020),
-                            )),
-                        Text('Years of\nExcellence',
-                            style: GoogleFonts.jost(
-                              fontSize: 10,
-                              letterSpacing: 2,
-                              color: const Color(0xFFC09020),
-                            ),
-                            textAlign: TextAlign.center),
+                        Text(
+                          '16',
+                          style: GoogleFonts.playfairDisplaySc(
+                            fontSize: 48,
+                            fontWeight: FontWeight.w900,
+                            color: const Color(0xFF5C1020),
+                          ),
+                        ),
+                        Text(
+                          'Years of\nExcellence',
+                          style: GoogleFonts.jost(
+                            fontSize: 10,
+                            letterSpacing: 2,
+                            color: const Color(0xFFC09020),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ],
                     ),
                   ),
@@ -252,29 +286,35 @@ class AdminLandingScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('RESTAURANT',
-                    style: GoogleFonts.playfairDisplaySc(
-                      fontSize: 40,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      letterSpacing: 2,
-                      height: 1,
-                    )),
-                Text('MANAGEMENT',
-                    style: GoogleFonts.playfairDisplaySc(
-                      fontSize: 40,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      letterSpacing: 2,
-                      height: 1,
-                    )),
+                Text(
+                  'RESTAURANT',
+                  style: GoogleFonts.playfairDisplaySc(
+                    fontSize: 40,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    letterSpacing: 2,
+                    height: 1,
+                  ),
+                ),
+                Text(
+                  'MANAGEMENT',
+                  style: GoogleFonts.playfairDisplaySc(
+                    fontSize: 40,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    letterSpacing: 2,
+                    height: 1,
+                  ),
+                ),
                 const SizedBox(height: 8),
-                Text('Fine Dining',
-                    style: GoogleFonts.dmSerifDisplay(
-                      fontSize: 22,
-                      fontStyle: FontStyle.italic,
-                      color: const Color(0xFFE0B840),
-                    )),
+                Text(
+                  'Fine Dining',
+                  style: GoogleFonts.dmSerifDisplay(
+                    fontSize: 22,
+                    fontStyle: FontStyle.italic,
+                    color: const Color(0xFFE0B840),
+                  ),
+                ),
                 const SizedBox(height: 28),
                 SizedBox(
                   width: double.infinity,
@@ -285,14 +325,17 @@ class AdminLandingScreen extends StatelessWidget {
                       foregroundColor: const Color(0xFF5C1020),
                       padding: const EdgeInsets.symmetric(vertical: 18),
                       shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero),
+                        borderRadius: BorderRadius.zero,
+                      ),
                     ),
-                    child: Text('ACCESS DASHBOARD',
-                        style: GoogleFonts.jost(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 3,
-                        )),
+                    child: Text(
+                      'ACCESS DASHBOARD',
+                      style: GoogleFonts.jost(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 3,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -311,7 +354,7 @@ class AdminLandingScreen extends StatelessWidget {
       'Live Dashboard',
       'Table Control',
       'Order Management',
-      'Analytics'
+      'Analytics',
     ];
     return Container(
       color: const Color(0xFF5C1020),
@@ -320,21 +363,26 @@ class AdminLandingScreen extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: items
-              .expand((t) => [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Text(t,
-                          style: GoogleFonts.jost(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 3,
-                            color: const Color(0xFFFAF4E8),
-                          )),
+              .expand(
+                (t) => [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Text(
+                      t,
+                      style: GoogleFonts.jost(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 3,
+                        color: const Color(0xFFFAF4E8),
+                      ),
                     ),
-                    const Text('✦',
-                        style:
-                            TextStyle(color: Color(0xFFC09020), fontSize: 10)),
-                  ])
+                  ),
+                  const Text(
+                    '✦',
+                    style: TextStyle(color: Color(0xFFC09020), fontSize: 10),
+                  ),
+                ],
+              )
               .toList(),
         ),
       ),
@@ -374,55 +422,65 @@ class AdminLandingScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('OUR RESTAURANT',
-            style: GoogleFonts.jost(
-              fontSize: 10,
-              letterSpacing: 4,
-              color: const Color(0xFF5C1020),
-              fontWeight: FontWeight.w500,
-            )),
+        Text(
+          'OUR RESTAURANT',
+          style: GoogleFonts.jost(
+            fontSize: 10,
+            letterSpacing: 4,
+            color: const Color(0xFF5C1020),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         const SizedBox(height: 12),
         _buildDividerRule(),
         const SizedBox(height: 20),
-        Text('Where Every Plate\nTells a Story',
-            style: GoogleFonts.playfairDisplay(
-              fontSize: 36,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF1A0A06),
-              height: 1.2,
-            )),
+        Text(
+          'Where Every Plate\nTells a Story',
+          style: GoogleFonts.playfairDisplay(
+            fontSize: 36,
+            fontWeight: FontWeight.w700,
+            color: const Color(0xFF1A0A06),
+            height: 1.2,
+          ),
+        ),
         const SizedBox(height: 20),
         Text(
-            'This portal puts every aspect of operations at your fingertips — '
-            'live orders, staff, tables, and reports.',
-            style: GoogleFonts.jost(
-              fontSize: 14,
-              color: const Color(0xFF1A0A06).withValues(alpha: 0.6),
-              height: 1.7,
-            )),
+          'This portal puts every aspect of operations at your fingertips — '
+          'live orders, staff, tables, and reports.',
+          style: GoogleFonts.jost(
+            fontSize: 14,
+            color: const Color(0xFF1A0A06).withValues(alpha: 0.6),
+            height: 1.7,
+          ),
+        ),
         const SizedBox(height: 32),
         Wrap(
           spacing: 24,
           runSpacing: 16,
           children: stats
-              .map((s) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(s[0],
-                          style: GoogleFonts.playfairDisplaySc(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF5C1020),
-                          )),
-                      Text(s[1],
-                          style: GoogleFonts.jost(
-                            fontSize: 11,
-                            letterSpacing: 2,
-                            color:
-                                const Color(0xFF1A0A06).withValues(alpha: 0.5),
-                          )),
-                    ],
-                  ))
+              .map(
+                (s) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      s[0],
+                      style: GoogleFonts.playfairDisplaySc(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF5C1020),
+                      ),
+                    ),
+                    Text(
+                      s[1],
+                      style: GoogleFonts.jost(
+                        fontSize: 11,
+                        letterSpacing: 2,
+                        color: const Color(0xFF1A0A06).withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ],
+                ),
+              )
               .toList(),
         ),
       ],
@@ -449,22 +507,22 @@ class AdminLandingScreen extends StatelessWidget {
       [
         '👨‍🍳',
         'Staff Scheduling',
-        'Build rosters, manage shifts, track attendance.'
+        'Build rosters, manage shifts, track attendance.',
       ],
       [
         '📦',
         'Inventory Tracker',
-        'Monitor stock levels, set alerts, reduce wastage.'
+        'Monitor stock levels, set alerts, reduce wastage.',
       ],
       [
         '📊',
         'Revenue Analytics',
-        'Daily covers, revenue, top dishes, peak hours.'
+        'Daily covers, revenue, top dishes, peak hours.',
       ],
       [
         '🔔',
         'Live Notifications',
-        'Instant alerts for orders, stock and staff.'
+        'Instant alerts for orders, stock and staff.',
       ],
     ];
     return Container(
@@ -472,81 +530,97 @@ class AdminLandingScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: isWide ? 80 : 24, vertical: 80),
       child: Column(
         children: [
-          Text('DASHBOARD FEATURES',
-              style: GoogleFonts.jost(
-                fontSize: 10,
-                letterSpacing: 4,
-                color: const Color(0xFF5C1020),
-              )),
+          Text(
+            'DASHBOARD FEATURES',
+            style: GoogleFonts.jost(
+              fontSize: 10,
+              letterSpacing: 4,
+              color: const Color(0xFF5C1020),
+            ),
+          ),
           const SizedBox(height: 12),
           _buildDividerRule(),
           const SizedBox(height: 16),
-          Text('Everything You Need\nto Run the Show',
-              style: GoogleFonts.playfairDisplay(
-                fontSize: 32,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF1A0A06),
-                height: 1.2,
-              ),
-              textAlign: TextAlign.center),
+          Text(
+            'Everything You Need\nto Run the Show',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 32,
+              fontWeight: FontWeight.w700,
+              color: const Color(0xFF1A0A06),
+              height: 1.2,
+            ),
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: 48),
-          LayoutBuilder(builder: (ctx, c) {
-            final cols = c.maxWidth > 700
-                ? 3
-                : c.maxWidth > 480
-                    ? 2
-                    : 1;
-            return Wrap(
-              spacing: 24,
-              runSpacing: 24,
-              children: features.asMap().entries.map((e) {
-                final idx = e.key;
-                final f = e.value;
-                final w = (c.maxWidth - (cols - 1) * 24) / cols;
-                return SizedBox(
-                  width: w,
-                  child: Container(
-                    padding: const EdgeInsets.all(28),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                          color:
-                              const Color(0xFF5C1020).withValues(alpha: 0.08)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('0${idx + 1}',
+          LayoutBuilder(
+            builder: (ctx, c) {
+              final cols = c.maxWidth > 700
+                  ? 3
+                  : c.maxWidth > 480
+                      ? 2
+                      : 1;
+              return Wrap(
+                spacing: 24,
+                runSpacing: 24,
+                children: features.asMap().entries.map((e) {
+                  final idx = e.key;
+                  final f = e.value;
+                  final w = (c.maxWidth - (cols - 1) * 24) / cols;
+                  return SizedBox(
+                    width: w,
+                    child: Container(
+                      padding: const EdgeInsets.all(28),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: const Color(
+                            0xFF5C1020,
+                          ).withValues(alpha: 0.08),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '0${idx + 1}',
                             style: GoogleFonts.playfairDisplaySc(
                               fontSize: 48,
                               fontWeight: FontWeight.w900,
-                              color: const Color(0xFF5C1020)
-                                  .withValues(alpha: 0.06),
+                              color: const Color(
+                                0xFF5C1020,
+                              ).withValues(alpha: 0.06),
                               height: 1,
-                            )),
-                        Text(f[0], style: const TextStyle(fontSize: 36)),
-                        const SizedBox(height: 12),
-                        Text(f[1],
+                            ),
+                          ),
+                          Text(f[0], style: const TextStyle(fontSize: 36)),
+                          const SizedBox(height: 12),
+                          Text(
+                            f[1],
                             style: GoogleFonts.playfairDisplay(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
                               color: const Color(0xFF1A0A06),
-                            )),
-                        const SizedBox(height: 8),
-                        Text(f[2],
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            f[2],
                             style: GoogleFonts.jost(
                               fontSize: 13,
-                              color: const Color(0xFF1A0A06)
-                                  .withValues(alpha: 0.55),
+                              color: const Color(
+                                0xFF1A0A06,
+                              ).withValues(alpha: 0.55),
                               height: 1.6,
-                            )),
-                      ],
-                    ),
-                  ).animate().fadeIn(delay: (idx * 100).ms),
-                );
-              }).toList(),
-            );
-          }),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ).animate().fadeIn(delay: (idx * 100).ms),
+                  );
+                }).toList(),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -563,42 +637,48 @@ class AdminLandingScreen extends StatelessWidget {
     return Container(
       color: const Color(0xFF5C1020),
       padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 32),
-      child: LayoutBuilder(builder: (ctx, c) {
-        final cols = c.maxWidth > 700 ? 4 : 2;
-        return Wrap(
-          spacing: 0,
-          runSpacing: 0,
-          children: stats.map((s) {
-            final w = c.maxWidth / cols;
-            return SizedBox(
-              width: w,
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  children: [
-                    Text(s[0], style: const TextStyle(fontSize: 32)),
-                    const SizedBox(height: 12),
-                    Text(s[1],
+      child: LayoutBuilder(
+        builder: (ctx, c) {
+          final cols = c.maxWidth > 700 ? 4 : 2;
+          return Wrap(
+            spacing: 0,
+            runSpacing: 0,
+            children: stats.map((s) {
+              final w = c.maxWidth / cols;
+              return SizedBox(
+                width: w,
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: [
+                      Text(s[0], style: const TextStyle(fontSize: 32)),
+                      const SizedBox(height: 12),
+                      Text(
+                        s[1],
                         style: GoogleFonts.playfairDisplaySc(
                           fontSize: 36,
                           fontWeight: FontWeight.w900,
                           color: const Color(0xFFE0B840),
-                        )),
-                    const SizedBox(height: 4),
-                    Text(s[2],
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        s[2],
                         style: GoogleFonts.jost(
                           fontSize: 11,
                           letterSpacing: 2,
                           color: const Color(0xFFFAF4E8).withValues(alpha: 0.6),
                         ),
-                        textAlign: TextAlign.center),
-                  ],
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }).toList(),
-        );
-      }),
+              );
+            }).toList(),
+          );
+        },
+      ),
     );
   }
 
@@ -633,16 +713,20 @@ class AdminLandingScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('© ${DateTime.now().year} Restaurant. All rights reserved.',
-                  style: GoogleFonts.jost(
-                    fontSize: 11,
-                    color: Colors.white.withValues(alpha: 0.3),
-                  )),
-              Text('Admin Portal',
-                  style: GoogleFonts.jost(
-                    fontSize: 11,
-                    color: Colors.white.withValues(alpha: 0.3),
-                  )),
+              Text(
+                '© ${DateTime.now().year} Restaurant. All rights reserved.',
+                style: GoogleFonts.jost(
+                  fontSize: 11,
+                  color: Colors.white.withValues(alpha: 0.3),
+                ),
+              ),
+              Text(
+                'Admin Portal',
+                style: GoogleFonts.jost(
+                  fontSize: 11,
+                  color: Colors.white.withValues(alpha: 0.3),
+                ),
+              ),
             ],
           ),
         ],
@@ -654,21 +738,24 @@ class AdminLandingScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('RESTAURANT',
-            style: GoogleFonts.playfairDisplaySc(
-              fontSize: 20,
-              fontWeight: FontWeight.w900,
-              color: const Color(0xFFC09020),
-              letterSpacing: 3,
-            )),
+        Text(
+          'RESTAURANT',
+          style: GoogleFonts.playfairDisplaySc(
+            fontSize: 20,
+            fontWeight: FontWeight.w900,
+            color: const Color(0xFFC09020),
+            letterSpacing: 3,
+          ),
+        ),
         const SizedBox(height: 12),
         Text(
-            'Internal management portal.\nFor access issues contact your system administrator.',
-            style: GoogleFonts.jost(
-              fontSize: 13,
-              color: Colors.white.withValues(alpha: 0.4),
-              height: 1.7,
-            )),
+          'Internal management portal.\nFor access issues contact your system administrator.',
+          style: GoogleFonts.jost(
+            fontSize: 13,
+            color: Colors.white.withValues(alpha: 0.4),
+            height: 1.7,
+          ),
+        ),
       ],
     );
   }
@@ -677,25 +764,31 @@ class AdminLandingScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('NAVIGATE',
-            style: GoogleFonts.jost(
-              fontSize: 10,
-              letterSpacing: 3,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFFC09020),
-            )),
+        Text(
+          'NAVIGATE',
+          style: GoogleFonts.jost(
+            fontSize: 10,
+            letterSpacing: 3,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFFC09020),
+          ),
+        ),
         const SizedBox(height: 16),
-        ...['Dashboard Login'].map((l) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: GestureDetector(
-                onTap: () => context.go('/admin/login'),
-                child: Text(l,
-                    style: GoogleFonts.jost(
-                      fontSize: 14,
-                      color: Colors.white.withValues(alpha: 0.5),
-                    )),
+        ...['Dashboard Login'].map(
+          (l) => Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: GestureDetector(
+              onTap: () => context.go('/admin/login'),
+              child: Text(
+                l,
+                style: GoogleFonts.jost(
+                  fontSize: 14,
+                  color: Colors.white.withValues(alpha: 0.5),
+                ),
               ),
-            )),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -708,10 +801,11 @@ class AdminLandingScreen extends StatelessWidget {
         Container(width: 40, height: 1, color: const Color(0xFFC09020)),
         const SizedBox(width: 10),
         Container(
-            width: 6,
-            height: 6,
-            color: const Color(0xFFC09020),
-            transform: Matrix4.rotationZ(0.785)),
+          width: 6,
+          height: 6,
+          color: const Color(0xFFC09020),
+          transform: Matrix4.rotationZ(0.785),
+        ),
         const SizedBox(width: 10),
         Container(width: 40, height: 1, color: const Color(0xFFC09020)),
       ],

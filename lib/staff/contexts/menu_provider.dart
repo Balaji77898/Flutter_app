@@ -29,9 +29,7 @@ class MenuProvider extends ChangeNotifier {
           (await SharedPreferences.getInstance()).getString('auth_token');
 
       // If no token, we still proceed to try public endpoints
-      final Map<String, String> headers = {
-        'Content-Type': 'application/json',
-      };
+      final Map<String, String> headers = {'Content-Type': 'application/json'};
 
       if (token != null && token.isNotEmpty) {
         headers['Authorization'] = 'Bearer $token';
@@ -40,7 +38,8 @@ class MenuProvider extends ChangeNotifier {
       debugPrint('MenuProvider: Token length: ${token?.length ?? 0}');
       if (token != null && token.length > 10) {
         debugPrint(
-            'MenuProvider: Token starts with: ${token.substring(0, 10)}...');
+          'MenuProvider: Token starts with: ${token.substring(0, 10)}...',
+        );
       }
 
       // List of endpoints to try
@@ -60,10 +59,7 @@ class MenuProvider extends ChangeNotifier {
 
         try {
           final response = await http
-              .get(
-                Uri.parse(url),
-                headers: headers,
-              )
+              .get(Uri.parse(url), headers: headers)
               .timeout(const Duration(seconds: 10));
 
           debugPrint('MenuProvider: $endpoint - Status ${response.statusCode}');
@@ -84,11 +80,13 @@ class MenuProvider extends ChangeNotifier {
               _items.sort((a, b) => a.category.compareTo(b.category));
               success = true;
               debugPrint(
-                  'MenuProvider: Successfully parsed ${_items.length} items from $endpoint');
+                'MenuProvider: Successfully parsed ${_items.length} items from $endpoint',
+              );
               break;
             } else {
               debugPrint(
-                  'MenuProvider: Endpoint $endpoint returned empty list or could not be extracted');
+                'MenuProvider: Endpoint $endpoint returned empty list or could not be extracted',
+              );
             }
           } else {
             lastError =
@@ -122,7 +120,7 @@ class MenuProvider extends ChangeNotifier {
         'menu',
         'menuItems',
         'menu_items',
-        'results'
+        'results',
       ]) {
         final val = decoded[key];
         if (val is List) return val;

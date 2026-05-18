@@ -7,8 +7,9 @@ import 'package:restaurant_unified_app/core/constants.dart';
 /// Central HTTP client — all API calls go through this.
 /// Mirrors the Next.js api.service.ts + proxy.ts behaviour.
 class ApiService {
-  static Future<Map<String, String>> _buildHeaders(
-      {bool requiresAuth = true}) async {
+  static Future<Map<String, String>> _buildHeaders({
+    bool requiresAuth = true,
+  }) async {
     final headers = <String, String>{
       'Content-Type': 'application/json',
       'ngrok-skip-browser-warning': 'true',
@@ -29,15 +30,18 @@ class ApiService {
   static Future<dynamic> get(String path, {bool requiresAuth = true}) async {
     final headers = await _buildHeaders(requiresAuth: requiresAuth);
     debugPrint('API GET: $path');
-    final response = await http.get(_uri(path), headers: headers).timeout(
-          const Duration(seconds: 40),
-        );
+    final response = await http
+        .get(_uri(path), headers: headers)
+        .timeout(const Duration(seconds: 40));
     return _handleResponse(response, path);
   }
 
   /// POST request
-  static Future<dynamic> post(String path, Map<String, dynamic> body,
-      {bool requiresAuth = true}) async {
+  static Future<dynamic> post(
+    String path,
+    Map<String, dynamic> body, {
+    bool requiresAuth = true,
+  }) async {
     final headers = await _buildHeaders(requiresAuth: requiresAuth);
     debugPrint('API POST: $path | Body: ${jsonEncode(body)}');
     final response = await http
@@ -47,8 +51,11 @@ class ApiService {
   }
 
   /// PUT request
-  static Future<dynamic> put(String path, Map<String, dynamic> body,
-      {bool requiresAuth = true}) async {
+  static Future<dynamic> put(
+    String path,
+    Map<String, dynamic> body, {
+    bool requiresAuth = true,
+  }) async {
     final headers = await _buildHeaders(requiresAuth: requiresAuth);
     debugPrint('API PUT: $path | Body: ${jsonEncode(body)}');
     final response = await http
@@ -58,14 +65,21 @@ class ApiService {
   }
 
   /// PATCH request (Refreshed)
-  static Future<dynamic> patch(String path,
-      {Map<String, dynamic>? body, bool requiresAuth = true}) async {
+  static Future<dynamic> patch(
+    String path, {
+    Map<String, dynamic>? body,
+    bool requiresAuth = true,
+  }) async {
     final headers = await _buildHeaders(requiresAuth: requiresAuth);
     debugPrint(
-        'API PATCH: $path | Body: ${body != null ? jsonEncode(body) : "EMPTY"}');
+      'API PATCH: $path | Body: ${body != null ? jsonEncode(body) : "EMPTY"}',
+    );
     final response = await http
-        .patch(_uri(path),
-            headers: headers, body: body != null ? jsonEncode(body) : null)
+        .patch(
+          _uri(path),
+          headers: headers,
+          body: body != null ? jsonEncode(body) : null,
+        )
         .timeout(const Duration(seconds: 40));
     return _handleResponse(response, path);
   }
@@ -92,7 +106,8 @@ class ApiService {
       if (decoded is Map<String, dynamic>) {
         if (decoded.containsKey('success') && decoded['success'] == false) {
           throw Exception(
-              decoded['message'] ?? decoded['error'] ?? 'Request failed');
+            decoded['message'] ?? decoded['error'] ?? 'Request failed',
+          );
         }
         if (decoded.containsKey('data')) {
           return decoded['data'];
@@ -110,7 +125,8 @@ class ApiService {
       }
       if (response.statusCode == 403) {
         throw Exception(
-            'Access denied. Your account may not have admin privileges.');
+          'Access denied. Your account may not have admin privileges.',
+        );
       }
       throw Exception(message);
     }

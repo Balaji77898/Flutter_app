@@ -50,7 +50,8 @@ class StaffLandingScreen extends StatelessWidget {
                       // ── Header (Back Button) ───────────────────────────
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: isMobile ? 20 : 40),
+                          horizontal: isMobile ? 20 : 40,
+                        ),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: PremiumBackButton(
@@ -65,7 +66,8 @@ class StaffLandingScreen extends StatelessWidget {
                       // ── Title Section ───────────────────────────────────
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: isMobile ? 20 : 40),
+                          horizontal: isMobile ? 20 : 40,
+                        ),
                         child: Column(
                           children: [
                             Text(
@@ -98,7 +100,8 @@ class StaffLandingScreen extends StatelessWidget {
                       // ── Cards Section ───────────────────────────────────────
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: isMobile ? 20 : 40),
+                          horizontal: isMobile ? 20 : 40,
+                        ),
                         child: Wrap(
                           spacing: isMobile ? 20 : 40,
                           runSpacing: isMobile ? 20 : 30,
@@ -186,7 +189,7 @@ class _StaffTypeCardState extends State<_StaffTypeCard> {
                 color: AppColors.rubyDark.withOpacity(0.12),
                 blurRadius: _isHovered ? 30 : 20,
                 offset: Offset(0, _isHovered ? 15 : 10),
-              )
+              ),
             ],
           ),
           child: Column(

@@ -75,11 +75,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     final ordersProvider = context.watch<OrdersProvider>();
     final allOrders = ordersProvider.orders
-        .where((o) =>
-            o.status == OrderStatus.confirmed ||
-            o.status == OrderStatus.preparing ||
-            o.status == OrderStatus.ready ||
-            o.status == OrderStatus.served)
+        .where(
+          (o) =>
+              o.status == OrderStatus.confirmed ||
+              o.status == OrderStatus.preparing ||
+              o.status == OrderStatus.ready ||
+              o.status == OrderStatus.served,
+        )
         .toList();
 
     final filters = [
@@ -195,10 +197,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               .animate()
                               .fade(duration: 400.ms, delay: (index * 50).ms)
                               .slideY(
-                                  begin: 0.2,
-                                  end: 0,
-                                  duration: 400.ms,
-                                  curve: Curves.easeOutQuad);
+                                begin: 0.2,
+                                end: 0,
+                                duration: 400.ms,
+                                curve: Curves.easeOutQuad,
+                              );
                         },
                       );
 
@@ -248,9 +251,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                       filterList,
                                     ],
                                   ).animate().fade().slideX(
-                                      begin: -0.1,
-                                      duration: 400.ms,
-                                      curve: Curves.easeOutQuad),
+                                        begin: -0.1,
+                                        duration: 400.ms,
+                                        curve: Curves.easeOutQuad,
+                                      ),
                                 ),
                                 // Grid
                                 Expanded(child: content),
@@ -301,7 +305,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
               ),
               if (isWide) const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 2,
+                ),
                 decoration: BoxDecoration(
                   color: isActive
                       ? Colors.white.withValues(alpha: 0.2)
@@ -322,9 +329,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
         ),
       ),
     ).animate().fade(duration: 300.ms).scale(
-        begin: const Offset(0.95, 0.95),
-        end: const Offset(1, 1),
-        curve: Curves.easeOutBack);
+          begin: const Offset(0.95, 0.95),
+          end: const Offset(1, 1),
+          curve: Curves.easeOutBack,
+        );
   }
 }
 
@@ -380,8 +388,9 @@ class _OrderCard extends StatelessWidget {
                             style: AppTheme.sans(
                               size: 11,
                               weight: FontWeight.w600,
-                              color: (config['color'] as Color)
-                                  .withValues(alpha: 0.7),
+                              color: (config['color'] as Color).withValues(
+                                alpha: 0.7,
+                              ),
                             ),
                           ),
                           Text(
@@ -389,8 +398,9 @@ class _OrderCard extends StatelessWidget {
                             style: AppTheme.sans(
                               size: 11,
                               weight: FontWeight.w600,
-                              color: (config['color'] as Color)
-                                  .withValues(alpha: 0.7),
+                              color: (config['color'] as Color).withValues(
+                                alpha: 0.7,
+                              ),
                             ),
                           ),
                           LiveTimeAgo(
@@ -398,8 +408,9 @@ class _OrderCard extends StatelessWidget {
                             style: AppTheme.sans(
                               size: 11,
                               weight: FontWeight.w600,
-                              color: (config['color'] as Color)
-                                  .withValues(alpha: 0.7),
+                              color: (config['color'] as Color).withValues(
+                                alpha: 0.7,
+                              ),
                             ),
                           ),
                         ],
@@ -486,8 +497,10 @@ class _OrderCard extends StatelessWidget {
 
                 // Quick actions or more info could go here
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.slate50,
                     borderRadius: BorderRadius.circular(10),
@@ -495,8 +508,11 @@ class _OrderCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.person_outline,
-                          size: 14, color: AppColors.slate400),
+                      const Icon(
+                        Icons.person_outline,
+                        size: 14,
+                        color: AppColors.slate400,
+                      ),
                       const SizedBox(width: 6),
                       Text(
                         'Assigned to Staff',

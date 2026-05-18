@@ -123,7 +123,10 @@ class ProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ).animate().fade(duration: 400.ms).slideY(
-                      begin: 0.06, duration: 400.ms, curve: Curves.easeOutQuad),
+                        begin: 0.06,
+                        duration: 400.ms,
+                        curve: Curves.easeOutQuad,
+                      ),
 
                   const SizedBox(height: 16),
 
@@ -160,7 +163,10 @@ class ProfileScreen extends StatelessWidget {
                             accentColor: AppColors.primary,
                             onTap: () => context.push('/staff/orders'),
                           ),
-                          const Divider(height: 20, color: AppColors.slate100),
+                          const Divider(
+                            height: 20,
+                            color: AppColors.slate100,
+                          ),
                           _QuickLink(
                             icon: Icons.table_restaurant_rounded,
                             label: 'Floor Plan',
@@ -178,7 +184,10 @@ class ProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ).animate().fade(duration: 400.ms, delay: 80.ms).slideY(
-                      begin: 0.06, duration: 400.ms, curve: Curves.easeOutQuad),
+                        begin: 0.06,
+                        duration: 400.ms,
+                        curve: Curves.easeOutQuad,
+                      ),
 
                   const SizedBox(height: 16),
 
@@ -210,7 +219,9 @@ class ProfileScreen extends StatelessWidget {
                             ),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 6),
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
                                 color: accentColor.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(10),
@@ -242,12 +253,16 @@ class ProfileScreen extends StatelessWidget {
                           },
                           child: Container(
                             width: double.infinity,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 14,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.dangerLight,
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
-                                color: AppColors.danger.withValues(alpha: 0.2),
+                                color: AppColors.danger.withValues(
+                                  alpha: 0.2,
+                                ),
                               ),
                             ),
                             child: Row(
@@ -274,7 +289,10 @@ class ProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ).animate().fade(duration: 400.ms, delay: 160.ms).slideY(
-                      begin: 0.06, duration: 400.ms, curve: Curves.easeOutQuad),
+                        begin: 0.06,
+                        duration: 400.ms,
+                        curve: Curves.easeOutQuad,
+                      ),
 
                   const SizedBox(height: 8),
                 ],
@@ -384,7 +402,10 @@ class _ProfileHeroHeader extends StatelessWidget {
                         height: 72,
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                            colors: [Color(0xFF9B2C2C), Color(0xFF6B1515)],
+                            colors: [
+                              Color(0xFF9B2C2C),
+                              Color(0xFF6B1515),
+                            ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
@@ -395,7 +416,9 @@ class _ProfileHeroHeader extends StatelessWidget {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.25),
+                              color: Colors.black.withValues(
+                                alpha: 0.25,
+                              ),
                               blurRadius: 16,
                               offset: const Offset(0, 6),
                             ),
@@ -427,11 +450,16 @@ class _ProfileHeroHeader extends StatelessWidget {
                               width: 2,
                             ),
                           ),
-                        ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(
-                            begin: const Offset(0.85, 0.85),
-                            end: const Offset(1.1, 1.1),
-                            duration: 1500.ms,
-                            curve: Curves.easeInOut),
+                        )
+                            .animate(
+                              onPlay: (c) => c.repeat(reverse: true),
+                            )
+                            .scale(
+                              begin: const Offset(0.85, 0.85),
+                              end: const Offset(1.1, 1.1),
+                              duration: 1500.ms,
+                              curve: Curves.easeInOut,
+                            ),
                       ),
                     ],
                   ),
@@ -456,12 +484,18 @@ class _ProfileHeroHeader extends StatelessWidget {
                           children: [
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 4),
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
-                                color: accentColor.withValues(alpha: 0.2),
+                                color: accentColor.withValues(
+                                  alpha: 0.2,
+                                ),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: accentColor.withValues(alpha: 0.35),
+                                  color: accentColor.withValues(
+                                    alpha: 0.35,
+                                  ),
                                 ),
                               ),
                               child: Text(
@@ -477,12 +511,18 @@ class _ProfileHeroHeader extends StatelessWidget {
                             const SizedBox(width: 8),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 4),
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.12),
+                                color: Colors.white.withValues(
+                                  alpha: 0.12,
+                                ),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.18),
+                                  color: Colors.white.withValues(
+                                    alpha: 0.18,
+                                  ),
                                 ),
                               ),
                               child: Text(
@@ -556,10 +596,7 @@ class _ProfileRow extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 value,
-                style: AppTextStyles.label(
-                  color: AppColors.slate800,
-                  size: 14,
-                ),
+                style: AppTextStyles.label(color: AppColors.slate800, size: 14),
                 overflow: TextOverflow.ellipsis,
               ),
             ],
@@ -606,14 +643,14 @@ class _QuickLink extends StatelessWidget {
             Expanded(
               child: Text(
                 label,
-                style: AppTextStyles.label(
-                  color: AppColors.slate800,
-                  size: 14,
-                ),
+                style: AppTextStyles.label(color: AppColors.slate800, size: 14),
               ),
             ),
-            const Icon(Icons.arrow_forward_ios_rounded,
-                color: AppColors.slate300, size: 16),
+            const Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: AppColors.slate300,
+              size: 16,
+            ),
           ],
         ),
       ),

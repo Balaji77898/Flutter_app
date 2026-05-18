@@ -90,16 +90,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 300,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.gold.withValues(alpha: 0.1), // gold-start/10
+                  color: AppColors.gold.withValues(
+                    alpha: 0.1,
+                  ), // gold-start/10
                 ),
               )
                   .animate(
-                      onPlay: (controller) => controller.repeat(reverse: true))
+                    onPlay: (controller) => controller.repeat(reverse: true),
+                  )
                   .moveY(
-                      begin: 0,
-                      end: 15,
-                      duration: 3.seconds,
-                      curve: Curves.easeInOut),
+                    begin: 0,
+                    end: 15,
+                    duration: 3.seconds,
+                    curve: Curves.easeInOut,
+                  ),
             ),
             Positioned(
               bottom: -80,
@@ -109,17 +113,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 300,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color:
-                      AppColors.primary.withValues(alpha: 0.05), // ruby-red/5
+                  color: AppColors.primary.withValues(
+                    alpha: 0.05,
+                  ), // ruby-red/5
                 ),
               )
                   .animate(
-                      onPlay: (controller) => controller.repeat(reverse: true))
+                    onPlay: (controller) => controller.repeat(reverse: true),
+                  )
                   .moveY(
-                      begin: 0,
-                      end: -15,
-                      duration: 4.seconds,
-                      curve: Curves.easeInOut),
+                    begin: 0,
+                    end: -15,
+                    duration: 4.seconds,
+                    curve: Curves.easeInOut,
+                  ),
             ),
             SafeArea(
               child: Center(
@@ -129,10 +136,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Container(
                       width: double.infinity,
                       constraints: const BoxConstraints(
-                          maxWidth: 448), // max-w-md is 448px (28rem)
+                        maxWidth: 448,
+                      ), // max-w-md is 448px (28rem)
                       decoration: BoxDecoration(
                         color: AppColors.white,
-                        borderRadius: BorderRadius.circular(16), // rounded-2xl
+                        borderRadius: BorderRadius.circular(
+                          16,
+                        ), // rounded-2xl
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withValues(alpha: 0.1),
@@ -141,8 +151,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                         border: Border.all(
-                          color: AppColors.gold
-                              .withValues(alpha: 0.2), // border-gold-start/20
+                          color: AppColors.gold.withValues(
+                            alpha: 0.2,
+                          ), // border-gold-start/20
                         ),
                       ),
                       padding: const EdgeInsets.all(32), // p-8
@@ -171,7 +182,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           if (_error != null)
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
+                              padding: const EdgeInsets.only(
+                                bottom: 16,
+                              ),
                               child: Text(
                                 _error!,
                                 style: AppTheme.sans(
@@ -256,9 +269,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             onTapUp: (_) => setState(() {}),
                             onTapCancel: () => setState(() {}),
                             child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
+                              duration: const Duration(
+                                milliseconds: 200,
+                              ),
                               width: double.infinity,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 14,
+                              ),
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
                                   colors: [
@@ -270,8 +287,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 borderRadius: BorderRadius.circular(8),
                                 boxShadow: [
                                   BoxShadow(
-                                    color:
-                                        AppColors.gold.withValues(alpha: 0.3),
+                                    color: AppColors.gold.withValues(
+                                      alpha: 0.3,
+                                    ),
                                     blurRadius: 8,
                                     offset: const Offset(0, 4),
                                   ),
@@ -310,17 +328,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                   size: 14,
                                   color: AppColors.slate500,
                                 ).copyWith(
-                                    decoration: TextDecoration.underline),
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
                     ).animate().fade(duration: 500.ms).scale(
-                        begin: const Offset(0.95, 0.95),
-                        end: const Offset(1, 1),
-                        duration: 500.ms,
-                        curve: Curves.easeOutBack),
+                          begin: const Offset(0.95, 0.95),
+                          end: const Offset(1, 1),
+                          duration: 500.ms,
+                          curve: Curves.easeOutBack,
+                        ),
                   ),
                 ),
               ),

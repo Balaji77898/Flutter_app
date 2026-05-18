@@ -41,9 +41,11 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
     final newOrders = List<Order>.from(provider.newOrders);
 
     // Sort by createdAt
-    newOrders.sort((a, b) => _showNewestFirst
-        ? a.createdAt.compareTo(b.createdAt)
-        : b.createdAt.compareTo(a.createdAt));
+    newOrders.sort(
+      (a, b) => _showNewestFirst
+          ? a.createdAt.compareTo(b.createdAt)
+          : b.createdAt.compareTo(a.createdAt),
+    );
 
     final acceptedCount = provider.activeOrders.length;
 
@@ -112,10 +114,10 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
                     iconBg: const Color(0xFFFEE2E2),
                     label: 'New Orders',
                     value: '${newOrders.length}',
-                  )
-                      .animate()
-                      .fade()
-                      .scale(curve: Curves.easeOutBack, duration: 400.ms),
+                  ).animate().fade().scale(
+                        curve: Curves.easeOutBack,
+                        duration: 400.ms,
+                      ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -126,9 +128,10 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
                     label: 'Accepted',
                     value: '$acceptedCount',
                   ).animate().fade().scale(
-                      curve: Curves.easeOutBack,
-                      duration: 400.ms,
-                      delay: 100.ms),
+                        curve: Curves.easeOutBack,
+                        duration: 400.ms,
+                        delay: 100.ms,
+                      ),
                 ),
               ],
             ),
@@ -140,7 +143,10 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
                 title: 'No orders yet',
                 subtitle: 'New customer orders will appear here',
               ).animate().fade(duration: 400.ms).slideY(
-                  begin: 0.1, duration: 400.ms, curve: Curves.easeOutQuad)
+                    begin: 0.1,
+                    duration: 400.ms,
+                    curve: Curves.easeOutQuad,
+                  )
             else
               ...newOrders.asMap().entries.map(
                     (entry) =>
@@ -148,10 +154,11 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
                             .animate()
                             .fade(duration: 400.ms, delay: (entry.key * 100).ms)
                             .slideX(
-                                begin: 0.1,
-                                end: 0,
-                                duration: 400.ms,
-                                curve: Curves.easeOutQuad),
+                              begin: 0.1,
+                              end: 0,
+                              duration: 400.ms,
+                              curve: Curves.easeOutQuad,
+                            ),
                   ),
           ],
         ),
@@ -372,24 +379,27 @@ class _OrderCard extends StatelessWidget {
                             order.time,
                             style: AppTheme.sans(
                               size: 12,
-                              color: const Color(0xFF065F46)
-                                  .withValues(alpha: 0.7),
+                              color: const Color(
+                                0xFF065F46,
+                              ).withValues(alpha: 0.7),
                             ),
                           ),
                           Text(
                             ' • ',
                             style: AppTheme.sans(
                               size: 12,
-                              color: const Color(0xFF065F46)
-                                  .withValues(alpha: 0.7),
+                              color: const Color(
+                                0xFF065F46,
+                              ).withValues(alpha: 0.7),
                             ),
                           ),
                           Text(
                             order.orderNumber,
                             style: AppTheme.sans(
                               size: 12,
-                              color: const Color(0xFF065F46)
-                                  .withValues(alpha: 0.7),
+                              color: const Color(
+                                0xFF065F46,
+                              ).withValues(alpha: 0.7),
                             ),
                           ),
                         ],
@@ -561,7 +571,10 @@ class _OrderCard extends StatelessWidget {
                     onTap: () {
                       final token = context.read<StaffAuthProvider>().token;
                       provider.updateOrderStatus(
-                          order.id, OrderStatus.confirmed, token!);
+                        order.id,
+                        OrderStatus.confirmed,
+                        token!,
+                      );
                       context.push('/staff/order-details/${order.id}');
                     },
                     child: Container(

@@ -24,12 +24,14 @@ void main() async {
 
     // Start loading but don't block forever if one fails
     await Future.wait([
-      authProvider
-          .loadAuth()
-          .timeout(const Duration(seconds: 5), onTimeout: () {}),
-      staffAuthProvider
-          .loadAuth()
-          .timeout(const Duration(seconds: 5), onTimeout: () {}),
+      authProvider.loadAuth().timeout(
+            const Duration(seconds: 5),
+            onTimeout: () {},
+          ),
+      staffAuthProvider.loadAuth().timeout(
+            const Duration(seconds: 5),
+            onTimeout: () {},
+          ),
     ]).catchError((e) {
       debugPrint("Initialization error: $e");
       return <void>[];
@@ -52,10 +54,15 @@ void main() async {
   } catch (e) {
     debugPrint("CRITICAL MAIN ERROR: $e");
     // Still try to run the app
-    runApp(const MaterialApp(
+    runApp(
+      const MaterialApp(
         home: Scaffold(
-            body: Center(
-                child: Text("App initialization failed. Please refresh.")))));
+          body: Center(
+            child: Text("App initialization failed. Please refresh."),
+          ),
+        ),
+      ),
+    );
   }
 }
 

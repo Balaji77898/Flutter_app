@@ -109,10 +109,12 @@ class _TablesScreenState extends State<TablesScreen> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: filters
-                              .map((f) => Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: _buildFilterButton(f, isWide: false),
-                                  ))
+                              .map(
+                                (f) => Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: _buildFilterButton(f, isWide: false),
+                                ),
+                              )
                               .toList(),
                         ),
                       );
@@ -122,7 +124,8 @@ class _TablesScreenState extends State<TablesScreen> {
                         child: Padding(
                           padding: EdgeInsets.all(48),
                           child: CircularProgressIndicator(
-                              color: AppColors.primary),
+                            color: AppColors.primary,
+                          ),
                         ),
                       )
                     : filteredTables.isEmpty
@@ -150,19 +153,23 @@ class _TablesScreenState extends State<TablesScreen> {
                               final config = _getStatusConfig(table);
                               return _TableCard(table: table, config: config)
                                   .animate(
-                                      delay: Duration(milliseconds: index * 60))
+                                    delay: Duration(milliseconds: index * 60),
+                                  )
                                   .fade(duration: 350.ms)
                                   .slideY(
-                                      begin: 0.1,
-                                      end: 0,
-                                      duration: 350.ms,
-                                      curve: Curves.easeOutQuad);
+                                    begin: 0.1,
+                                    end: 0,
+                                    duration: 350.ms,
+                                    curve: Curves.easeOutQuad,
+                                  );
                             },
                           );
 
                 return SingleChildScrollView(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 24,
+                  ),
                   child: Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 1280),
@@ -178,8 +185,9 @@ class _TablesScreenState extends State<TablesScreen> {
                                   decoration: BoxDecoration(
                                     color: AppColors.white,
                                     borderRadius: BorderRadius.circular(24),
-                                    border:
-                                        Border.all(color: AppColors.slate100),
+                                    border: Border.all(
+                                      color: AppColors.slate100,
+                                    ),
                                     boxShadow: AppShadows.card,
                                   ),
                                   child: Column(
@@ -330,11 +338,7 @@ class _TableCard extends StatelessWidget {
                       color: config.bg,
                       borderRadius: BorderRadius.circular(14),
                     ),
-                    child: Icon(
-                      config.icon,
-                      size: 24,
-                      color: config.textColor,
-                    ),
+                    child: Icon(config.icon, size: 24, color: config.textColor),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -363,8 +367,10 @@ class _TableCard extends StatelessWidget {
                   ),
                   // Status pill on right
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: config.bg,
                       borderRadius: BorderRadius.circular(20),

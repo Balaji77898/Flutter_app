@@ -132,28 +132,17 @@ class AppTextStyles {
     Color color = AppColors.slate900,
     double size = 20,
   }) =>
-      AppTheme.serif(
-        size: size,
-        weight: FontWeight.w700,
-        color: color,
-      );
+      AppTheme.serif(size: size, weight: FontWeight.w700, color: color);
 
   /// Body / label — Inter, medium weight
   static TextStyle label({
     Color color = AppColors.slate700,
     double size = 14,
   }) =>
-      AppTheme.sans(
-        size: size,
-        weight: FontWeight.w600,
-        color: color,
-      );
+      AppTheme.sans(size: size, weight: FontWeight.w600, color: color);
 
   /// Small body — Inter
-  static TextStyle body({
-    Color color = AppColors.slate500,
-    double size = 13,
-  }) =>
+  static TextStyle body({Color color = AppColors.slate500, double size = 13}) =>
       AppTheme.sans(size: size, color: color);
 
   /// Tiny overline — Inter, all caps spaced
@@ -173,11 +162,7 @@ class AppTextStyles {
     Color color = AppColors.slate900,
     double size = 24,
   }) =>
-      AppTheme.sans(
-        size: size,
-        weight: FontWeight.w900,
-        color: color,
-      );
+      AppTheme.sans(size: size, weight: FontWeight.w900, color: color);
 }
 
 class AppTheme {
@@ -218,8 +203,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.white,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: AppColors.slate200),

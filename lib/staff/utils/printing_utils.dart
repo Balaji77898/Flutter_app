@@ -5,8 +5,10 @@ import '../models/models.dart';
 import '../../core/currency_utils.dart';
 
 class PrintingUtils {
-  static Future<pw.Document> _generateBillPdf(Order order,
-      {String? restaurantName}) async {
+  static Future<pw.Document> _generateBillPdf(
+    Order order, {
+    String? restaurantName,
+  }) async {
     final font = await PdfGoogleFonts.notoSansRegular();
     final boldFont = await PdfGoogleFonts.notoSansBold();
     final pdf = pw.Document();
@@ -88,7 +90,9 @@ class PrintingUtils {
                         child: pw.Text(
                           'Item',
                           style: pw.TextStyle(
-                              fontWeight: pw.FontWeight.bold, font: boldFont),
+                            fontWeight: pw.FontWeight.bold,
+                            font: boldFont,
+                          ),
                         ),
                       ),
                       pw.Padding(
@@ -96,7 +100,9 @@ class PrintingUtils {
                         child: pw.Text(
                           'Qty',
                           style: pw.TextStyle(
-                              fontWeight: pw.FontWeight.bold, font: boldFont),
+                            fontWeight: pw.FontWeight.bold,
+                            font: boldFont,
+                          ),
                         ),
                       ),
                       pw.Padding(
@@ -104,7 +110,9 @@ class PrintingUtils {
                         child: pw.Text(
                           'Amount',
                           style: pw.TextStyle(
-                              fontWeight: pw.FontWeight.bold, font: boldFont),
+                            fontWeight: pw.FontWeight.bold,
+                            font: boldFont,
+                          ),
                           textAlign: pw.TextAlign.right,
                         ),
                       ),
@@ -115,20 +123,26 @@ class PrintingUtils {
                       children: [
                         pw.Padding(
                           padding: const pw.EdgeInsets.all(6),
-                          child: pw.Text(item.name,
-                              style: pw.TextStyle(font: font)),
-                        ),
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.all(6),
-                          child: pw.Text('${item.quantity}',
-                              style: pw.TextStyle(font: font)),
+                          child: pw.Text(
+                            item.name,
+                            style: pw.TextStyle(font: font),
+                          ),
                         ),
                         pw.Padding(
                           padding: const pw.EdgeInsets.all(6),
                           child: pw.Text(
-                            CurrencyUtils.format((item.quantity *
-                                    (double.tryParse(item.price) ?? 0))
-                                .round()),
+                            '${item.quantity}',
+                            style: pw.TextStyle(font: font),
+                          ),
+                        ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(6),
+                          child: pw.Text(
+                            CurrencyUtils.format(
+                              (item.quantity *
+                                      (double.tryParse(item.price) ?? 0))
+                                  .round(),
+                            ),
                             style: pw.TextStyle(font: font),
                             textAlign: pw.TextAlign.right,
                           ),
@@ -145,13 +159,18 @@ class PrintingUtils {
               pw.SizedBox(height: 10),
               if (order.subtotal > 0)
                 _pdfInfoRow(
-                    'Subtotal',
-                    CurrencyUtils.format(order.subtotal.round()),
-                    font,
-                    boldFont),
+                  'Subtotal',
+                  CurrencyUtils.format(order.subtotal.round()),
+                  font,
+                  boldFont,
+                ),
               if (order.tax > 0)
-                _pdfInfoRow('Tax', CurrencyUtils.format(order.tax.round()),
-                    font, boldFont),
+                _pdfInfoRow(
+                  'Tax',
+                  CurrencyUtils.format(order.tax.round()),
+                  font,
+                  boldFont,
+                ),
               pw.SizedBox(height: 6),
               pw.Container(height: 1, color: PdfColors.grey400),
               pw.SizedBox(height: 6),
@@ -199,8 +218,10 @@ class PrintingUtils {
     return pdf;
   }
 
-  static Future<void> printOrderBill(Order order,
-      {String? restaurantName}) async {
+  static Future<void> printOrderBill(
+    Order order, {
+    String? restaurantName,
+  }) async {
     final pdf = await _generateBillPdf(order, restaurantName: restaurantName);
     final billNumber =
         'BILL-${order.id.substring(0, order.id.length < 8 ? order.id.length : 8).toUpperCase()}';
@@ -210,8 +231,10 @@ class PrintingUtils {
     );
   }
 
-  static Future<void> downloadOrderBillPdf(Order order,
-      {String? restaurantName}) async {
+  static Future<void> downloadOrderBillPdf(
+    Order order, {
+    String? restaurantName,
+  }) async {
     final pdf = await _generateBillPdf(order, restaurantName: restaurantName);
     final billNumber =
         'BILL-${order.id.substring(0, order.id.length < 8 ? order.id.length : 8).toUpperCase()}';
@@ -222,7 +245,11 @@ class PrintingUtils {
   }
 
   static pw.Widget _pdfInfoRow(
-      String label, String value, pw.Font font, pw.Font boldFont) {
+    String label,
+    String value,
+    pw.Font font,
+    pw.Font boldFont,
+  ) {
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 3),
       child: pw.Row(
@@ -232,7 +259,10 @@ class PrintingUtils {
           pw.Text(
             value,
             style: pw.TextStyle(
-                fontSize: 12, fontWeight: pw.FontWeight.bold, font: boldFont),
+              fontSize: 12,
+              fontWeight: pw.FontWeight.bold,
+              font: boldFont,
+            ),
           ),
         ],
       ),

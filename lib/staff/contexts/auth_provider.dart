@@ -58,7 +58,8 @@ class StaffAuthProvider extends ChangeNotifier {
         );
 
         debugPrint(
-            "StaffAuthProvider: FETCH PROFILE ($endpoint) STATUS: ${response.statusCode}");
+          "StaffAuthProvider: FETCH PROFILE ($endpoint) STATUS: ${response.statusCode}",
+        );
         if (response.statusCode == 200) {
           final decoded = json.decode(response.body);
           final data = (decoded is Map && decoded.containsKey('data'))
@@ -89,10 +90,7 @@ class StaffAuthProvider extends ChangeNotifier {
       final response = await http.post(
         Uri.parse("$kBackendBase${ApiEndpoints.staffLogin}"),
         headers: {"Content-Type": "application/json"},
-        body: json.encode({
-          "email": email,
-          "password": password,
-        }),
+        body: json.encode({"email": email, "password": password}),
       );
 
       debugPrint("StaffAuthProvider: LOGIN STATUS: ${response.statusCode}");

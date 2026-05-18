@@ -86,11 +86,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Container(
             width: double.infinity,
             padding: EdgeInsets.fromLTRB(
-                isMobile ? 20 : 40, isMobile ? 32 : 48, isMobile ? 20 : 40, 32),
+              isMobile ? 20 : 40,
+              isMobile ? 32 : 48,
+              isMobile ? 20 : 40,
+              32,
+            ),
             decoration: const BoxDecoration(
               color: AppColors.rubyDark,
-              border:
-                  Border(bottom: BorderSide(color: AppColors.gold, width: 4)),
+              border: Border(
+                bottom: BorderSide(color: AppColors.gold, width: 4),
+              ),
             ),
             child: Row(
               children: [
@@ -100,7 +105,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: IconButton.styleFrom(
                     backgroundColor: Colors.white.withOpacity(0.1),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -108,17 +114,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Restaurant Profile',
-                          style: GoogleFonts.playfairDisplay(
-                              color: Colors.white,
-                              fontSize: isMobile ? 24 : 32,
-                              fontWeight: FontWeight.bold)),
+                      Text(
+                        'Restaurant Profile',
+                        style: GoogleFonts.playfairDisplay(
+                          color: Colors.white,
+                          fontSize: isMobile ? 24 : 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       const SizedBox(height: 4),
-                      Text('Manage your business identity',
-                          style: GoogleFonts.inter(
-                              color: AppColors.gold,
-                              fontSize: isMobile ? 12 : 14,
-                              fontWeight: FontWeight.w500)),
+                      Text(
+                        'Manage your business identity',
+                        style: GoogleFonts.inter(
+                          color: AppColors.gold,
+                          fontSize: isMobile ? 12 : 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -128,7 +140,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Expanded(
             child: restaurantProv.isLoading && r == null
                 ? const Center(
-                    child: CircularProgressIndicator(color: AppColors.rubyRed))
+                    child: CircularProgressIndicator(color: AppColors.rubyRed),
+                  )
                 : RefreshIndicator(
                     onRefresh: () => restaurantProv.fetchRestaurant(),
                     child: SingleChildScrollView(
@@ -143,11 +156,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const SizedBox(height: 32),
 
                             // ── Restaurant Details ─────────────────────────────────────
-                            Text('Restaurant Details',
-                                style: GoogleFonts.playfairDisplay(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.textDark)),
+                            Text(
+                              'Restaurant Details',
+                              style: GoogleFonts.playfairDisplay(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.textDark,
+                              ),
+                            ),
                             const SizedBox(height: 16),
                             _buildDetailsGrid(r, isMobile),
 
@@ -157,11 +173,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Additional Contacts',
-                                    style: GoogleFonts.playfairDisplay(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.textDark)),
+                                Text(
+                                  'Additional Contacts',
+                                  style: GoogleFonts.playfairDisplay(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.textDark,
+                                  ),
+                                ),
                                 if (_isEditing)
                                   TextButton.icon(
                                     onPressed: () => setState(() {
@@ -171,7 +190,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     icon: const Icon(Icons.close, size: 18),
                                     label: const Text('Done'),
                                     style: TextButton.styleFrom(
-                                        foregroundColor: AppColors.rubyRed),
+                                      foregroundColor: AppColors.rubyRed,
+                                    ),
                                   )
                                 else
                                   TextButton.icon(
@@ -180,7 +200,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     icon: const Icon(Icons.edit, size: 18),
                                     label: const Text('Edit'),
                                     style: TextButton.styleFrom(
-                                        foregroundColor: AppColors.rubyRed),
+                                      foregroundColor: AppColors.rubyRed,
+                                    ),
                                   ),
                               ],
                             ),
@@ -190,11 +211,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const SizedBox(height: 32),
 
                             // ── Admin info ─────────────────────────────────────────────
-                            Text('Admin Account',
-                                style: GoogleFonts.playfairDisplay(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.textDark)),
+                            Text(
+                              'Admin Account',
+                              style: GoogleFonts.playfairDisplay(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.textDark,
+                              ),
+                            ),
                             const SizedBox(height: 16),
                             _infoCard([
                               _InfoRow(
@@ -223,18 +247,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 },
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: AppColors.danger,
-                                  side:
-                                      const BorderSide(color: AppColors.danger),
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
+                                  side: const BorderSide(
+                                    color: AppColors.danger,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16)),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
                                 ),
                                 icon: const Icon(Icons.logout, size: 18),
-                                label: Text('Logout from Dashboard',
-                                    style: GoogleFonts.inter(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w700)),
+                                label: Text(
+                                  'Logout from Dashboard',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 40),
@@ -265,44 +295,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(children: [
-            Container(
-              width: isMobile ? 56 : 72,
-              height: isMobile ? 56 : 72,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+          Row(
+            children: [
+              Container(
+                width: isMobile ? 56 : 72,
+                height: isMobile ? 56 : 72,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.2),
+                  ),
+                ),
+                child: Icon(
+                  Icons.restaurant_rounded,
+                  color: Colors.white,
+                  size: isMobile ? 28 : 36,
+                ),
               ),
-              child: Icon(Icons.restaurant_rounded,
-                  color: Colors.white, size: isMobile ? 28 : 36),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
+              const SizedBox(width: 20),
+              Expanded(
                 child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(r?.name ?? 'Restaurant Name',
-                    style: GoogleFonts.playfairDisplay(
-                      fontSize: isMobile ? 20 : 26,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                    )),
-                const SizedBox(height: 4),
-                Text(r?.restaurantType ?? 'Restaurant Type',
-                    style: GoogleFonts.inter(
-                      fontSize: isMobile ? 12 : 14,
-                      color: AppColors.gold.withValues(alpha: 0.9),
-                      fontWeight: FontWeight.w600,
-                    )),
-              ],
-            )),
-            if (!isMobile) _buildStatusBadge(r),
-          ]),
-          if (isMobile) ...[
-            const SizedBox(height: 16),
-            _buildStatusBadge(r),
-          ],
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      r?.name ?? 'Restaurant Name',
+                      style: GoogleFonts.playfairDisplay(
+                        fontSize: isMobile ? 20 : 26,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      r?.restaurantType ?? 'Restaurant Type',
+                      style: GoogleFonts.inter(
+                        fontSize: isMobile ? 12 : 14,
+                        color: AppColors.gold.withValues(alpha: 0.9),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (!isMobile) _buildStatusBadge(r),
+            ],
+          ),
+          if (isMobile) ...[const SizedBox(height: 16), _buildStatusBadge(r)],
         ],
       ),
     ).animate().fadeIn().slideY(begin: -0.05);
@@ -461,11 +500,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label,
-                  style: GoogleFonts.inter(
-                      fontSize: 11,
-                      color: AppColors.textMuted,
-                      fontWeight: FontWeight.w600)),
+              Text(
+                label,
+                style: GoogleFonts.inter(
+                  fontSize: 11,
+                  color: AppColors.textMuted,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               const SizedBox(height: 4),
               Text(
                 controller.text.isEmpty ? 'Not set' : controller.text,
@@ -498,9 +540,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (prov.contacts.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Text('No additional contacts added.',
-                  style: GoogleFonts.inter(
-                      fontSize: 14, color: AppColors.textMuted)),
+              child: Text(
+                'No additional contacts added.',
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  color: AppColors.textMuted,
+                ),
+              ),
             )
           else
             ListView.separated(
@@ -520,16 +566,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(contact.value,
-                          style: GoogleFonts.inter(
-                              fontSize: 14,
-                              color: AppColors.textDark,
-                              fontWeight: FontWeight.w500)),
+                      child: Text(
+                        contact.value,
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: AppColors.textDark,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                     if (_isEditing)
                       IconButton(
-                        icon: const Icon(Icons.delete_outline,
-                            color: AppColors.danger, size: 20),
+                        icon: const Icon(
+                          Icons.delete_outline,
+                          color: AppColors.danger,
+                          size: 20,
+                        ),
                         onPressed: () =>
                             prov.deleteRestaurantContact(contact.id),
                       ),
@@ -547,7 +599,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 backgroundColor: AppColors.rubyRed,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ],
@@ -564,11 +617,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          title: Text('Add New Contact',
-              style: GoogleFonts.playfairDisplay(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textDark)),
+          title: Text(
+            'Add New Contact',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textDark,
+            ),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -593,8 +649,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           actions: [
             TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel')),
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
             ElevatedButton(
               onPressed: () {
                 if (controller.text.isNotEmpty) {
@@ -625,30 +682,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
           return Column(
             children: [
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                child: Row(children: [
-                  Icon(row.icon, color: AppColors.rubyRed, size: 20),
-                  const SizedBox(width: 14),
-                  Column(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 14,
+                ),
+                child: Row(
+                  children: [
+                    Icon(row.icon, color: AppColors.rubyRed, size: 20),
+                    const SizedBox(width: 14),
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(row.label,
-                            style: GoogleFonts.inter(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textMuted,
-                              letterSpacing: 0.5,
-                            )),
+                        Text(
+                          row.label,
+                          style: GoogleFonts.inter(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textMuted,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
                         const SizedBox(height: 2),
-                        Text(row.value,
-                            style: GoogleFonts.inter(
-                              fontSize: 14,
-                              color: AppColors.textDark,
-                              fontWeight: FontWeight.w500,
-                            )),
-                      ]),
-                ]),
+                        Text(
+                          row.value,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: AppColors.textDark,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               if (i < rows.length - 1)
                 const Divider(height: 1, color: AppColors.borderLight),
@@ -663,6 +729,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 class _InfoRow {
   final IconData icon;
   final String label, value;
-  const _InfoRow(
-      {required this.icon, required this.label, required this.value});
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 }
