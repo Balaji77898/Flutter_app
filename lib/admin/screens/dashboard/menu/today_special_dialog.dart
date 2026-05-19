@@ -330,8 +330,8 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                 runSpacing: 10,
                 children: [
                   Text(
-                    '${_specialItemIds.length} '
-                    'item${_specialItemIds.length == 1 ? '' : 's'} selected',
+                    '${_specialItemIds.length} item'
+                    '${_specialItemIds.length == 1 ? '' : 's'} selected',
                     style: GoogleFonts.inter(
                       color: AppColors.rubyDark,
                       fontWeight: FontWeight.w600,
@@ -342,8 +342,9 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                     alignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
-                        onPressed:
-                            _isSubmitting ? null : () => Navigator.pop(context),
+                        onPressed: _isSubmitting
+                            ? null
+                            : () => Navigator.pop(context),
                         child: const Text('Cancel'),
                       ),
                       ElevatedButton.icon(
@@ -357,7 +358,10 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                                   strokeWidth: 2,
                                 ),
                               )
-                            : const Text('⭐', style: TextStyle(fontSize: 14)),
+                            : const Text(
+                                '⭐',
+                                style: TextStyle(fontSize: 14),
+                              ),
                         label: Text(
                           'Save Specials',
                           style: GoogleFonts.inter(
