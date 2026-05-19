@@ -53,7 +53,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   children: [
                     PremiumBackButton(
                       label: 'Back',
-                      onTap: () => Navigator.pop(context),
+                      onTap: () => context.pop(),
                     ),
                     const SizedBox(width: 8),
                     Column(
@@ -299,7 +299,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                   PremiumBackButton(
                     label: 'Cancel Payment',
-                    onTap: () => Navigator.pop(context),
+                    onTap: () => context.pop(),
                   ),
                 ],
               ),

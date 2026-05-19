@@ -10,8 +10,9 @@ import '../utils/printing_utils.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
   final String orderId;
+  final String? from;
 
-  const OrderDetailsScreen({super.key, required this.orderId});
+  const OrderDetailsScreen({super.key, required this.orderId, this.from});
 
   @override
   State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
@@ -30,7 +31,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     if (!mounted) return;
     final auth = context.read<StaffAuthProvider>();
     final ordersProvider = context.read<OrdersProvider>();
-    if (auth.token != null && ordersProvider.orders.isEmpty) {
+    if (auth.token != null) {
       await ordersProvider.fetchOrders(auth.token!);
     }
   }
@@ -111,7 +112,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   children: [
                     PremiumBackButton(
                       label: 'Back',
-                      onTap: () => Navigator.pop(context),
+                      onTap: () {
+                        if (widget.from != null) {
+                          context.go(widget.from!);
+                        } else {
+                          context.pop();
+                        }
+                      },
                     ),
                     const SizedBox(width: 16),
                     Expanded(

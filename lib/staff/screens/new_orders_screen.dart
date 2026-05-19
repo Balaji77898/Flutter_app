@@ -30,7 +30,7 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
     if (!mounted) return;
     final auth = context.read<StaffAuthProvider>();
     final ordersProvider = context.read<OrdersProvider>();
-    if (auth.token != null && ordersProvider.orders.isEmpty) {
+    if (auth.token != null) {
       await ordersProvider.fetchOrders(auth.token!);
     }
   }
@@ -56,7 +56,7 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
           PageHeader(
             title: 'New Orders',
             subtitle: 'Incoming Kitchen Orders',
-            onBack: () => Navigator.pop(context),
+            onBack: () => context.pop(),
             actions: [
               const SizedBox(width: 8),
               HeaderIconButton(

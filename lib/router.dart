@@ -149,7 +149,8 @@ GoRouter createRouter(AuthProvider authProvider) {
         path: '/staff/order-details/:id',
         builder: (context, state) {
           final id = state.pathParameters['id'] ?? '';
-          return OrderDetailsScreen(orderId: id);
+          final from = state.uri.queryParameters['from'];
+          return OrderDetailsScreen(orderId: id, from: from);
         },
       ),
       GoRoute(

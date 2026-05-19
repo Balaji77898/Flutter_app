@@ -20,9 +20,11 @@ class MenuProvider extends ChangeNotifier {
 
   Future<void> fetchMenuItems({String? authToken}) async {
     if (_isLoading) return;
-    _isLoading = true;
-    _error = null;
-    Future.microtask(() => notifyListeners());
+    if (_items.isEmpty) {
+      _isLoading = true;
+      _error = null;
+      Future.microtask(() => notifyListeners());
+    }
 
     try {
       final String? token = authToken ??

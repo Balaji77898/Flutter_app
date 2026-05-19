@@ -10,7 +10,8 @@ import '../../core/currency_utils.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class OrdersScreen extends StatefulWidget {
-  const OrdersScreen({super.key});
+  final VoidCallback? onGoHome;
+  const OrdersScreen({super.key, this.onGoHome});
 
   @override
   State<OrdersScreen> createState() => _OrdersScreenState();
@@ -33,7 +34,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     final ordersProvider = context.read<OrdersProvider>();
     final auth = context.read<StaffAuthProvider>();
 
-    if (auth.token != null && ordersProvider.orders.isEmpty) {
+    if (auth.token != null) {
       await ordersProvider.fetchOrders(auth.token!);
     }
   }
@@ -134,7 +135,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
           PageHeader(
             title: 'Active Orders',
             subtitle: 'Manage Real-time Dining Service',
-            onBack: () => context.go('/staff/dashboard'),
+            onBack: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                widget.onGoHome?.call();
+              }
+            },
             actions: [
               PrimaryButton(
                 label: 'Create Order',
@@ -346,7 +353,8 @@ class _OrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppCard(
       padding: EdgeInsets.zero,
-      onTap: () => context.push('/staff/order-details/${order.id}'),
+      onTap: () =>
+          context.push('/staff/order-details/${order.id}?from=/staff/orders'),
       child: Column(
         children: [
           // Status Banner

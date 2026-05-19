@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../contexts/auth_provider.dart';
@@ -95,7 +96,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
           ),
         ),
       );
-      Navigator.pop(context);
+      context.pop();
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -135,7 +136,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
           PageHeader(
             title: 'Create Order',
             subtitle: 'Manual order entry',
-            onBack: () => Navigator.pop(context),
+            onBack: () => context.pop(),
           ),
 
           // ── Body ─────────────────────────────────────────────────
