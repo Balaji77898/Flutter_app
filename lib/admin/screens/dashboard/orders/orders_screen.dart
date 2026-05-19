@@ -13,7 +13,6 @@ import 'package:restaurant_unified_app/admin/core/models/restaurant_model.dart';
 import 'package:restaurant_unified_app/admin/core/providers/restaurant_provider.dart';
 import 'package:restaurant_unified_app/admin/services/orders_service.dart';
 
-
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
 
