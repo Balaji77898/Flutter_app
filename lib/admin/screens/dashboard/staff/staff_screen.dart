@@ -297,7 +297,8 @@ class _StaffScreenState extends State<StaffScreen> {
                           ),
                         ),
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Colors.white30, width: 1.2),
+                          side: const BorderSide(
+                              color: Colors.white30, width: 1.2),
                           padding: const EdgeInsets.symmetric(
                             horizontal: 20,
                             vertical: 10,
@@ -362,7 +363,8 @@ class _StaffScreenState extends State<StaffScreen> {
                               ),
                             ),
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: Colors.white30, width: 1.2),
+                              side: const BorderSide(
+                                  color: Colors.white30, width: 1.2),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 20,
                                 vertical: 10,

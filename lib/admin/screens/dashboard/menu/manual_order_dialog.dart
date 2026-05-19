@@ -244,8 +244,9 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton(
-                          onPressed:
-                              _isSubmitting ? null : () => Navigator.pop(context),
+                          onPressed: _isSubmitting
+                              ? null
+                              : () => Navigator.pop(context),
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.symmetric(
                               horizontal: isDesktop ? 24 : 8,
@@ -373,17 +374,20 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
               segments: const [
                 ButtonSegment(
                   value: 'Dine-in',
-                  label: FittedBox(fit: BoxFit.scaleDown, child: Text('Dine-in')),
+                  label:
+                      FittedBox(fit: BoxFit.scaleDown, child: Text('Dine-in')),
                   icon: Icon(Icons.restaurant, size: 14),
                 ),
                 ButtonSegment(
                   value: 'Takeaway',
-                  label: FittedBox(fit: BoxFit.scaleDown, child: Text('Takeaway')),
+                  label:
+                      FittedBox(fit: BoxFit.scaleDown, child: Text('Takeaway')),
                   icon: Icon(Icons.shopping_bag, size: 14),
                 ),
                 ButtonSegment(
                   value: 'Delivery',
-                  label: FittedBox(fit: BoxFit.scaleDown, child: Text('Delivery')),
+                  label:
+                      FittedBox(fit: BoxFit.scaleDown, child: Text('Delivery')),
                   icon: Icon(Icons.delivery_dining, size: 14),
                 ),
               ],
