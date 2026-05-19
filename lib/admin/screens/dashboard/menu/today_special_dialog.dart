@@ -188,7 +188,7 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
             // ── Subtitle ────────────────────────────────────────────────
             Container(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
-              color: AppColors.gold.withValues(alpha: 0.1),
+              color: AppColors.gold.withOpacity(0.1),
               child: Row(
                 children: [
                   const Icon(
@@ -305,7 +305,7 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           tileColor: isSelected
-                              ? AppColors.rubyDark.withValues(alpha: 0.05)
+                              ? AppColors.rubyDark.withOpacity(0.05)
                               : null,
                           controlAffinity: ListTileControlAffinity.trailing,
                         );
@@ -337,15 +337,15 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
+                  OverflowBar(
+                    spacing: 12,
+                    alignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
                         onPressed:
                             _isSubmitting ? null : () => Navigator.pop(context),
                         child: const Text('Cancel'),
                       ),
-                      const SizedBox(width: 12),
                       ElevatedButton.icon(
                         onPressed: _isSubmitting ? null : _save,
                         icon: _isSubmitting

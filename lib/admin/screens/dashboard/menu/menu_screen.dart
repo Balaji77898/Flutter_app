@@ -319,7 +319,7 @@ class _MenuScreenState extends State<MenuScreen> {
               )
             else
               Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Column(
