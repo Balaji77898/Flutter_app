@@ -32,8 +32,10 @@ class OrdersProvider extends ChangeNotifier {
 
   // 🔥 FETCH ORDERS (WITH TOKEN)
   Future<void> fetchOrders(String token) async {
-    _isLoading = true;
-    notifyListeners();
+    if (_orders.isEmpty) {
+      _isLoading = true;
+      notifyListeners();
+    }
 
     try {
       final response = await http.get(

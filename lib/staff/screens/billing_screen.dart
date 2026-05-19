@@ -31,7 +31,7 @@ class _BillingScreenState extends State<BillingScreen> {
     final ordersProvider = context.read<OrdersProvider>();
     final auth = context.read<StaffAuthProvider>();
 
-    if (auth.token != null && ordersProvider.orders.isEmpty) {
+    if (auth.token != null) {
       await ordersProvider.fetchOrders(auth.token!);
     }
   }

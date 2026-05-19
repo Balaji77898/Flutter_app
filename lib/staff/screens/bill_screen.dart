@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -310,7 +311,9 @@ class BillScreen extends StatelessWidget {
                                 label: auth.role == StaffRole.billingStaff
                                     ? 'Back to Billing'
                                     : 'Back to Dashboard',
-                                onTap: () => Navigator.pop(context),
+                                onTap: () => auth.role == StaffRole.billingStaff
+                                    ? context.go('/staff/billing')
+                                    : context.go('/staff/dashboard'),
                               ),
                             ],
                           ),

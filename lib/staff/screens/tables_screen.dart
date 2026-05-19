@@ -9,7 +9,8 @@ import '../widgets/common_widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class TablesScreen extends StatefulWidget {
-  const TablesScreen({super.key});
+  final VoidCallback? onGoHome;
+  const TablesScreen({super.key, this.onGoHome});
 
   @override
   State<TablesScreen> createState() => _TablesScreenState();
@@ -90,7 +91,13 @@ class _TablesScreenState extends State<TablesScreen> {
           PageHeader(
             title: 'Floor Plan',
             subtitle: 'Real-time Table Status',
-            onBack: () => context.go('/staff/dashboard'),
+            onBack: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                widget.onGoHome?.call();
+              }
+            },
           ),
           Expanded(
             child: LayoutBuilder(

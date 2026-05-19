@@ -12,8 +12,10 @@ class TablesProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   Future<void> fetchTables(String token) async {
-    _isLoading = true;
-    notifyListeners();
+    if (_tables.isEmpty) {
+      _isLoading = true;
+      notifyListeners();
+    }
 
     try {
       final response = await http.get(

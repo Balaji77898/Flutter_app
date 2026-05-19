@@ -28,6 +28,14 @@ class _MainScaffoldState extends State<MainScaffold> {
   }
 
   @override
+  void didUpdateWidget(MainScaffold oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialTab != oldWidget.initialTab) {
+      _currentIndex = widget.initialTab;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final staffAuth = context.watch<StaffAuthProvider>();
     final coreAuth = context.watch<AuthProvider>();
@@ -52,17 +60,21 @@ class _MainScaffoldState extends State<MainScaffold> {
         label: 'Home',
         screen: DashboardScreen(),
       ),
-      const _NavItem(
+      _NavItem(
         icon: Icons.receipt_long_outlined,
         activeIcon: Icons.receipt_long_rounded,
         label: 'Orders',
-        screen: OrdersScreen(),
+        screen: OrdersScreen(
+          onGoHome: () => setState(() => _currentIndex = 0),
+        ),
       ),
-      const _NavItem(
+      _NavItem(
         icon: Icons.grid_view_outlined,
         activeIcon: Icons.grid_view_rounded,
         label: 'Tables',
-        screen: TablesScreen(),
+        screen: TablesScreen(
+          onGoHome: () => setState(() => _currentIndex = 0),
+        ),
       ),
       const _NavItem(
         icon: Icons.person_outline_rounded,
