@@ -174,6 +174,7 @@ class _ItemFormDialogState extends State<ItemFormDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                const SizedBox(height: 8), // Added space so the floating label is not cut off at the top
                 DropdownButtonFormField<String>(
                   initialValue: _selectedCategoryId,
                   decoration: const InputDecoration(labelText: 'Category'),

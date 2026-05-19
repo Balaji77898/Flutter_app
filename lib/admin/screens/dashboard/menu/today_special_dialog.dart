@@ -146,7 +146,7 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
-        width: 520,
+        width: size.width < 600 ? size.width * 0.95 : 520,
         height: size.height * 0.75,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -324,8 +324,10 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                   bottomRight: Radius.circular(16),
                 ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                runSpacing: 10,
                 children: [
                   Text(
                     '${_specialItemIds.length} item${_specialItemIds.length == 1 ? '' : 's'} selected',
@@ -335,6 +337,7 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                     ),
                   ),
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       TextButton(
                         onPressed:

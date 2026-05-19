@@ -162,8 +162,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       child: LayoutBuilder(
                         builder: (ctx, constraints) {
                           int cols = 1;
-                          double aspect =
-                              2.8; // List tile aspect for single column mobile
+                          double aspect = 1.4; // Updated aspect for single column mobile to prevent overflow
 
                           if (constraints.maxWidth > 900) {
                             cols = 4;
