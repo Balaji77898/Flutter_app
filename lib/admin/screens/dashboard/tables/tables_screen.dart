@@ -430,11 +430,12 @@ class _TablesScreenState extends State<TablesScreen> {
                       ),
                     ),
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.white30),
+                      side: const BorderSide(color: Colors.white30, width: 1.2),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
+                        horizontal: 20,
+                        vertical: 10,
                       ),
+                      shape: const StadiumBorder(),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -484,18 +485,19 @@ class _TablesScreenState extends State<TablesScreen> {
                       size: 16,
                     ),
                     label: Text(
-                      'Back to Dashboard',
+                      'Back',
                       style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: 14,
                       ),
                     ),
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.white30),
+                      side: const BorderSide(color: Colors.white30, width: 1.2),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
+                        horizontal: 20,
+                        vertical: 10,
                       ),
+                      shape: const StadiumBorder(),
                     ),
                   ),
                   Expanded(

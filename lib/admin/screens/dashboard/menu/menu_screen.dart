@@ -251,30 +251,27 @@ class _MenuScreenState extends State<MenuScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            InkWell(
-              onTap: () => context.go('/admin/dashboard'),
-              borderRadius: BorderRadius.circular(8),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: AppColors.gold,
-                      size: 14,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Back',
-                      style: GoogleFonts.inter(
-                        color: AppColors.gold,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
+            OutlinedButton.icon(
+              onPressed: () => context.go('/admin/dashboard'),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+                size: 16,
+              ),
+              label: Text(
+                'Back',
+                style: GoogleFonts.inter(
+                  color: Colors.white,
+                  fontSize: 14,
                 ),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: Colors.white30, width: 1.2),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+                shape: const StadiumBorder(),
               ),
             ),
             const SizedBox(height: 12),

@@ -207,14 +207,27 @@ class _OrdersScreenState extends State<OrdersScreen> {
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                IconButton(
+                OutlinedButton.icon(
                   onPressed: () => context.go('/admin/dashboard'),
-                  icon: const Icon(Icons.arrow_back, color: AppColors.gold),
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.white.withValues(alpha: 0.1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                  label: Text(
+                    'Back',
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontSize: 14,
                     ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.white30, width: 1.2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    shape: const StadiumBorder(),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -241,9 +254,28 @@ class _OrdersScreenState extends State<OrdersScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                PremiumBackButton(
-                  label: 'Back to Dashboard',
-                  onTap: () => context.go('/admin/dashboard'),
+                OutlinedButton.icon(
+                  onPressed: () => context.go('/admin/dashboard'),
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                  label: Text(
+                    'Back',
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.white30, width: 1.2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    shape: const StadiumBorder(),
+                  ),
                 ),
                 Expanded(
                   child: Center(
@@ -2143,23 +2175,29 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                                   ),
                                   Expanded(
                                     child: Center(
-                                      child: Text(
-                                        '₹${item.price.toStringAsFixed(0)}',
-                                        style: GoogleFonts.inter(
-                                          fontSize: 14,
-                                          color: AppColors.slate700,
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          '₹${item.price.toStringAsFixed(0)}',
+                                          style: GoogleFonts.inter(
+                                            fontSize: 14,
+                                            color: AppColors.slate700,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                   Expanded(
                                     child: Center(
-                                      child: Text(
-                                        '₹${(item.price * item.quantity).toStringAsFixed(0)}',
-                                        style: GoogleFonts.inter(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.slate900,
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          '₹${(item.price * item.quantity).toStringAsFixed(0)}',
+                                          style: GoogleFonts.inter(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColors.slate900,
+                                          ),
                                         ),
                                       ),
                                     ),

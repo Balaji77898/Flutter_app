@@ -203,7 +203,10 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
 
             // Footer
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+              padding: EdgeInsets.symmetric(
+                horizontal: isDesktop ? 32 : 16,
+                vertical: isDesktop ? 20 : 16,
+              ),
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border(top: BorderSide(color: Colors.grey.shade100)),
@@ -229,54 +232,64 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                       Text(
                         '₹${_totalAmount.toStringAsFixed(2)}',
                         style: GoogleFonts.inter(
-                          fontSize: 24,
+                          fontSize: isDesktop ? 24 : 18,
                           fontWeight: FontWeight.bold,
                           color: AppColors.rubyRed,
                         ),
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      TextButton(
-                        onPressed:
-                            _isSubmitting ? null : () => Navigator.pop(context),
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                        ),
-                        child: const Text('Cancel'),
-                      ),
-                      const SizedBox(width: 16),
-                      ElevatedButton(
-                        onPressed: _isSubmitting ? null : _submitOrder,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.rubyRed,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 40,
-                            vertical: 18,
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed:
+                              _isSubmitting ? null : () => Navigator.pop(context),
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isDesktop ? 24 : 8,
+                            ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                          child: const Text('Cancel'),
                         ),
-                        child: _isSubmitting
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : const Text(
-                                'Submit Order',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        SizedBox(width: isDesktop ? 16 : 8),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: _isSubmitting ? null : _submitOrder,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.rubyRed,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: isDesktop ? 40 : 8,
+                                vertical: isDesktop ? 18 : 14,
                               ),
-                      ),
-                    ],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: _isSubmitting
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      'Submit Order',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -354,35 +367,38 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
 
           // Order Mode
           _fieldLabel('Order Mode'),
-          SegmentedButton<String>(
-            segments: const [
-              ButtonSegment(
-                value: 'Dine-in',
-                label: Text('Dine-in'),
-                icon: Icon(Icons.restaurant, size: 14),
+          SizedBox(
+            width: double.infinity,
+            child: SegmentedButton<String>(
+              segments: const [
+                ButtonSegment(
+                  value: 'Dine-in',
+                  label: FittedBox(fit: BoxFit.scaleDown, child: Text('Dine-in')),
+                  icon: Icon(Icons.restaurant, size: 14),
+                ),
+                ButtonSegment(
+                  value: 'Takeaway',
+                  label: FittedBox(fit: BoxFit.scaleDown, child: Text('Takeaway')),
+                  icon: Icon(Icons.shopping_bag, size: 14),
+                ),
+                ButtonSegment(
+                  value: 'Delivery',
+                  label: FittedBox(fit: BoxFit.scaleDown, child: Text('Delivery')),
+                  icon: Icon(Icons.delivery_dining, size: 14),
+                ),
+              ],
+              selected: {_orderMode},
+              onSelectionChanged: (v) => setState(() => _orderMode = v.first),
+              showSelectedIcon: false,
+              style: SegmentedButton.styleFrom(
+                selectedBackgroundColor: AppColors.rubyRed,
+                selectedForegroundColor: Colors.white,
+                textStyle: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
+                visualDensity: VisualDensity.compact,
               ),
-              ButtonSegment(
-                value: 'Takeaway',
-                label: Text('Takeaway'),
-                icon: Icon(Icons.shopping_bag, size: 14),
-              ),
-              ButtonSegment(
-                value: 'Delivery',
-                label: Text('Delivery'),
-                icon: Icon(Icons.delivery_dining, size: 14),
-              ),
-            ],
-            selected: {_orderMode},
-            onSelectionChanged: (v) => setState(() => _orderMode = v.first),
-            showSelectedIcon: false,
-            style: SegmentedButton.styleFrom(
-              selectedBackgroundColor: AppColors.rubyRed,
-              selectedForegroundColor: Colors.white,
-              textStyle: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-              visualDensity: VisualDensity.compact,
             ),
           ),
 

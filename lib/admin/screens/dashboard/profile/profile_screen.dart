@@ -99,14 +99,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             child: Row(
               children: [
-                IconButton(
+                OutlinedButton.icon(
                   onPressed: () => context.go('/admin/dashboard'),
-                  icon: const Icon(Icons.arrow_back, color: AppColors.gold),
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.white.withOpacity(0.1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                  label: Text(
+                    'Back',
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontSize: 14,
                     ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.white30, width: 1.2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    shape: const StadiumBorder(),
                   ),
                 ),
                 const SizedBox(width: 16),

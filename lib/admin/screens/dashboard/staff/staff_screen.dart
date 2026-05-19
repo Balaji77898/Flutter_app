@@ -282,17 +282,27 @@ class _StaffScreenState extends State<StaffScreen> {
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      IconButton(
+                      OutlinedButton.icon(
                         onPressed: () => context.go('/admin/staff'),
                         icon: const Icon(
                           Icons.arrow_back,
-                          color: AppColors.gold,
+                          color: Colors.white,
+                          size: 16,
                         ),
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.white.withOpacity(0.1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                        label: Text(
+                          'Back',
+                          style: GoogleFonts.inter(
+                            color: Colors.white,
+                            fontSize: 14,
                           ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Colors.white30, width: 1.2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
+                          shape: const StadiumBorder(),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -337,18 +347,27 @@ class _StaffScreenState extends State<StaffScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ElevatedButton.icon(
+                          OutlinedButton.icon(
                             onPressed: () => context.go('/admin/staff'),
-                            icon: const Icon(Icons.arrow_back, size: 16),
-                            label: const Text('Back to Staff Management'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white.withOpacity(0.1),
-                              foregroundColor: AppColors.gold,
-                              elevation: 0,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                            label: Text(
+                              'Back',
+                              style: GoogleFonts.inter(
+                                color: Colors.white,
+                                fontSize: 14,
                               ),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Colors.white30, width: 1.2),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 10,
+                              ),
+                              shape: const StadiumBorder(),
                             ),
                           ),
                           const SizedBox(height: 24),
