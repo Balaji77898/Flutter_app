@@ -330,7 +330,8 @@ class _TodaySpecialDialogState extends State<TodaySpecialDialog> {
                 runSpacing: 10,
                 children: [
                   Text(
-                    '${_specialItemIds.length} item${_specialItemIds.length == 1 ? '' : 's'} selected',
+                    '${_specialItemIds.length} '
+                    'item${_specialItemIds.length == 1 ? '' : 's'} selected',
                     style: GoogleFonts.inter(
                       color: AppColors.rubyDark,
                       fontWeight: FontWeight.w600,
