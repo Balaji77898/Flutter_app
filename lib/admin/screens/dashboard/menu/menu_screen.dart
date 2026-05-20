@@ -59,13 +59,17 @@ class _MenuScreenState extends State<MenuScreen> {
     if (_selectedCategoryId == 'SPECIALS') {
       filtered = filtered.where((i) => i.isSpecial).toList();
     } else if (_selectedCategoryId.isNotEmpty) {
-      filtered = filtered.where((i) => i.categoryId == _selectedCategoryId).toList();
+      filtered =
+          filtered.where((i) => i.categoryId == _selectedCategoryId).toList();
     }
-    
+
     if (_searchQuery.isNotEmpty) {
-      filtered = filtered.where((i) => i.name.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
+      filtered = filtered
+          .where(
+              (i) => i.name.toLowerCase().contains(_searchQuery.toLowerCase()))
+          .toList();
     }
-    
+
     return filtered;
   }
 
