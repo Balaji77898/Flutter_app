@@ -24,6 +24,7 @@ class _MenuScreenState extends State<MenuScreen> {
   bool _isLoading = true;
   String? _error;
   String _selectedCategoryId = '';
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -54,12 +55,18 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   List<MenuItem> get _filteredItems {
+    List<MenuItem> filtered = _items;
     if (_selectedCategoryId == 'SPECIALS') {
-      return _items.where((i) => i.isSpecial).toList();
+      filtered = filtered.where((i) => i.isSpecial).toList();
+    } else if (_selectedCategoryId.isNotEmpty) {
+      filtered = filtered.where((i) => i.categoryId == _selectedCategoryId).toList();
     }
-    return _selectedCategoryId.isEmpty
-        ? _items
-        : _items.where((i) => i.categoryId == _selectedCategoryId).toList();
+    
+    if (_searchQuery.isNotEmpty) {
+      filtered = filtered.where((i) => i.name.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
+    }
+    
+    return filtered;
   }
 
   Future<void> _toggleItem(String id) async {
@@ -587,6 +594,7 @@ class _MenuScreenState extends State<MenuScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: TextField(
+                  onChanged: (value) => setState(() => _searchQuery = value),
                   decoration: InputDecoration(
                     hintText: 'Search menu items...',
                     border: InputBorder.none,

@@ -2,6 +2,7 @@
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=D:\Downloads\flutter\flutter\flutter"
 export "FLUTTER_APPLICATION_PATH=D:\Downloads\internship project\flutter project\Flutter_app"
+export "FLUTTER_FRAMEWORK_SWIFT_PACKAGE_PATH=D:\Downloads\internship project\flutter project\Flutter_app\macos\Flutter\ephemeral\Packages\.packages\FlutterFramework"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.0"
