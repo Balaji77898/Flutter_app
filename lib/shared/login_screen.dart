@@ -7,6 +7,7 @@ import 'package:restaurant_unified_app/core/auth_provider.dart';
 import 'package:restaurant_unified_app/staff/contexts/auth_provider.dart';
 import 'package:restaurant_unified_app/staff/models/models.dart'
     as staff_models;
+import 'package:restaurant_unified_app/utils/session_manager.dart';
 import 'package:go_router/go_router.dart';
 import '../core/theme.dart';
 
@@ -80,6 +81,7 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
               : staff_models.StaffRole.billingStaff,
         );
       }
+      
       // Navigation will be handled by the router/main redirect logic
     } catch (e) {
       setState(() => _error = e.toString().replaceAll('Exception: ', ''));

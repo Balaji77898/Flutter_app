@@ -4,6 +4,7 @@ import '../contexts/auth_provider.dart';
 import '../models/models.dart';
 import '../contexts/orders_provider.dart';
 import '../theme/app_theme.dart';
+import '../../utils/session_manager.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -57,6 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (auth.token != null) {
         await orders.fetchOrders(auth.token!);
       }
+      await SessionManager.saveLoginSession();
 
       if (mounted) {
         if (_selectedRole == StaffRole.billingStaff) {

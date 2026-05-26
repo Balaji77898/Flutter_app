@@ -10,6 +10,7 @@ import 'package:restaurant_unified_app/staff/contexts/auth_provider.dart';
 import 'package:restaurant_unified_app/admin/core/providers/restaurant_provider.dart';
 import 'package:restaurant_unified_app/admin/core/providers/notification_provider.dart';
 import 'package:restaurant_unified_app/admin/core/models/notification_model.dart';
+import 'package:restaurant_unified_app/utils/session_manager.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -18,13 +19,19 @@ class AdminDashboardScreen extends StatefulWidget {
   State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
 }
 
-class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
+class _AdminDashboardScreenState
+    extends State<AdminDashboardScreen>
+    with WidgetsBindingObserver {
   bool _isNavigating = false;
   Offset _navStartPos = Offset.zero;
 
-  @override
+    @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
+
+    SessionManager.updateLastActiveTime();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<RestaurantProvider>().fetchRestaurant();
       final notifProv = context.read<NotificationProvider>();
@@ -41,6 +48,38 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         }
       });
     });
+  }
+    @override
+  void didChangeAppLifecycleState(
+      AppLifecycleState state) async {
+
+    // App returned from background
+    if (state == AppLifecycleState.resumed) {
+
+      bool isValid =
+          await SessionManager.isSessionValid();
+
+      if (!isValid && mounted) {
+
+        await SessionManager.logout();
+
+        await context.read<AuthProvider>().logout();
+
+        if (mounted) {
+          context.go('/login');
+        }
+
+      } else {
+
+        await SessionManager.updateLastActiveTime();
+      }
+    }
+
+    // App moved to background
+    if (state == AppLifecycleState.paused) {
+
+      await SessionManager.updateLastActiveTime();
+    }
   }
 
   void _showTopToast(NotificationModel notification) {
@@ -61,6 +100,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   @override
   void dispose() {
+        WidgetsBinding.instance.removeObserver(this);
     // Note: We might want to keep polling if the admin stays in the app
     // but for now we stop when dashboard is disposed
     // context.read<NotificationProvider>().stopPolling();

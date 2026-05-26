@@ -8,7 +8,9 @@ import 'dashboard_screen.dart';
 import 'orders_screen.dart';
 import 'tables_screen.dart';
 import 'billing_screen.dart';
+import '../../utils/session_manager.dart';
 import 'profile_screen.dart';
+
 
 class MainScaffold extends StatefulWidget {
   final int initialTab;
@@ -18,14 +20,59 @@ class MainScaffold extends StatefulWidget {
   State<MainScaffold> createState() => _MainScaffoldState();
 }
 
-class _MainScaffoldState extends State<MainScaffold> {
+class _MainScaffoldState
+    extends State<MainScaffold>
+    with WidgetsBindingObserver {
   late int _currentIndex;
 
-  @override
+    @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
+
     _currentIndex = widget.initialTab;
+
+    SessionManager.updateLastActiveTime();
   }
+    @override
+  void didChangeAppLifecycleState(
+      AppLifecycleState state) async {
+
+    // App resumed
+    if (state == AppLifecycleState.resumed) {
+
+      bool isValid =
+          await SessionManager.isSessionValid();
+
+      if (!isValid && mounted) {
+
+        await SessionManager.logout();
+
+        await context.read<StaffAuthProvider>().logout();
+
+        if (mounted) {
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil(
+            '/login',
+            (route) => false,
+          );
+        }
+
+      } else {
+
+        await SessionManager.updateLastActiveTime();
+      }
+    }
+
+    // App paused
+    if (state == AppLifecycleState.paused) {
+
+      await SessionManager.updateLastActiveTime();
+    }
+  }
+
+  
 
   @override
   void didUpdateWidget(MainScaffold oldWidget) {
@@ -33,6 +80,13 @@ class _MainScaffoldState extends State<MainScaffold> {
     if (widget.initialTab != oldWidget.initialTab) {
       _currentIndex = widget.initialTab;
     }
+  }
+    @override
+  void dispose() {
+
+    WidgetsBinding.instance.removeObserver(this);
+
+    super.dispose();
   }
 
   @override
