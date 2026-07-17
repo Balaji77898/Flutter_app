@@ -22,7 +22,7 @@ class AuthProvider extends ChangeNotifier {
   AuthProvider() {
     // Initialization handled in main.dart
   }
-Map<String, dynamic> _userToPrefsJson(UserProfile u) => {
+  Map<String, dynamic> _userToPrefsJson(UserProfile u) => {
         'id': u.id,
         'name': u.name,
         'email': u.email,

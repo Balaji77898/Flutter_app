@@ -78,9 +78,9 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
         await staffAuth.login(email, password);
         debugPrint("Role from StaffAuthProvider: ${staffAuth.user?.role}");
         debugPrint("========== STAFF LOGIN ==========");
-debugPrint("Token: ${staffAuth.token}");
-debugPrint("User: ${staffAuth.user?.name}");
-debugPrint("Role: ${staffAuth.user?.role}");
+        debugPrint("Token: ${staffAuth.token}");
+        debugPrint("User: ${staffAuth.user?.name}");
+        debugPrint("Role: ${staffAuth.user?.role}");
 
         final staffUser = staffAuth.user;
         if (staffUser == null || staffAuth.token == null) {
@@ -90,14 +90,11 @@ debugPrint("Role: ${staffAuth.user?.role}");
         // Backend already returned the role inside StaffUser.fromJson().
         // Mirror it into AuthProvider so the router (which only listens
         // to AuthProvider) redirects to the correct dashboard.
-        final mappedRole =
-            staffUser.role == staff_models.StaffRole.servingStaff
-                ? UserRole.servingStaff
-                : UserRole.billingStaff;
+        final mappedRole = staffUser.role == staff_models.StaffRole.servingStaff
+            ? UserRole.servingStaff
+            : UserRole.billingStaff;
 
         await auth.setAuth(
-
-          
           staffAuth.token!,
           UserProfile(
             id: staffUser.id,
@@ -157,9 +154,6 @@ debugPrint("Role: ${staffAuth.user?.role}");
                   style: AppTheme.sans(color: AppColors.textMuted),
                 ),
                 const SizedBox(height: 32),
-
-                
-
                 const SizedBox(height: 24),
                 if (_error != null) ...[
                   Text(
@@ -171,7 +165,6 @@ debugPrint("Role: ${staffAuth.user?.role}");
                   ),
                   const SizedBox(height: 16),
                 ],
-
                 TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(
@@ -213,7 +206,6 @@ debugPrint("Role: ${staffAuth.user?.role}");
                   ),
                 ),
                 const SizedBox(height: 24),
-
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -249,4 +241,3 @@ debugPrint("Role: ${staffAuth.user?.role}");
     );
   }
 }
-

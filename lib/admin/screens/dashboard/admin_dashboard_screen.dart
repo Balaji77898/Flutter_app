@@ -19,13 +19,12 @@ class AdminDashboardScreen extends StatefulWidget {
   State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
 }
 
-class _AdminDashboardScreenState
-    extends State<AdminDashboardScreen>
+class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     with WidgetsBindingObserver {
   bool _isNavigating = false;
   Offset _navStartPos = Offset.zero;
 
-    @override
+  @override
   void initState() {
     super.initState();
 
@@ -49,18 +48,14 @@ class _AdminDashboardScreenState
       });
     });
   }
-    @override
-  void didChangeAppLifecycleState(
-      AppLifecycleState state) async {
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     // App returned from background
     if (state == AppLifecycleState.resumed) {
-
-      bool isValid =
-          await SessionManager.isSessionValid();
+      bool isValid = await SessionManager.isSessionValid();
 
       if (!isValid && mounted) {
-
         await SessionManager.logout();
 
         if (!mounted) return;
@@ -69,16 +64,13 @@ class _AdminDashboardScreenState
         if (mounted) {
           context.go('/login');
         }
-
       } else {
-
         await SessionManager.updateLastActiveTime();
       }
     }
 
     // App moved to background
     if (state == AppLifecycleState.paused) {
-
       await SessionManager.updateLastActiveTime();
     }
   }
@@ -101,7 +93,7 @@ class _AdminDashboardScreenState
 
   @override
   void dispose() {
-        WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     // Note: We might want to keep polling if the admin stays in the app
     // but for now we stop when dashboard is disposed
     // context.read<NotificationProvider>().stopPolling();

@@ -51,7 +51,6 @@ class StaffAuthProvider extends ChangeNotifier {
   // 🔥 FETCH USER PROFILE
   Future<void> fetchUserProfile() async {
     if (_token == null) return;
-    
 
     final endpoints = [
       '/api/staff/me',

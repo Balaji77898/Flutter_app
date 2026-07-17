@@ -265,10 +265,11 @@ class OrderModel {
       subtotal: json.containsKey('subtotal')
           ? double.tryParse(json['subtotal'].toString())
           : null,
-      taxAmount: (json.containsKey('tax_amount') || json.containsKey('taxAmount'))
-          ? double.tryParse(
-              (json['tax_amount'] ?? json['taxAmount']).toString())
-          : null,
+      taxAmount:
+          (json.containsKey('tax_amount') || json.containsKey('taxAmount'))
+              ? double.tryParse(
+                  (json['tax_amount'] ?? json['taxAmount']).toString())
+              : null,
       paymentStatus:
           (json['payment_status'] ?? json['paymentStatus'])?.toString() ??
               'PENDING',

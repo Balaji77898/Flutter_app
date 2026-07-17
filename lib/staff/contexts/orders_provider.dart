@@ -46,10 +46,8 @@ class OrdersProvider extends ChangeNotifier {
         },
       );
       debugPrint("=========== ORDER DETAIL ===========");
-debugPrint(response.body);
-debugPrint("====================================");
-
-      
+      debugPrint(response.body);
+      debugPrint("====================================");
 
       if (response.statusCode == 200) {
         final decoded = json.decode(response.body);
@@ -67,6 +65,7 @@ debugPrint("====================================");
     _isLoading = false;
     notifyListeners();
   }
+
   // 🔥 FETCH SINGLE ORDER DETAIL (has real subtotal/tax_amount — the list
   // endpoint above does not return these fields)
   Future<Order?> fetchOrderDetail(String id, String token) async {
@@ -101,7 +100,6 @@ debugPrint("====================================");
     return null;
   }
 
- 
   // 🔥 UPDATE STATUS (WITH TOKEN)
   Future<void> updateOrderStatus(
     String id,

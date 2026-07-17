@@ -126,6 +126,7 @@ class _MenuScreenState extends State<MenuScreen> {
       }
     }
   }
+
   void _showCategoryActions(MenuCategory cat) {
     final hasItems = _items.any((it) => it.categoryId == cat.id);
 
