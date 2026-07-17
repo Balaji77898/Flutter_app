@@ -31,7 +31,7 @@ class RestaurantProfile {
   factory RestaurantProfile.fromJson(Map<String, dynamic> json) {
     return RestaurantProfile(
       id: json['id']?.toString() ?? '',
-      name: json['name']?.toString() ?? 'Restaurant',
+      name: json['name']?.toString() ?? 'PureDine',
       restaurantType: json['restaurant_type']?.toString() ?? 'Fine Dining',
       status: json['status']?.toString() ?? 'INACTIVE',
       address: json['address']?.toString(),
@@ -206,6 +206,8 @@ class OrderModel {
   final String status;
   final String orderType;
   final double totalAmount;
+  final double? subtotal;
+  final double? taxAmount;
   final String paymentStatus;
   final String? paymentMethod;
   final String createdAt;
@@ -219,6 +221,8 @@ class OrderModel {
     required this.status,
     required this.orderType,
     required this.totalAmount,
+    this.subtotal,
+    this.taxAmount,
     required this.paymentStatus,
     this.paymentMethod,
     required this.createdAt,
@@ -258,6 +262,13 @@ class OrderModel {
       orderType:
           (json['order_type'] ?? json['orderType'])?.toString() ?? 'DINE_IN',
       totalAmount: parsedAmount,
+      subtotal: json.containsKey('subtotal')
+          ? double.tryParse(json['subtotal'].toString())
+          : null,
+      taxAmount: (json.containsKey('tax_amount') || json.containsKey('taxAmount'))
+          ? double.tryParse(
+              (json['tax_amount'] ?? json['taxAmount']).toString())
+          : null,
       paymentStatus:
           (json['payment_status'] ?? json['paymentStatus'])?.toString() ??
               'PENDING',
@@ -278,6 +289,8 @@ class OrderModel {
     String? status,
     String? orderType,
     double? totalAmount,
+    double? subtotal,
+    double? taxAmount,
     String? paymentStatus,
     String? paymentMethod,
     String? createdAt,
@@ -291,6 +304,8 @@ class OrderModel {
       status: status ?? this.status,
       orderType: orderType ?? this.orderType,
       totalAmount: totalAmount ?? this.totalAmount,
+      subtotal: subtotal ?? this.subtotal,
+      taxAmount: taxAmount ?? this.taxAmount,
       paymentStatus: paymentStatus ?? this.paymentStatus,
       paymentMethod: paymentMethod ?? this.paymentMethod,
       createdAt: createdAt ?? this.createdAt,
@@ -303,6 +318,16 @@ class OrderModel {
 
   double get calculatedSubtotal =>
       items.fold(0, (sum, item) => sum + (item.price * item.quantity));
+
+  // For display only. Some older orders have a stored subtotal of exactly
+  // 0 (e.g. placed before tax tracking existed on the backend) even though
+  // total_amount is correct. In that case, fall back to the item-computed
+  // subtotal so the bill doesn't show ₹0. This never touches tax — tax
+  // stays exactly what the backend sent, including a real 0.
+  double get displaySubtotal {
+    if (subtotal != null && subtotal! > 0) return subtotal!;
+    return calculatedSubtotal;
+  }
 }
 
 class OrderItem {

@@ -51,7 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
       await auth.login(
         _staffIdController.text,
         _staffPasswordController.text,
-        _selectedRole!,
       );
 
       // 🔥 FETCH ORDERS AFTER LOGIN

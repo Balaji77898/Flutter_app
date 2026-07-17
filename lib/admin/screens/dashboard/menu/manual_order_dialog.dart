@@ -660,6 +660,8 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                               children: [
                                 Text(
                                   item.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.inter(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15,
@@ -668,6 +670,8 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                                 const SizedBox(height: 4),
                                 Text(
                                   '₹${item.price.toStringAsFixed(2)}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.inter(
                                     color: AppColors.rubyRed,
                                     fontWeight: FontWeight.w600,
@@ -677,13 +681,20 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                             ),
                           ),
                           Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               if (qty > 0) ...[
                                 IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(
+                                    minWidth: 32,
+                                    minHeight: 32,
+                                  ),
+                                  visualDensity: VisualDensity.compact,
                                   icon: const Icon(
                                     Icons.remove_circle_outline,
                                     color: AppColors.rubyRed,
-                                    size: 24,
+                                    size: 22,
                                   ),
                                   onPressed: () {
                                     setState(() {
@@ -695,21 +706,31 @@ class _ManualOrderDialogState extends State<ManualOrderDialog> {
                                     });
                                   },
                                 ),
-                                Text(
-                                  '$qty',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                                SizedBox(
+                                  width: 20,
+                                  child: Text(
+                                    '$qty',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
                               ],
                               IconButton(
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(
+                                  minWidth: 32,
+                                  minHeight: 32,
+                                ),
+                                visualDensity: VisualDensity.compact,
                                 icon: Icon(
                                   qty > 0
                                       ? Icons.add_circle
                                       : Icons.add_circle_outline,
                                   color: AppColors.success,
-                                  size: 24,
+                                  size: 22,
                                 ),
                                 onPressed: () {
                                   setState(() {

@@ -208,6 +208,8 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
                 children: [
                   Text(
                     item.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -229,12 +231,20 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
               ),
             ),
             Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 if (qty > 0) ...[
                   IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(
+                      minWidth: 32,
+                      minHeight: 32,
+                    ),
+                    visualDensity: VisualDensity.compact,
                     icon: const Icon(
                       Icons.remove_circle_outline,
                       color: AppColors.rubyRed,
+                      size: 22,
                     ),
                     onPressed: () => setState(() {
                       if (qty == 1) {
@@ -244,15 +254,26 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
                       }
                     }),
                   ),
-                  Text(
-                    '$qty',
-                    style: GoogleFonts.inter(fontWeight: FontWeight.bold),
+                  SizedBox(
+                    width: 20,
+                    child: Text(
+                      '$qty',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ],
                 IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(
+                    minWidth: 32,
+                    minHeight: 32,
+                  ),
+                  visualDensity: VisualDensity.compact,
                   icon: Icon(
                     qty > 0 ? Icons.add_circle : Icons.add_circle_outline,
                     color: Colors.green,
+                    size: 22,
                   ),
                   onPressed: () => setState(() => _cart[item.id] = qty + 1),
                 ),

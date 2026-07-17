@@ -49,6 +49,7 @@ class _MainScaffoldState
 
         await SessionManager.logout();
 
+        if (!mounted) return;
         await context.read<StaffAuthProvider>().logout();
 
         if (mounted) {
@@ -346,7 +347,7 @@ class _Sidebar extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  'RestaurantOS',
+                  'PUREDINE',
                   style: AppTheme.serif(
                     size: 22,
                     weight: FontWeight.w700,

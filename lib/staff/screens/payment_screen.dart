@@ -25,6 +25,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadOrderDetail());
+  }
+
+  Future<void> _loadOrderDetail() async {
+    if (!mounted) return;
+    final token = context.read<StaffAuthProvider>().token;
+    if (token != null) {
+      await context.read<OrdersProvider>().fetchOrderDetail(
+            widget.orderId,
+            token,
+          );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final provider = context.watch<OrdersProvider>();
     final order = provider.findById(widget.orderId);
@@ -327,6 +344,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     try {
       await provider.payOrder(widget.orderId, token);
+
+      if (!context.mounted) return;
+
+      // BillScreen reads straight from the provider and can't fetch on its
+      // own — make sure it has the real subtotal/tax_amount before we go.
+      await provider.fetchOrderDetail(widget.orderId, token);
 
       if (!context.mounted) return;
 

@@ -171,24 +171,20 @@ class Order {
           .toList(),
     );
 
-    if (order.subtotal == 0 && order.itemsDetails.isNotEmpty) {
+    // Tax always comes from the backend (tax_amount), including when it's
+    // legitimately 0 (GST disabled for this restaurant). We never invent a
+    // percentage on the client. The only thing we fill in ourselves is the
+    // subtotal, and only when the backend response genuinely omitted it
+    // (e.g. list endpoints that don't include a billing breakdown) — this
+    // is purely a display convenience and never touches tax or total.
+    final hasSubtotalField = json.containsKey('subtotal');
+
+    if (!hasSubtotalField && order.itemsDetails.isNotEmpty) {
       double calcSubtotal = order.itemsDetails.fold(
         0.0,
         (sum, item) => sum + item.total,
       );
-      double calcTax = calcSubtotal * 0.05; // Default 5% tax
-      double calcTotal = calcSubtotal + calcTax;
-
-      return order.copyWith(
-        subtotal: calcSubtotal,
-        tax: calcTax,
-        total: calcTotal,
-      );
-    } else if (order.tax == 0 && order.subtotal > 0) {
-      // If subtotal was provided but tax is 0, calculate tax
-      double calcTax = order.subtotal * 0.05;
-      double calcTotal = order.subtotal + calcTax;
-      return order.copyWith(tax: calcTax, total: calcTotal);
+      return order.copyWith(subtotal: calcSubtotal);
     }
 
     return order;

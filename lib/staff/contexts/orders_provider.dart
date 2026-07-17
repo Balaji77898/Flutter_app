@@ -45,9 +45,11 @@ class OrdersProvider extends ChangeNotifier {
           "Authorization": "Bearer $token",
         },
       );
+      debugPrint("=========== ORDER DETAIL ===========");
+debugPrint(response.body);
+debugPrint("====================================");
 
-      debugPrint("STATUS: ${response.statusCode}");
-      debugPrint("BODY: ${response.body}");
+      
 
       if (response.statusCode == 200) {
         final decoded = json.decode(response.body);
@@ -65,7 +67,41 @@ class OrdersProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+  // 🔥 FETCH SINGLE ORDER DETAIL (has real subtotal/tax_amount — the list
+  // endpoint above does not return these fields)
+  Future<Order?> fetchOrderDetail(String id, String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse("$kBackendBase${ApiEndpoints.ordersList}/$id"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
 
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        final data = (decoded is Map && decoded.containsKey('data'))
+            ? decoded['data']
+            : decoded;
+        final detailedOrder = Order.fromJson(data as Map<String, dynamic>);
+
+        final index = _orders.indexWhere((o) => o.id == id);
+        if (index != -1) {
+          _orders[index] = detailedOrder;
+        } else {
+          _orders.add(detailedOrder);
+        }
+        notifyListeners();
+        return detailedOrder;
+      }
+    } catch (e) {
+      debugPrint("fetchOrderDetail error: $e");
+    }
+    return null;
+  }
+
+ 
   // 🔥 UPDATE STATUS (WITH TOKEN)
   Future<void> updateOrderStatus(
     String id,

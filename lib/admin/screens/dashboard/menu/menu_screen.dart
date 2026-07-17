@@ -126,6 +126,55 @@ class _MenuScreenState extends State<MenuScreen> {
       }
     }
   }
+  void _showCategoryActions(MenuCategory cat) {
+    final hasItems = _items.any((it) => it.categoryId == cat.id);
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 8),
+              ListTile(
+                leading: const Icon(Icons.edit, color: AppColors.rubyDark),
+                title: const Text('Edit Category'),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showCategoryForm(cat);
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.delete_outline,
+                  color: hasItems ? Colors.grey.shade400 : AppColors.danger,
+                ),
+                title: Text(
+                  hasItems
+                      ? 'Delete Category (remove its items first)'
+                      : 'Delete Category',
+                  style: TextStyle(
+                    color: hasItems ? Colors.grey.shade400 : AppColors.danger,
+                  ),
+                ),
+                onTap: hasItems
+                    ? null
+                    : () {
+                        Navigator.pop(ctx);
+                        _deleteCategory(cat.id);
+                      },
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   Future<void> _deleteCategory(String id) async {
     final confirm = await showDialog<bool>(
@@ -487,7 +536,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       label: cat.name,
                       isSelected: _selectedCategoryId == cat.id,
                       onTap: () => setState(() => _selectedCategoryId = cat.id),
-                      onLongPress: () => _showCategoryForm(cat),
+                      onLongPress: () => _showCategoryActions(cat),
                     ),
                   ),
                 ),
@@ -1019,16 +1068,23 @@ class _SidebarItemState extends State<_SidebarItem> {
                 ),
                 const SizedBox(width: 8),
               ],
-              if (!isAllItems && widget.onDelete != null)
-                IconButton(
-                  icon: Icon(
-                    Icons.delete_outline,
-                    size: 16,
-                    color: Colors.grey.shade400,
+              if (!isAllItems)
+                Tooltip(
+                  message: widget.onDelete != null
+                      ? 'Delete category'
+                      : 'Remove all items from this category before deleting',
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.delete_outline,
+                      size: 16,
+                      color: widget.onDelete != null
+                          ? Colors.grey.shade400
+                          : Colors.grey.shade300,
+                    ),
+                    onPressed: widget.onDelete,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
                   ),
-                  onPressed: widget.onDelete,
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
                 ),
             ],
           ),

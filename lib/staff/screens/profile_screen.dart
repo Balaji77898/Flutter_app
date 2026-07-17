@@ -98,7 +98,7 @@ class ProfileScreen extends StatelessWidget {
                         _ProfileRow(
                           icon: Icons.restaurant_rounded,
                           label: 'Restaurant',
-                          value: user?.restaurantName ?? 'RestaurantOS',
+                          value: user?.restaurantName ?? 'PUREDINE',
                           iconColor: AppColors.primary,
                           iconBg: AppColors.primary.withValues(alpha: 0.08),
                         ),

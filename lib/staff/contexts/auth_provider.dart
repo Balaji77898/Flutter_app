@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/models.dart';
 import '../../core/constants.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class StaffAuthProvider extends ChangeNotifier {
   StaffUser? _user;
@@ -26,6 +27,17 @@ class StaffAuthProvider extends ChangeNotifier {
   Future<void> loadAuth() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+
+      if (kIsWeb) {
+        // Website must always require login on every visit.
+        await prefs.remove(kTokenKey);
+        _token = null;
+        _user = null;
+        _role = null;
+        notifyListeners();
+        return;
+      }
+
       _token = prefs.getString(kTokenKey);
       if (_token != null) {
         await fetchUserProfile();
@@ -39,6 +51,7 @@ class StaffAuthProvider extends ChangeNotifier {
   // 🔥 FETCH USER PROFILE
   Future<void> fetchUserProfile() async {
     if (_token == null) return;
+    
 
     final endpoints = [
       '/api/staff/me',
@@ -88,7 +101,7 @@ class StaffAuthProvider extends ChangeNotifier {
   }
 
   // 🔥 LOGIN WITH API
-  Future<void> login(String email, String password, StaffRole role) async {
+  Future<void> login(String email, String password) async {
     _isLoading = true;
     notifyListeners();
 
@@ -107,9 +120,8 @@ class StaffAuthProvider extends ChangeNotifier {
             ? decoded['data']
             : decoded;
 
-        // Save token and role
+        // Save token
         _token = data['token'] ?? decoded['token'];
-        _role = role;
 
         // Try to get user from login response first
         final userData = data['user'] ?? decoded['user'];

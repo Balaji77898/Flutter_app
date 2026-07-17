@@ -7,7 +7,7 @@ import 'package:restaurant_unified_app/core/auth_provider.dart';
 import 'package:restaurant_unified_app/staff/contexts/auth_provider.dart';
 import 'package:restaurant_unified_app/staff/models/models.dart'
     as staff_models;
-import 'package:restaurant_unified_app/utils/session_manager.dart';
+import 'package:restaurant_unified_app/core/models/user.dart';
 import 'package:go_router/go_router.dart';
 import '../core/theme.dart';
 
@@ -21,10 +21,9 @@ class UnifiedLoginScreen extends StatefulWidget {
 class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  UserRole _selectedRole = UserRole.admin;
   bool _obscurePassword = true;
   String? _error;
-  String _restaurantName = 'Restaurant Unified';
+  String _restaurantName = 'PUREDINE';
 
   @override
   void initState() {
@@ -62,29 +61,58 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
     }
 
     final auth = context.read<AuthProvider>();
+    final email = _emailController.text;
+    final password = _passwordController.text;
 
     try {
-      await auth.login(
-        _emailController.text,
-        _passwordController.text,
-        _selectedRole,
-      );
+      // 1. Try existing Admin login first
+      await auth.login(email, password);
+      // Success -> AuthProvider is authenticated with role = admin
+      // Router redirect logic sends the user to /admin/dashboard
+    } catch (adminError) {
+      // 2. Admin login failed -> automatically try existing Staff login
+      if (!mounted) return;
+      final staffAuth = context.read<StaffAuthProvider>();
 
-      if (_selectedRole != UserRole.admin) {
-        if (!mounted) return;
-        final staffAuth = context.read<StaffAuthProvider>();
-        await staffAuth.login(
-          _emailController.text,
-          _passwordController.text,
-          _selectedRole == UserRole.servingStaff
-              ? staff_models.StaffRole.servingStaff
-              : staff_models.StaffRole.billingStaff,
+      try {
+        await staffAuth.login(email, password);
+        debugPrint("Role from StaffAuthProvider: ${staffAuth.user?.role}");
+        debugPrint("========== STAFF LOGIN ==========");
+debugPrint("Token: ${staffAuth.token}");
+debugPrint("User: ${staffAuth.user?.name}");
+debugPrint("Role: ${staffAuth.user?.role}");
+
+        final staffUser = staffAuth.user;
+        if (staffUser == null || staffAuth.token == null) {
+          throw Exception('Invalid email or password');
+        }
+
+        // Backend already returned the role inside StaffUser.fromJson().
+        // Mirror it into AuthProvider so the router (which only listens
+        // to AuthProvider) redirects to the correct dashboard.
+        final mappedRole =
+            staffUser.role == staff_models.StaffRole.servingStaff
+                ? UserRole.servingStaff
+                : UserRole.billingStaff;
+
+        await auth.setAuth(
+
+          
+          staffAuth.token!,
+          UserProfile(
+            id: staffUser.id,
+            name: staffUser.name,
+            email: staffUser.email,
+            role: mappedRole,
+            phone: staffUser.phone,
+            restaurantName: staffUser.restaurantName,
+            createdAt: staffUser.createdAt,
+          ),
         );
+        // Navigation will be handled by the router/main redirect logic
+      } catch (staffError) {
+        setState(() => _error = 'Invalid email or password');
       }
-      
-      // Navigation will be handled by the router/main redirect logic
-    } catch (e) {
-      setState(() => _error = e.toString().replaceAll('Exception: ', ''));
     }
   }
 
@@ -130,53 +158,7 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
                 ),
                 const SizedBox(height: 32),
 
-                // Role Selector
-                Row(
-                  children: [
-                    _RoleButton(
-                      label: 'Admin',
-                      isSelected: _selectedRole == UserRole.admin,
-                      onTap: () => setState(
-                        () => _selectedRole = UserRole.admin,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    _RoleButton(
-                      label: 'Staff',
-                      isSelected: _selectedRole != UserRole.admin,
-                      onTap: () => setState(
-                        () => _selectedRole = UserRole.servingStaff,
-                      ),
-                    ),
-                  ],
-                ),
-
-                if (_selectedRole != UserRole.admin) ...[
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _SubRoleButton(
-                          label: 'Serving',
-                          isSelected: _selectedRole == UserRole.servingStaff,
-                          onTap: () => setState(
-                            () => _selectedRole = UserRole.servingStaff,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: _SubRoleButton(
-                          label: 'Billing',
-                          isSelected: _selectedRole == UserRole.billingStaff,
-                          onTap: () => setState(
-                            () => _selectedRole = UserRole.billingStaff,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                
 
                 const SizedBox(height: 24),
                 if (_error != null) ...[
@@ -268,85 +250,3 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
   }
 }
 
-class _RoleButton extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _RoleButton({
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? AppColors.primary.withValues(alpha: 0.1)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isSelected ? AppColors.primary : AppColors.slate200,
-            ),
-          ),
-          child: Center(
-            child: Text(
-              label,
-              style: AppTheme.sans(
-                weight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? AppColors.primary : AppColors.textMuted,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SubRoleButton extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _SubRoleButton({
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.gold.withValues(alpha: 0.1)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? AppColors.gold : AppColors.slate200,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: AppTheme.sans(
-              size: 12,
-              weight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: isSelected ? AppColors.goldDark : AppColors.textMuted,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

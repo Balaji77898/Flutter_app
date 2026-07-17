@@ -1650,6 +1650,20 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
   void initState() {
     super.initState();
     _currentOrder = widget.order;
+    _loadOrderDetail();
+  }
+
+  Future<void> _loadOrderDetail() async {
+    try {
+      // The orders list endpoint doesn't include subtotal/tax_amount —
+      // fetch the single-order detail so the real tax reflects correctly.
+      final detailed = await OrdersService.getOrderById(widget.order.id);
+      if (mounted) {
+        setState(() => _currentOrder = detailed);
+      }
+    } catch (e) {
+      debugPrint('Failed to load order detail: $e');
+    }
   }
 
   Future<void> _handleStatusUpdate(String newStatus) async {
@@ -2233,22 +2247,22 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                         children: [
                           _priceRow(
                             'Subtotal',
-                            _currentOrder.calculatedSubtotal.toStringAsFixed(0),
+                            _currentOrder.displaySubtotal.toStringAsFixed(0),
                           ),
-                          const SizedBox(height: 12),
-                          _priceRow(
-                            'Tax (5%)',
-                            (_currentOrder.calculatedSubtotal * 0.05)
-                                .toStringAsFixed(0),
-                          ),
+                          if ((_currentOrder.taxAmount ?? 0) > 0) ...[
+                            const SizedBox(height: 12),
+                            _priceRow(
+                              'Tax',
+                              _currentOrder.taxAmount!.toStringAsFixed(0),
+                            ),
+                          ],
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 16),
                             child: Divider(height: 1, color: Color(0xFFCBD5E1)),
                           ),
                           _priceRow(
                             'TOTAL',
-                            (_currentOrder.calculatedSubtotal * 1.05)
-                                .toStringAsFixed(0),
+                            _currentOrder.totalAmount.toStringAsFixed(0),
                             isTotal: true,
                           ),
                         ],
@@ -2555,18 +2569,17 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                     children: [
                       _pdfPriceRow(
                         'Subtotal',
-                        _currentOrder.calculatedSubtotal.toStringAsFixed(0),
+                        _currentOrder.displaySubtotal.toStringAsFixed(0),
                       ),
-                      _pdfPriceRow(
-                        'Tax (5%)',
-                        (_currentOrder.calculatedSubtotal * 0.05)
-                            .toStringAsFixed(0),
-                      ),
+                      if ((_currentOrder.taxAmount ?? 0) > 0)
+                        _pdfPriceRow(
+                          'Tax',
+                          _currentOrder.taxAmount!.toStringAsFixed(0),
+                        ),
                       pw.Divider(color: PdfColors.grey400),
                       _pdfPriceRow(
                         'TOTAL',
-                        (_currentOrder.calculatedSubtotal * 1.05)
-                            .toStringAsFixed(0),
+                        _currentOrder.totalAmount.toStringAsFixed(0),
                         isTotal: true,
                       ),
                     ],

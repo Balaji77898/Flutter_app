@@ -654,16 +654,19 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                         value: '₹${total.toStringAsFixed(0)}',
                       ),
                       const SizedBox(height: 8),
-                      _SummaryDetailRow(
-                        label: 'Tax (5%)',
-                        value: '₹${(total * 0.05).toStringAsFixed(0)}',
+                      Text(
+                        'Tax (if applicable) is calculated on the final bill.',
+                        style: AppTheme.sans(
+                          size: 11,
+                          color: AppColors.slate400,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Total Amount',
+                            'Estimated Amount',
                             style: AppTheme.sans(
                               size: 14,
                               weight: FontWeight.w700,
@@ -671,7 +674,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                             ),
                           ),
                           Text(
-                            '₹${(total * 1.05).toStringAsFixed(0)}',
+                            '₹${total.toStringAsFixed(0)}',
                             style: AppTheme.serif(
                               size: 24,
                               weight: FontWeight.w900,

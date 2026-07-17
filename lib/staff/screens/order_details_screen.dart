@@ -33,6 +33,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     final ordersProvider = context.read<OrdersProvider>();
     if (auth.token != null) {
       await ordersProvider.fetchOrders(auth.token!);
+      if (!mounted) return;
+      // The list endpoint above doesn't include subtotal/tax_amount —
+      // fetch the single-order detail so the real tax shows correctly.
+      await ordersProvider.fetchOrderDetail(widget.orderId, auth.token!);
     }
   }
 
@@ -286,8 +290,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         const Divider(),
                         const SizedBox(height: 8),
                         _TotalRow('Subtotal', '₹${order.subtotal.round()}'),
-                        const SizedBox(height: 6),
-                        _TotalRow('Tax (5%)', '₹${order.tax.round()}'),
+                        if (order.tax > 0) ...[
+                          const SizedBox(height: 6),
+                          _TotalRow('Tax', '₹${order.tax.round()}'),
+                        ],
                         const SizedBox(height: 10),
                         Container(height: 1, color: AppColors.slate200),
                         const SizedBox(height: 10),

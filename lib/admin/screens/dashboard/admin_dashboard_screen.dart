@@ -63,6 +63,7 @@ class _AdminDashboardScreenState
 
         await SessionManager.logout();
 
+        if (!mounted) return;
         await context.read<AuthProvider>().logout();
 
         if (mounted) {
@@ -292,7 +293,7 @@ class _AdminDashboardScreenState
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    restaurant?.name ?? 'Restaurant Admin',
+                    restaurant?.name ?? 'PureDine Admin',
                     style: GoogleFonts.playfairDisplay(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -357,7 +358,7 @@ class _AdminDashboardScreenState
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        restaurant?.name ?? 'Restaurant Admin',
+                        restaurant?.name ?? 'PureDine Admin',
                         style: GoogleFonts.playfairDisplay(
                           fontSize: 48,
                           fontWeight: FontWeight.bold,
@@ -580,7 +581,9 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      height: 40,
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      alignment: Alignment.center,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(100),
@@ -646,10 +649,11 @@ class _ProfileChipState extends State<_ProfileChip> {
         onTap: () => context.go('/admin/profile'),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
+          height: 40,
           padding: EdgeInsets.symmetric(
             horizontal: isMobile ? 10 : 16,
-            vertical: isMobile ? 6 : 8,
           ),
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             color: _isHovered
                 ? Colors.white.withValues(alpha: 0.15)
@@ -808,8 +812,8 @@ class _NotificationButtonState extends State<_NotificationButton> {
         onTap: () => _showNotificationOverlay(context),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          width: 48,
-          height: 48,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
             color: _isHovered
                 ? Colors.white.withValues(alpha: 0.15)

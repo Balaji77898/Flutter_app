@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'constants.dart';
 import 'models/user.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class AuthProvider extends ChangeNotifier {
   String? _token;
@@ -21,36 +22,71 @@ class AuthProvider extends ChangeNotifier {
   AuthProvider() {
     // Initialization handled in main.dart
   }
+Map<String, dynamic> _userToPrefsJson(UserProfile u) => {
+        'id': u.id,
+        'name': u.name,
+        'email': u.email,
+        'phone': u.phone,
+        'restaurant_name': u.restaurantName,
+        'created_at': u.createdAt?.toIso8601String(),
+      };
 
   Future<void> loadAuth() async {
-    // Always start fresh — clear any stored session so users see the login screen
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(kTokenKey);
-      await prefs.remove(kRoleKey);
+
+      if (kIsWeb) {
+        // Website must always require login on every visit.
+        await prefs.remove(kTokenKey);
+        await prefs.remove(kRoleKey);
+        await prefs.remove(kUserKey);
+        _token = null;
+        _role = null;
+        _user = null;
+        notifyListeners();
+        return;
+      }
+
+      // Mobile app: restore any previously saved session (like Instagram).
+      final savedToken = prefs.getString(kTokenKey);
+      final savedRoleName = prefs.getString(kRoleKey);
+      final savedUserJson = prefs.getString(kUserKey);
+
+      if (savedToken != null && savedRoleName != null) {
+        _token = savedToken;
+        _role = UserRole.values.firstWhere(
+          (r) => r.name == savedRoleName,
+          orElse: () => UserRole.admin,
+        );
+        if (savedUserJson != null) {
+          try {
+            _user = UserProfile.fromJson(
+              json.decode(savedUserJson) as Map<String, dynamic>,
+              _role!,
+            );
+          } catch (e) {
+            debugPrint("AuthProvider: failed to restore cached user: $e");
+          }
+        }
+      }
     } catch (e) {
       debugPrint("AuthProvider loadAuth error: $e");
     }
-    _token = null;
-    _role = null;
-    _user = null;
     notifyListeners();
   }
 
-  Future<void> login(String email, String password, UserRole role) async {
+  Future<void> login(String email, String password) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      final endpoint = role == UserRole.admin
-          ? ApiEndpoints.adminLogin
-          : ApiEndpoints.staffLogin;
-
       final response = await http.post(
-        Uri.parse('$kBackendBase$endpoint'),
+        Uri.parse('$kBackendBase${ApiEndpoints.adminLogin}'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'email': email, 'password': password}),
       );
+
+      const role = UserRole.admin;
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -68,6 +104,10 @@ class AuthProvider extends ChangeNotifier {
         final prefs = await SharedPreferences.getInstance();
         if (_token != null) await prefs.setString(kTokenKey, _token!);
         await prefs.setString(kRoleKey, role.name);
+        if (_user != null) {
+          await prefs.setString(
+              kUserKey, json.encode(_userToPrefsJson(_user!)));
+        }
         if (_user?.restaurantName != null &&
             _user!.restaurantName!.isNotEmpty) {
           await prefs.setString(
@@ -92,6 +132,7 @@ class AuthProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(kTokenKey, _token!);
     await prefs.setString(kRoleKey, _role!.name);
+    await prefs.setString(kUserKey, json.encode(_userToPrefsJson(user)));
     if (user.restaurantName != null && user.restaurantName!.isNotEmpty) {
       await prefs.setString('cached_restaurant_name', user.restaurantName!);
     }
@@ -105,6 +146,7 @@ class AuthProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(kTokenKey);
     await prefs.remove(kRoleKey);
+    await prefs.remove(kUserKey);
     notifyListeners();
   }
 
