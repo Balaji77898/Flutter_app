@@ -333,9 +333,9 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
                                       strokeWidth: 2.5,
                                     ),
                                   )
-                                : Row(
+                                : const Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
+                                    children: [
                                       Text(
                                         'Login',
                                         style: TextStyle(
