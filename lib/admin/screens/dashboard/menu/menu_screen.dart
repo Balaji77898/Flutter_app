@@ -11,6 +11,36 @@ import 'item_form_dialog.dart';
 import 'manual_order_dialog.dart';
 import 'today_special_dialog.dart';
 
+IconData categoryIconFor(String name) {
+  final n = name.toLowerCase();
+  if (n.contains('breakfast')) return Icons.free_breakfast_rounded;
+  if (n.contains('soup')) return Icons.soup_kitchen_rounded;
+  if (n.contains('pasta') || n.contains('noodle')) {
+    return Icons.ramen_dining_rounded;
+  }
+  if (n.contains('main') || n.contains('curry') || n.contains('thali')) {
+    return Icons.dinner_dining_rounded;
+  }
+  if (n.contains('burger')) return Icons.lunch_dining_rounded;
+  if (n.contains('pizza')) return Icons.local_pizza_rounded;
+  if (n.contains('drink') ||
+      n.contains('beverage') ||
+      n.contains('juice')) {
+    return Icons.local_bar_rounded;
+  }
+  if (n.contains('dessert') || n.contains('sweet') || n.contains('ice')) {
+    return Icons.icecream_rounded;
+  }
+  if (n.contains('starter') || n.contains('appetizer') || n.contains('snack')) {
+    return Icons.tapas_rounded;
+  }
+  if (n.contains('salad')) return Icons.eco_rounded;
+  if (n.contains('bread') || n.contains('bakery')) {
+    return Icons.bakery_dining_rounded;
+  }
+  return Icons.restaurant_menu_rounded;
+}
+
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
 
@@ -520,21 +550,23 @@ class _MenuScreenState extends State<MenuScreen> {
           ),
           const SizedBox(height: 12),
           SizedBox(
-            height: 44,
+            height: 78,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
                 _CategoryPill(
                   label: 'All Items',
+                  icon: Icons.grid_view_rounded,
                   isSelected: _selectedCategoryId.isEmpty,
                   onTap: () => setState(() => _selectedCategoryId = ''),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 10),
                 ..._categories.map(
                   (cat) => Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
+                    padding: const EdgeInsets.only(right: 10.0),
                     child: _CategoryPill(
                       label: cat.name,
+                      icon: categoryIconFor(cat.name),
                       isSelected: _selectedCategoryId == cat.id,
                       onTap: () => setState(() => _selectedCategoryId = cat.id),
                       onLongPress: () => _showCategoryActions(cat),
@@ -600,6 +632,7 @@ class _MenuScreenState extends State<MenuScreen> {
             id: '',
             name: 'All Items',
             description: 'View all',
+            icon: Icons.grid_view_rounded,
             isSelected: _selectedCategoryId.isEmpty,
             onTap: () => setState(() => _selectedCategoryId = ''),
           ),
@@ -615,6 +648,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 id: cat.id,
                 name: cat.name,
                 description: cat.description ?? '',
+                icon: categoryIconFor(cat.name),
                 isSelected: _selectedCategoryId == cat.id,
                 category: cat,
                 onTap: () => setState(() => _selectedCategoryId = cat.id),
@@ -689,19 +723,19 @@ class _MenuScreenState extends State<MenuScreen> {
     }
     return LayoutBuilder(
       builder: (ctx, c) {
-        final cols = c.maxWidth > 900
-            ? 3
-            : c.maxWidth > 600
-                ? 2
-                : 1;
+        final cols = c.maxWidth > 1100
+            ? 4
+            : c.maxWidth > 700
+                ? 3
+                : 2;
         return GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: cols,
-            mainAxisSpacing: c.maxWidth > 600 ? 32 : 16,
-            crossAxisSpacing: c.maxWidth > 600 ? 32 : 16,
-            childAspectRatio: c.maxWidth > 600 ? 0.75 : 0.70,
+            mainAxisSpacing: c.maxWidth > 600 ? 24 : 14,
+            crossAxisSpacing: c.maxWidth > 600 ? 24 : 14,
+            childAspectRatio: c.maxWidth > 600 ? 0.72 : 0.64,
           ),
           itemCount: items.length,
           itemBuilder: (ctx, i) => _buildItemCard(
@@ -713,213 +747,248 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  Widget _buildItemCard(MenuItem item, int i) {
+Widget _buildItemCard(MenuItem item, int i) {
     String categoryName = 'General';
     try {
       categoryName =
           _categories.firstWhere((c) => c.id == item.categoryId).name;
     } catch (_) {}
 
+    final hasPrepTime = item.preparationTime != null &&
+        item.preparationTime!.trim().isNotEmpty;
+
     return HoverableCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            flex: 5,
-            child: Container(
-              color: AppColors.ivoryDark,
-              child: item.imageUrl != null && item.imageUrl!.isNotEmpty
-                  ? Image.network(
-                      item.imageUrl!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Center(
-                        child: Icon(
-                          Icons.broken_image,
-                          color: AppColors.textMuted,
-                          size: 48,
-                        ),
-                      ),
-                    )
-                  : const Center(
-                      child: Icon(
-                        Icons.restaurant,
-                        color: AppColors.textMuted,
-                        size: 48,
-                      ),
-                    ),
-            ),
-          ),
-          Expanded(
             flex: 6,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                item.name,
-                                style: GoogleFonts.playfairDisplay(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Container(
+                  color: AppColors.ivoryDark,
+                  child: item.imageUrl != null && item.imageUrl!.isNotEmpty
+                      ? Image.network(
+                          item.imageUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Center(
+                            child: Icon(
+                              categoryIconFor(categoryName),
+                              color: AppColors.textMuted,
+                              size: 40,
                             ),
-                            const SizedBox(width: 8),
-                            if (item.isSpecial)
-                              IconButton(
-                                onPressed: () => _toggleSpecial(item.id),
-                                icon: const Icon(
-                                  Icons.star,
-                                  color: AppColors.gold,
-                                  size: 20,
-                                ),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                tooltip: 'Today\'s Special',
-                              ),
-                          ],
-                        ),
-                      ),
-                      Text(
-                        '₹${item.price.toStringAsFixed(2)}',
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.rubyRed,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.borderLight,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          categoryName,
-                          style: GoogleFonts.inter(
-                            fontSize: 10,
+                          ),
+                        )
+                      : Center(
+                          child: Icon(
+                            categoryIconFor(categoryName),
                             color: AppColors.textMuted,
-                            fontWeight: FontWeight.w600,
+                            size: 40,
                           ),
                         ),
-                        if (item.isSpecial) ...[
-                          const SizedBox(width: 8),
-                          const Icon(
-                            Icons.flash_on,
-                            size: 10,
-                            color: AppColors.rubyRed,
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            'TODAY\'S SPECIAL',
-                            style: GoogleFonts.inter(
-                              fontSize: 10,
-                              color: AppColors.rubyRed,
-                              fontWeight: FontWeight.w800,
-                            ),
+                ),
+                // Special (favorite-style) toggle, top-right
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: InkWell(
+                    onTap: () => _toggleSpecial(item.id),
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.12),
+                            blurRadius: 6,
                           ),
                         ],
-                      ],
+                      ),
+                      child: Icon(
+                        item.isSpecial ? Icons.star : Icons.star_border,
+                        size: 15,
+                        color: item.isSpecial
+                            ? AppColors.gold
+                            : AppColors.textMuted,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    item.description ?? 'No description provided.',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      color: AppColors.textMuted,
-                    ),
-                    maxLines: 1, // Reduced to 1 line for shorter card
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Availability',
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Switch(
-                        value: item.isAvailable,
-                        onChanged: (_) => _toggleItem(item.id),
-                        activeThumbColor: AppColors.success,
-                      ),
-                    ],
-                  ),
-                  Container(
+                ),
+                // Prep time / category pill, bottom-left
+                Positioned(
+                  bottom: 8,
+                  left: 8,
+                  child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 8,
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: item.isAvailable
-                          ? AppColors.success.withValues(alpha: 0.1)
-                          : AppColors.danger.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: item.isAvailable
-                            ? AppColors.success.withValues(alpha: 0.3)
-                            : AppColors.danger.withValues(alpha: 0.3),
-                      ),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.12),
+                          blurRadius: 6,
+                        ),
+                      ],
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.circle,
-                          size: 8,
-                          color: item.isAvailable
-                              ? AppColors.success
-                              : AppColors.danger,
+                          hasPrepTime
+                              ? Icons.timer_outlined
+                              : categoryIconFor(categoryName),
+                          size: 11,
+                          color: AppColors.rubyDark,
                         ),
-                        const SizedBox(width: 6),
+                        const SizedBox(width: 4),
                         Text(
-                          item.isAvailable ? 'Available' : 'Unavailable',
+                          hasPrepTime
+                              ? '${item.preparationTime} min'
+                              : categoryName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.inter(
                             fontSize: 10,
-                            color: item.isAvailable
-                                ? AppColors.success
-                                : AppColors.danger,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.rubyDark,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () => _showItemForm(item),
-                      icon: const Icon(Icons.edit, size: 14),
-                      label: const Text('Edit'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.info,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
+                ),
+                // Availability toggle, bottom-right (compact icon button)
+                Positioned(
+                  bottom: 8,
+                  right: 8,
+                  child: InkWell(
+                    onTap: () => _toggleItem(item.id),
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: item.isAvailable
+                            ? AppColors.success
+                            : Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.12),
+                            blurRadius: 6,
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        item.isAvailable
+                            ? Icons.check_rounded
+                            : Icons.close_rounded,
+                        size: 15,
+                        color:
+                            item.isAvailable ? Colors.white : AppColors.danger,
                       ),
                     ),
+                  ),
+                ),
+                if (!item.isAvailable)
+                  Positioned.fill(
+                    child: Container(
+                      color: Colors.black.withValues(alpha: 0.25),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 5,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (item.isSpecial)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 3),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.flash_on,
+                                size: 11,
+                                color: AppColors.rubyRed,
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                "TODAY'S SPECIAL",
+                                style: GoogleFonts.inter(
+                                  fontSize: 9,
+                                  color: AppColors.rubyRed,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      Text(
+                        item.name,
+                        style: GoogleFonts.playfairDisplay(
+                          fontSize: 15.5,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.rubyRed.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          '₹${item.price.toStringAsFixed(0)}',
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.rubyRed,
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () => _showItemForm(item),
+                        borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          padding: const EdgeInsets.all(7),
+                          decoration: const BoxDecoration(
+                            color: AppColors.rubyDark,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.edit,
+                            size: 13,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -950,6 +1019,7 @@ class _SidebarItem extends StatefulWidget {
   final String id, name, description;
   final bool isSelected;
   final MenuCategory? category;
+  final IconData icon;
   final VoidCallback onTap;
   final VoidCallback? onEdit, onDelete;
 
@@ -959,6 +1029,7 @@ class _SidebarItem extends StatefulWidget {
     required this.description,
     required this.isSelected,
     this.category,
+    this.icon = Icons.restaurant_menu_rounded,
     required this.onTap,
     this.onEdit,
     this.onDelete,
@@ -1018,9 +1089,25 @@ class _SidebarItemState extends State<_SidebarItem> {
                   ]
                 : null,
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
           child: Row(
             children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: isAllItems
+                      ? Colors.white.withValues(alpha: 0.15)
+                      : AppColors.rubyDark.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                child: Icon(
+                  widget.icon,
+                  size: 19,
+                  color: isAllItems ? Colors.white : AppColors.rubyDark,
+                ),
+              ),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1184,12 +1271,14 @@ class _HeaderButton extends StatelessWidget {
 
 class _CategoryPill extends StatelessWidget {
   final String label;
+  final IconData icon;
   final bool isSelected;
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
 
   const _CategoryPill({
     required this.label,
+    this.icon = Icons.restaurant_menu_rounded,
     required this.isSelected,
     required this.onTap,
     this.onLongPress,
@@ -1202,35 +1291,55 @@ class _CategoryPill extends StatelessWidget {
       onLongPress: onLongPress,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        width: 74,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.rubyDark : Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(18),
           border: Border.all(
             color: isSelected
                 ? AppColors.rubyDark
-                : AppColors.rubyDark.withOpacity(0.1),
+                : AppColors.rubyDark.withValues(alpha: 0.1),
             width: 1,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: AppColors.rubyDark.withOpacity(0.2),
-                    blurRadius: 8,
+                    color: AppColors.rubyDark.withValues(alpha: 0.25),
+                    blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
                 ]
-              : null,
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
         ),
-        child: Center(
-          child: Text(
-            label,
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-              color: isSelected ? Colors.white : AppColors.rubyDark,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color: isSelected ? AppColors.gold : AppColors.rubyDark,
             ),
-          ),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.inter(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                color: isSelected ? Colors.white : AppColors.rubyDark,
+              ),
+            ),
+          ],
         ),
       ),
     );
