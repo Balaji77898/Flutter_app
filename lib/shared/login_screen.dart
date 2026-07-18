@@ -230,7 +230,6 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
-
                         if (_error != null) ...[
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -263,7 +262,6 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
                           ),
                           const SizedBox(height: 16),
                         ],
-
                         TextField(
                           controller: _emailController,
                           decoration: const InputDecoration(
@@ -314,7 +312,6 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-
                         SizedBox(
                           height: 52,
                           child: ElevatedButton(
@@ -337,8 +334,7 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
                                     ),
                                   )
                                 : Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: const [
                                       Text(
                                         'Login',
@@ -358,10 +354,7 @@ class _UnifiedLoginScreenState extends State<UnifiedLoginScreen> {
                         ),
                       ],
                     ),
-                  )
-                      .animate()
-                      .fade(duration: 500.ms)
-                      .slideY(
+                  ).animate().fade(duration: 500.ms).slideY(
                         begin: 0.08,
                         end: 0,
                         duration: 500.ms,

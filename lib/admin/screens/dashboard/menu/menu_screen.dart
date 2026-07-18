@@ -23,9 +23,7 @@ IconData categoryIconFor(String name) {
   }
   if (n.contains('burger')) return Icons.lunch_dining_rounded;
   if (n.contains('pizza')) return Icons.local_pizza_rounded;
-  if (n.contains('drink') ||
-      n.contains('beverage') ||
-      n.contains('juice')) {
+  if (n.contains('drink') || n.contains('beverage') || n.contains('juice')) {
     return Icons.local_bar_rounded;
   }
   if (n.contains('dessert') || n.contains('sweet') || n.contains('ice')) {
@@ -747,15 +745,15 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-Widget _buildItemCard(MenuItem item, int i) {
+  Widget _buildItemCard(MenuItem item, int i) {
     String categoryName = 'General';
     try {
       categoryName =
           _categories.firstWhere((c) => c.id == item.categoryId).name;
     } catch (_) {}
 
-    final hasPrepTime = item.preparationTime != null &&
-        item.preparationTime!.trim().isNotEmpty;
+    final hasPrepTime =
+        item.preparationTime != null && item.preparationTime!.trim().isNotEmpty;
 
     return HoverableCard(
       child: Column(
@@ -772,8 +770,7 @@ Widget _buildItemCard(MenuItem item, int i) {
                       ? Image.network(
                           item.imageUrl!,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Center(
+                          errorBuilder: (context, error, stackTrace) => Center(
                             child: Icon(
                               categoryIconFor(categoryName),
                               color: AppColors.textMuted,
@@ -874,9 +871,8 @@ Widget _buildItemCard(MenuItem item, int i) {
                     child: Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: item.isAvailable
-                            ? AppColors.success
-                            : Colors.white,
+                        color:
+                            item.isAvailable ? AppColors.success : Colors.white,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
